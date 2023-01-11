@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Mxp extends SubsystemBase {
@@ -13,7 +14,7 @@ public class Mxp extends SubsystemBase {
   AHRS ahrs;
   public float zAccel = 0;
   public Mxp() {
-    ahrs = new AHRS(SPI.Port.kMXP); 
+    ahrs = new AHRS(I2C.Port.kMXP); 
 
   }
 
