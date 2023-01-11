@@ -13,16 +13,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TankDrive extends SubsystemBase {
   /** Creates a new TankDrive. */
+  CANSparkMax left1;
+  CANSparkMax left2;
+  CANSparkMax right1;
+  CANSparkMax right2;
+  MotorControllerGroup leftgroup;
+  MotorControllerGroup rightgroup;
+  DifferentialDrive drivetrain;
   public TankDrive() {
-    CANSparkMax left1 = new CANSparkMax(40, MotorType.kBrushless);
-    CANSparkMax left2 = new CANSparkMax(41, MotorType.kBrushless);
-    CANSparkMax right1 = new CANSparkMax(42, MotorType.kBrushless);
-    CANSparkMax right2 = new CANSparkMax(43, MotorType.kBrushless);
-    MotorControllerGroup leftgroup = new MotorControllerGroup(left1, left2);
-    MotorControllerGroup rightgroup = new MotorControllerGroup(right1, right2);
-    DifferentialDrive drivetrain = new DifferentialDrive(leftgroup, rightgroup);
+     left1 = new CANSparkMax(40, MotorType.kBrushless);
+     left2 = new CANSparkMax(41, MotorType.kBrushless);
+     right1 = new CANSparkMax(42, MotorType.kBrushless);
+     right2 = new CANSparkMax(43, MotorType.kBrushless);
+     leftgroup = new MotorControllerGroup(left1, left2);
+     rightgroup = new MotorControllerGroup(right1, right2);
+     drivetrain = new DifferentialDrive(leftgroup, rightgroup);
+     leftgroup.setInverted(true);
   }
 
+  public void drive(double xspeed, double zrotation){
+    drivetrain.arcadeDrive(xspeed, zrotation);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
