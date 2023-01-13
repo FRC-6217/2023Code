@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -29,6 +30,10 @@ public class TankDrive extends SubsystemBase {
      rightgroup = new MotorControllerGroup(right1, right2);
      drivetrain = new DifferentialDrive(leftgroup, rightgroup);
      leftgroup.setInverted(true);
+     left1.setIdleMode(IdleMode.kBrake);
+     left2.setIdleMode(IdleMode.kBrake);
+     right1.setIdleMode(IdleMode.kBrake);
+     right2.setIdleMode(IdleMode.kBrake);
   }
 
   public void drive(double xspeed, double zrotation){
