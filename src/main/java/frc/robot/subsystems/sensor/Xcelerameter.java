@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Xcelerameter extends SubsystemBase {
@@ -15,6 +16,7 @@ public class Xcelerameter extends SubsystemBase {
   Accelerometer accelerometer;
   int Counter = 0;
   LinearFilter filter;
+  double filteraccel = 0;
   public Xcelerameter() {
     filter = LinearFilter.movingAverage(10);
     accelerometer = new BuiltInAccelerometer();
@@ -22,13 +24,15 @@ public class Xcelerameter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Counter++;
     double z = accelerometer.getZ() > 1 ? 1 : accelerometer.getZ();
-    double filteraccel = filter.calculate(z);
+    filteraccel = filter.calculate(z);
+    double degrees = Math.toDegrees(Math.acos(filteraccel));
     // This method will be called once per scheduler run
-    if(Counter == 10){
-      System.out.println(Math.toDegrees(Math.acos(filteraccel)));
-      Counter = 0;
-     } 
+    
+  }
+
+  public double getRobotTilt() {
+    //spiderman 
+    return filteraccel;
   }
 }

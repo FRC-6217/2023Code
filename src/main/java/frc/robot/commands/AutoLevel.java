@@ -6,9 +6,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.subsystems.TankDrive;
+import frc.robot.subsystems.sensor.Xcelerameter;
 
 public class AutoLevel extends CommandBase {
   /** Creates a new AutoLevel. */
+  private TankDrive tankDrive;
+  private Xcelerameter xcelerameter;
+
+  public AutoLevel(TankDrive tankDrive, Xcelerameter xcelerameter) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(tankDrive);
+    addRequirements(xcelerameter);
+    this.tankDrive = tankDrive;
+    this.xcelerameter = xcelerameter;
+  }
   enum AutoLevelState {
     INITIALIZE,
     DRIVING_TO,
@@ -38,17 +51,30 @@ public class AutoLevel extends CommandBase {
         nextState = AutoLevelState.DRIVING_TO;
         break;
       case DRIVING_TO:
-        if(1 == 1){
+        if(doDrivingTo()){
           nextState = AutoLevelState.GETTING_ON;
         }
         break;
       case GETTING_ON:
+        if (doGettingOn()) {
+          nextState = AutoLevelState.UNBALANCED;
+        }
         break;
       case UNBALANCED:
-        break;
+        nextState = AutoLevelState.BALANCING;
       case BALANCING:
+        if (doBalancing()) {
+          nextState = AutoLevelState.BALANCED;
+        } else {
+          nextState = AutoLevelState.BALANCING;
+        }
         break;
       case BALANCED:
+        if (isBalanced()) {
+          nextState = AutoLevelState.UNBALANCED;
+        } else {
+          nextState = AutoLevelState.BALANCED;
+        }
         break;
       default:
         break;
@@ -64,5 +90,33 @@ public class AutoLevel extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+
+  // drive forward until we are at 11deg then return true
+  private boolean doDrivingTo() {
+    tankDrive.drive(0, 0);
+
+    return false;
+  }
+
+  // goto 15degs ish or start tilt other way
+  private boolean doGettingOn() {
+
+    return false;
+  }
+
+  // slowly go back and forward until balanced
+  private boolean doBalancing() {
+
+
+
+    return isBalanced();
+  }
+
+  // check if we are still balanced
+  private boolean isBalanced() {
+  
+    return true;
   }
 }
