@@ -29,13 +29,14 @@ public class Gyro extends SubsystemBase {
     }
   }
   
-
-  //thomas todo
   public boolean isBalanced() {
     // if within 2.5 deg
+    if (Math.abs(getRoll())<2.5){
+      return true;
+    } else{
+      return false;
+    }
 
-
-    return true;
   }
 
   @Override
@@ -46,7 +47,7 @@ public class Gyro extends SubsystemBase {
     orientation[YAW_POS] = filters[YAW_POS].calculate(pigeon.getYaw());
     
 
-    SmartDashboard.putNumber("Robot Tilt", orientation[PITCH_POS]);
+    SmartDashboard.putNumber("Robot Tilt",(int) orientation[ROLL_POS]);
     SmartDashboard.putBoolean("Is Balanced", isBalanced());
     SmartDashboard.putData("Gyro", pigeon);
 

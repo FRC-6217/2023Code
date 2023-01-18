@@ -8,19 +8,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.subsystems.TankDrive;
-import frc.robot.subsystems.sensor.Xcelerameter;
+import frc.robot.subsystems.sensor.*;
 
 public class AutoLevel extends CommandBase {
   /** Creates a new AutoLevel. */
   private TankDrive tankDrive;
-  private Xcelerameter xcelerameter;
-
-  public AutoLevel(TankDrive tankDrive, Xcelerameter xcelerameter) {
+  private Gyro gyro;
+  public AutoLevel(TankDrive tankDrive, Gyro gyro) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
-    addRequirements(xcelerameter);
     this.tankDrive = tankDrive;
-    this.xcelerameter = xcelerameter;
+    this.gyro = gyro;
   }
   enum AutoLevelState {
     INITIALIZE,

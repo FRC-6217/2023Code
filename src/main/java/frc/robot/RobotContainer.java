@@ -14,13 +14,16 @@ import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.sensor.Gyro;
 import frc.robot.subsystems.sensor.Xcelerameter;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -61,6 +64,33 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
         CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
+    driveJoystick.button(12).whileTrue(new PIDCommand(
+      new PIDController(0,0,0),
+      // Close the loop on the turn rate
+      gyro::getRoll,
+      // Setpoint is 0
+      (double)0,
+      // Pipe the output to the turning controls
+      output -> mTankDrive.drive(output, 0),
+      // Require the robot drive
+        mTankDrive));
+        
+   /* new JoystickButton(driveJoystick, 12)
+    .whileTrue(
+        new PIDCommand(
+            new PIDController(
+                DriveConstants.kStabilizationP,
+                DriveConstants.kStabilizationI,
+                DriveConstants.kStabilizationD),
+            // Close the loop on the turn rate
+            m_robotDrive::getTurnRate,
+            // Setpoint is 0
+            0,
+            // Pipe the output to the turning controls
+            output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
+            // Require the robot drive
+                m_robotDrive));
+ */
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
