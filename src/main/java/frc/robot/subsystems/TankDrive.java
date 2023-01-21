@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -51,6 +52,7 @@ public class TankDrive extends SubsystemBase {
      left2.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
      right1.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
      right2.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
+     
   }
 
   public void drive(double xspeed, double zrotation){

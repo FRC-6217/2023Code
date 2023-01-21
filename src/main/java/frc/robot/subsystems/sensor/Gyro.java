@@ -25,7 +25,7 @@ public class Gyro extends SubsystemBase {
     pigeon.reset();
 
     for(int i = 0; i < NUM_POS; i++) {
-      System.out.println(i);
+
       filters[i] = LinearFilter.movingAverage(NUM_TAPS);
     }
   }
