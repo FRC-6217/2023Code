@@ -10,14 +10,15 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.GyroConstants;
 
 public class Gyro extends SubsystemBase {
   /** Creates a new Gyro. */
 
-  private WPI_Pigeon2 pigeon= new WPI_Pigeon2(10);
+  private WPI_Pigeon2 pigeon= new WPI_Pigeon2(GyroConstants.pigeonID);
 
   private final int ROLL_POS = 0, PITCH_POS = 1, YAW_POS = 2, NUM_POS = 3;
-  private final int NUM_TAPS = 10;
+  private final int NUM_TAPS = GyroConstants.NUM_TAPS;
   private double orientation[] = {0,0,0};
   private LinearFilter filters[] =  new LinearFilter[NUM_POS];
   public Gyro() {

@@ -39,8 +39,8 @@ public class RobotContainer {
   private final TankDrive mTankDrive = new TankDrive();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  private final CommandJoystick driveJoystick = new CommandJoystick(0);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
+  private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final Gyro gyro = new Gyro();
   private final PDP pdp = new PDP();
   private final StayPut stayPutcommand = new StayPut(mTankDrive, gyro);
@@ -66,7 +66,7 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
         CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
-    driveJoystick.button(12).whileTrue(stayPutcommand);
+    driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(stayPutcommand);
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

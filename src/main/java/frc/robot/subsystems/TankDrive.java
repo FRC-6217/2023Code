@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.Constants.DriveTrainConstants;
+
 public class TankDrive extends SubsystemBase {
   /** Creates a new TankDrive. */
   CANSparkMax left1;
@@ -31,10 +33,10 @@ public class TankDrive extends SubsystemBase {
 
   public TankDrive() {
 
-     left1 = new CANSparkMax(40, MotorType.kBrushless);
-     left2 = new CANSparkMax(41, MotorType.kBrushless);
-     right1 = new CANSparkMax(42, MotorType.kBrushless);
-     right2 = new CANSparkMax(43, MotorType.kBrushless);
+     left1 = new CANSparkMax(DriveTrainConstants.LEFT_1, MotorType.kBrushless);
+     left2 = new CANSparkMax(DriveTrainConstants.LEFT_2, MotorType.kBrushless);
+     right1 = new CANSparkMax(DriveTrainConstants.RIGHT_1, MotorType.kBrushless);
+     right2 = new CANSparkMax(DriveTrainConstants.RIGHT_2, MotorType.kBrushless);
      leftgroup = new MotorControllerGroup(left1, left2);
      rightgroup = new MotorControllerGroup(right1, right2);
      drivetrain = new DifferentialDrive(leftgroup, rightgroup);

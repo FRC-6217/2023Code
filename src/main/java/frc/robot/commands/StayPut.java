@@ -34,9 +34,12 @@ public class StayPut extends PIDCommand {
     this.mTankDrive = mTankDrive;
   }
 
-  public void setSetpoint(){
+  @Override
+  public void initialize() {
+    super.initialize();
     this.getController().setSetpoint(mTankDrive.getRobotPosition());
   }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

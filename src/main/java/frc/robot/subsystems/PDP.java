@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PDPConstants;
 
 public class PDP extends SubsystemBase {
   
@@ -16,7 +17,7 @@ public class PDP extends SubsystemBase {
   /** Creates a new PDP. */
   public PDP() {
 
-    pdp = new PowerDistribution(1, ModuleType.kRev);
+    pdp = new PowerDistribution(PDPConstants.ID, ModuleType.kRev);
   }
 
   @Override

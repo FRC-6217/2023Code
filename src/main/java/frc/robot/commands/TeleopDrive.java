@@ -8,6 +8,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.subsystems.TankDrive;
+import frc.robot.Constants.DriveTrainConstants;
+import frc.robot.Constants.OperatorConstants;
 
 public class TeleopDrive extends CommandBase  {
   /** Creates a new TeleopDrive. */
@@ -28,10 +30,10 @@ public class TeleopDrive extends CommandBase  {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (commandJoystick.button(10).getAsBoolean()){
+    if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()){
       isTurningEnabled=true;
     }
-    if (commandJoystick.button(9).getAsBoolean()){
+    if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()){
       isTurningEnabled=false;
     }
     if (isTurningEnabled==true){
