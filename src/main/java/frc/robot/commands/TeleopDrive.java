@@ -13,6 +13,7 @@ public class TeleopDrive extends CommandBase  {
   /** Creates a new TeleopDrive. */
   private TankDrive tankDrive;
   private CommandJoystick commandJoystick;
+  private boolean isTurningEnabled =true;
   public TeleopDrive(TankDrive tankDrive, CommandJoystick commandJoystick ) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
@@ -27,7 +28,18 @@ public class TeleopDrive extends CommandBase  {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    tankDrive.drive(commandJoystick.getY(),0 );
+    if (commandJoystick.button(10).getAsBoolean()){
+      isTurningEnabled=true;
+    }
+    if (commandJoystick.button(9).getAsBoolean()){
+      isTurningEnabled=false;
+    }
+    if (isTurningEnabled==true){
+      tankDrive.drive(commandJoystick.getY(), commandJoystick.getZ());
+    } else{
+      tankDrive.drive(commandJoystick.getY(), 0);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

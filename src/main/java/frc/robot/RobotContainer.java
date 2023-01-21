@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoLevel;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final CommandJoystick driveJoystick = new CommandJoystick(0);
   private final Gyro gyro = new Gyro();
   private final PDP pdp = new PDP();
+  private final StayPut stayPutcommand = new StayPut(mTankDrive, gyro);
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,33 +66,7 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
         CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
-    driveJoystick.button(12).whileTrue(new PIDCommand(
-      new PIDController(0,0,0),
-      // Close the loop on the turn rate
-      gyro::getRoll,
-      // Setpoint is 0
-      (double)0,
-      // Pipe the output to the turning controls
-      output -> mTankDrive.drive(output, 0),
-      // Require the robot drive
-        mTankDrive));
-        
-   /* new JoystickButton(driveJoystick, 12)
-    .whileTrue(
-        new PIDCommand(
-            new PIDController(
-                DriveConstants.kStabilizationP,
-                DriveConstants.kStabilizationI,
-                DriveConstants.kStabilizationD),
-            // Close the loop on the turn rate
-            m_robotDrive::getTurnRate,
-            // Setpoint is 0
-            0,
-            // Pipe the output to the turning controls
-            output -> m_robotDrive.arcadeDrive(-m_driverController.getLeftY(), output),
-            // Require the robot drive
-                m_robotDrive));
- */
+    driveJoystick.button(12).whileTrue(stayPutcommand);
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

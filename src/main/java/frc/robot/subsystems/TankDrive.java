@@ -55,8 +55,12 @@ public class TankDrive extends SubsystemBase {
     drivetrain.arcadeDrive(xspeed, zrotation);
   }
 
-  public double getAvergeFPS() {
-    return Math.round(left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2);
+  public int getAvergeFPS() {
+    return (int) Math.round(left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2);
+  }
+
+  public double getRobotPosition() {
+    return (left1.getEncoder().getPosition() + right1.getEncoder().getPosition()) / 2;
   }
   @Override
   public void periodic() {
