@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Preferences;
 
 import frc.robot.Constants;
@@ -22,6 +23,7 @@ public class PersistenceData  {
     }
 
     public void setup(){
+        DataLogManager.start();
 
         if (!Preferences.containsKey("NumberOfPowerCycles")){
             Preferences.initInt("NumberOfPowerCycles", 0);
@@ -43,6 +45,9 @@ public class PersistenceData  {
                 } else {
                     System.out.println("failed to insert key:" + kv.key);
                 }
+            } else {
+                //if key exists 
+                DataLogManager.log("Key: " + kv.key + " value: " + kv.value);
             } 
         }
 

@@ -30,6 +30,7 @@ public class TeleopDrive extends CommandBase  {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double governer = -commandJoystick.getThrottle()*.5+.5;
     if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()){
       isTurningEnabled=true;
     }
@@ -37,10 +38,12 @@ public class TeleopDrive extends CommandBase  {
       isTurningEnabled=false;
     }
     if (isTurningEnabled==true){
-      tankDrive.drive(commandJoystick.getY(), commandJoystick.getZ());
+      tankDrive.drive(commandJoystick.getY()*governer, commandJoystick.getZ()*governer);
     } else{
-      tankDrive.drive(commandJoystick.getY(), 0);
+      tankDrive.drive(commandJoystick.getY()*governer, 0);
     }
+    
+
     
   }
 

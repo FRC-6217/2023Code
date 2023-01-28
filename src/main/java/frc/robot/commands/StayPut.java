@@ -25,11 +25,11 @@ public class StayPut extends PIDCommand {
       Preferences.getDouble(StayPutCommandConstants.i, 0),
       Preferences.getDouble(StayPutCommandConstants.d, 0)),
       // Close the loop on the turn rate
-      gyro::getRoll,
+      mTankDrive::getRobotPosition,
       // Setpoint is 0
       0,
       // Pipe the output to the turning controls
-      output -> mTankDrive.drive(output*.1, 0),
+      output -> mTankDrive.drive(output*.5, 0),
       // Require the robot drive
         mTankDrive);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -40,7 +40,10 @@ public class StayPut extends PIDCommand {
   @Override
   public void initialize() {
     super.initialize();
-    this.getController().setSetpoint(mTankDrive.getRobotPosition());
+    mTankDrive.resetPosition();
+    this.getController().setSetpoint(mTankDrive.getRobotPosition() - 6*3);
+    System.out.println("initialize" + getController().getSetpoint());
+    SmartDashboard.putNumber("Setpoint", getController().getSetpoint());
   }
 
   // Returns true when the command should end.
@@ -57,5 +60,7 @@ public class StayPut extends PIDCommand {
       this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
     }
     super.execute();
+    SmartDashboard.putData(this.getController()); 
+    SmartDashboard.putNumber("Setpoint", getController().getSetpoint());
   }
 }

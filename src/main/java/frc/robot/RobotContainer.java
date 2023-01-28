@@ -11,9 +11,11 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.TestCommandCoolBeans;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.TankDrive;
+import frc.robot.subsystems.TestCoolBeans;
 import frc.robot.subsystems.sensor.Gyro;
 import frc.robot.subsystems.sensor.Xcelerameter;
 import edu.wpi.first.math.controller.PIDController;
@@ -47,7 +49,7 @@ public class RobotContainer {
   private final Gyro gyro = new Gyro();
   private final PDP pdp = new PDP();
   private final StayPut stayPutcommand = new StayPut(mTankDrive, gyro);
-  
+  private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -72,6 +74,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(stayPutcommand);
+    driveJoystick.button(Constants.OperatorConstants.buttonUnused7).whileTrue(new TestCommandCoolBeans(t));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -57,6 +58,11 @@ public final class Constants {
     public static final String i = "StayPut I";
     public static final String d = "StayPut D";
     public static final String enableTuning = "Enable StayPut Tuning";
+  }
+
+  public static class NumberConstants {
+    public static final double WHEEL_DIAMETER = 6;//inches
+    public static final double PI = 3.14;
   }
 
   public static class PeristentMemory {
