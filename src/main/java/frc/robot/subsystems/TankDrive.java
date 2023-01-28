@@ -30,8 +30,9 @@ public class TankDrive extends SubsystemBase {
   DifferentialDrive drivetrain;
 
   //todo
-  private final double VELOCITY_CONVERSION_FACTOR  = NumberConstants.WHEEL_DIAMETER*NumberConstants.PI/12/60;
-private final double POSITION_CONVERSION_FACTOR = NumberConstants.WHEEL_DIAMETER * NumberConstants.PI;
+  private final double POSITION_CONVERSION_FACTOR = 1.7391;
+  private final double VELOCITY_CONVERSION_FACTOR  = 0.001388889;
+  
 
   public TankDrive() {
 
@@ -40,13 +41,16 @@ private final double POSITION_CONVERSION_FACTOR = NumberConstants.WHEEL_DIAMETER
 
      right1 = new CANSparkMax(DriveTrainConstants.RIGHT_1, MotorType.kBrushless);
      right2 = new CANSparkMax(DriveTrainConstants.RIGHT_2, MotorType.kBrushless);
-
-     leftgroup = new MotorControllerGroup(left1, left2);
-     rightgroup = new MotorControllerGroup(right1, right2);
-
-     leftgroup.setInverted(true);
-     rightgroup.setInverted(false);
-     drivetrain = new DifferentialDrive(leftgroup, rightgroup);
+     left1.restoreFactoryDefaults();
+     left2.restoreFactoryDefaults();
+     right1.restoreFactoryDefaults();
+     right2.restoreFactoryDefaults();
+     left1.setInverted(true);
+     left2.setInverted(true);
+     left2.follow(left1);
+     right2.follow(right1);
+     
+     drivetrain = new DifferentialDrive(left1, right1);
      
 
      left1.setIdleMode(IdleMode.kBrake);
@@ -73,12 +77,15 @@ private final double POSITION_CONVERSION_FACTOR = NumberConstants.WHEEL_DIAMETER
   }
 
   public void drive(double xspeed, double zrotation){
+    if(xspeed != 0){
+      xspeed = xspeed;
+    }
    drivetrain.curvatureDrive(xspeed, zrotation, true);
     //drivetrain.arcadeDrive(xspeed, zrotation);
   }
 
-  public int getAvergeFPS() {
-    return (int) Math.round(left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2);
+  public double getAvergeFPS() {
+    return left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2;
   }
 
   public double getRobotPosition() {

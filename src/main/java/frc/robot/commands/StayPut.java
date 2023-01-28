@@ -21,7 +21,8 @@ public class StayPut extends PIDCommand {
     TankDrive mTankDrive;
   public StayPut(TankDrive mTankDrive, Gyro gyro) {
     super(
-      new PIDController(Preferences.getDouble(StayPutCommandConstants.p, 0),
+      new PIDController(
+      Preferences.getDouble(StayPutCommandConstants.p, 0),
       Preferences.getDouble(StayPutCommandConstants.i, 0),
       Preferences.getDouble(StayPutCommandConstants.d, 0)),
       // Close the loop on the turn rate
@@ -41,9 +42,9 @@ public class StayPut extends PIDCommand {
   public void initialize() {
     super.initialize();
     mTankDrive.resetPosition();
-    this.getController().setSetpoint(mTankDrive.getRobotPosition() - 6*3);
+    this.getController().setSetpoint(mTankDrive.getRobotPosition() -6*3);
     System.out.println("initialize" + getController().getSetpoint());
-    SmartDashboard.putNumber("Setpoint", getController().getSetpoint());
+    SmartDashboard.putNumber("Setpoints", getController().getSetpoint());
   }
 
   // Returns true when the command should end.
@@ -54,13 +55,23 @@ public class StayPut extends PIDCommand {
 
   @Override
   public void execute() {
-    if (Preferences.getBoolean(StayPutCommandConstants.enableTuning, false)){ 
-      this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
-      this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
-      this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
-    }
     super.execute();
-    SmartDashboard.putData(this.getController()); 
-    SmartDashboard.putNumber("Setpoint", getController().getSetpoint());
+    if (Preferences.getBoolean(StayPutCommandConstants.enableTuning, false)){ 
+    if (Preferences.getDouble(StayPutCommandConstants.p, 0) != this.getController().getP()){
+      this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
+    }
+    if (Preferences.getDouble(StayPutCommandConstants.i, 0) != this.getController().getI()){
+      this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
+    }
+    if (Preferences.getDouble(StayPutCommandConstants.d, 0) != this.getController().getD()){
+      this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));    
+    }
+    if(SmartDashboard.getNumber("Setpoints", 0) != this.getController().getSetpoint()) {
+      this.getController().setSetpoint(SmartDashboard.getNumber("Setpoints", 0));
+    }  
+    }
+
+    SmartDashboard.putNumber("Setpoints", getController().getSetpoint());
+    SmartDashboard.putNumber("Error", getController().getPositionError());
   }
 }

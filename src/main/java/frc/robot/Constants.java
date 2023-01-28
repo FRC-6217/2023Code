@@ -57,6 +57,7 @@ public final class Constants {
     public static final String p = "StayPut P";
     public static final String i = "StayPut I";
     public static final String d = "StayPut D";
+    public static final String f = "StayPut F";
     public static final String enableTuning = "Enable StayPut Tuning";
   }
 
@@ -71,6 +72,7 @@ public final class Constants {
       new KeyValue<Double>(StayPutCommandConstants.p, 0.0),
       new KeyValue<Double>(StayPutCommandConstants.i, 0.0),
       new KeyValue<Double>(StayPutCommandConstants.d, 0.0),
+      new KeyValue<Double>(StayPutCommandConstants.f, 0.0),
       new KeyValue<Boolean>(StayPutCommandConstants.enableTuning, true),
 
     };
