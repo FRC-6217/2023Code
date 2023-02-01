@@ -28,11 +28,12 @@ public class StayPut extends PIDCommand {
       // Close the loop on the turn rate
       mTankDrive::getRobotPosition,
       // Setpoint is 0
-      0,
+      18,
       // Pipe the output to the turning controls
-      output -> mTankDrive.drive(output*.5, 0),
+      output -> mTankDrive.drive(output, 0),
       // Require the robot drive
         mTankDrive);
+        mTankDrive.resetPosition();
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     this.mTankDrive = mTankDrive;
@@ -42,7 +43,10 @@ public class StayPut extends PIDCommand {
   public void initialize() {
     super.initialize();
     mTankDrive.resetPosition();
-    this.getController().setSetpoint(mTankDrive.getRobotPosition() -6*3);
+    getController().setSetpoint(mTankDrive.getRobotPosition() -6*3);
+    this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
+    this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
+    this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
     System.out.println("initialize" + getController().getSetpoint());
     SmartDashboard.putNumber("Setpoints", getController().getSetpoint());
   }
@@ -52,7 +56,7 @@ public class StayPut extends PIDCommand {
   public boolean isFinished() {
     return false;
   }
-
+/*
   @Override
   public void execute() {
     super.execute();
@@ -62,16 +66,21 @@ public class StayPut extends PIDCommand {
     }
     if (Preferences.getDouble(StayPutCommandConstants.i, 0) != this.getController().getI()){
       this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
-    }
-    if (Preferences.getDouble(StayPutCommandConstants.d, 0) != this.getController().getD()){
+   }
+     if (Preferences.getDouble(StayPutCommandConstants.d, 0) != this.getController().getD()){
       this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));    
     }
     if(SmartDashboard.getNumber("Setpoints", 0) != this.getController().getSetpoint()) {
       this.getController().setSetpoint(SmartDashboard.getNumber("Setpoints", 0));
     }  
     }
-
+    System.out.println(getController().getP());
     SmartDashboard.putNumber("Setpoints", getController().getSetpoint());
     SmartDashboard.putNumber("Error", getController().getPositionError());
+  }*/
+
+  @Override
+  public void end(boolean coolbeans){
+    System.out.println("ending now" + coolbeans);
   }
 }

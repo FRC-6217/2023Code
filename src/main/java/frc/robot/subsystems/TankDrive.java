@@ -28,7 +28,7 @@ public class TankDrive extends SubsystemBase {
   MotorControllerGroup leftgroup;
   MotorControllerGroup rightgroup;
   DifferentialDrive drivetrain;
-
+  double position = 0;
   //todo
   private final double POSITION_CONVERSION_FACTOR = 1.7391;
   private final double VELOCITY_CONVERSION_FACTOR  = 0.001388889;
@@ -77,11 +77,15 @@ public class TankDrive extends SubsystemBase {
   }
 
   public void drive(double xspeed, double zrotation){
+
     if(xspeed != 0){
       xspeed = xspeed;
     }
-   drivetrain.curvatureDrive(xspeed, zrotation, true);
-    //drivetrain.arcadeDrive(xspeed, zrotation);
+    if(xspeed != 0)
+    System.out.println(xspeed);
+    //Fix this for Auto need Arcade for auto
+    //drivetrain.curvatureDrive(xspeed, zrotation, true);
+    drivetrain.arcadeDrive(xspeed, zrotation);
   }
 
   public double getAvergeFPS() {
@@ -89,11 +93,12 @@ public class TankDrive extends SubsystemBase {
   }
 
   public double getRobotPosition() {
-    return (left1.getEncoder().getPosition());
+    return (position);
   }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    position = left1.getEncoder().getPosition();
     SmartDashboard.putNumber("robotposition",getRobotPosition());
 
     SmartDashboard.putNumber("left1", left1.getEncoder().getPosition());
@@ -105,6 +110,7 @@ public class TankDrive extends SubsystemBase {
   }
 
   public void resetPosition() {
+  position = 0;
   left1.getEncoder().setPosition(0);
   left2.getEncoder().setPosition(0);
   right1.getEncoder().setPosition(0);

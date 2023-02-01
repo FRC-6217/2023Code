@@ -48,7 +48,6 @@ public class RobotContainer {
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final Gyro gyro = new Gyro();
   private final PDP pdp = new PDP();
-  private final StayPut stayPutcommand = new StayPut(mTankDrive, gyro);
   private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,7 +72,7 @@ public class RobotContainer {
 
     CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
-    driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(stayPutcommand);
+    driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
     driveJoystick.button(Constants.OperatorConstants.buttonUnused7).whileTrue(new TestCommandCoolBeans(t));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

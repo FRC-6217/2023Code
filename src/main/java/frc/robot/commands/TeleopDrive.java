@@ -37,10 +37,12 @@ public class TeleopDrive extends CommandBase  {
     if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()){
       isTurningEnabled=false;
     }
+    double rotationAllowanceZ = Math.abs(commandJoystick.getZ()) > .1 ? commandJoystick.getZ() : 0;
+    double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
     if (isTurningEnabled==true){
-      tankDrive.drive(commandJoystick.getY()*governer, commandJoystick.getZ()*governer);
+      tankDrive.drive(rotationAllowanceY*governer, rotationAllowanceZ*governer);
     } else{
-      tankDrive.drive(commandJoystick.getY()*governer, 0);
+      tankDrive.drive(rotationAllowanceY*governer, 0);
     }
     
 
