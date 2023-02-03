@@ -73,7 +73,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
-    driveJoystick.button(Constants.OperatorConstants.buttonUnused7).whileTrue(new TestCommandCoolBeans(t));
+   driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

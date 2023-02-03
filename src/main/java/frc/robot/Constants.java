@@ -19,7 +19,7 @@ import java.util.Iterator;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kXboxDriver = 1;
+    public static final int outlevelbutton = 1;
     public static final int buttonUnused0 = 0;
     public static final int buttonUnused1 = 1;
     public static final int buttonUnused2 = 2;
@@ -27,12 +27,12 @@ public final class Constants {
     public static final int buttonUnused4 = 4;
     public static final int buttonUnused5 = 5;
     public static final int buttonUnused6 = 6;
-    public static final int buttonUnused7 = 7;
-    public static final int buttonUnused8 = 8;
-    public static final int disableRotationButton = 9;
+    public static final int disableRotationButton = 7;
+    public static final int stayPutCommandButton = 8;
+    public static final int disableRotationButtonbottonunused =9 ;
     public static final int enableRotationButton = 10;
     public static final int buttonUnused11 = 11;
-    public static final int stayPutCommandButton = 12;
+    public static final int stayPutCommandButtonbottonunsed12 = 12;
 
 
   }

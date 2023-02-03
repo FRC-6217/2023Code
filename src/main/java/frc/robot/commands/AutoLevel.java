@@ -5,6 +5,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.subsystems.TankDrive;
@@ -19,6 +20,7 @@ public class AutoLevel extends CommandBase {
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
     this.gyro = gyro;
+    
   }
   enum AutoLevelState {
     INITIALIZE,
@@ -78,6 +80,7 @@ public class AutoLevel extends CommandBase {
         break;
     }
     currentState = nextState;
+    SmartDashboard.putString("autolevelstate", currentState.toString());
   }
 
   // Called once the command ends or is interrupted.
@@ -93,14 +96,26 @@ public class AutoLevel extends CommandBase {
 
   // drive forward until we are at 11deg then return true
   private boolean doDrivingTo() {
-    tankDrive.drive(0, 0);
-
+   
+    if(gyro.getRoll() > 15){
+      tankDrive.drive(0, 0);
+      tankDrive.resetPosition();
+      return true;
+    }else{
+      tankDrive.drive(-0.3, 0);
+    }
     return false;
   }
 
   // goto 15degs ish or start tilt other way
   private boolean doGettingOn() {
-
+   
+    if(tankDrive.getRobotPosition() < -39){
+      tankDrive.drive(0, 0);
+      return true;
+    }else{
+      tankDrive.drive(-0.5, 0);
+    }
     return false;
   }
 

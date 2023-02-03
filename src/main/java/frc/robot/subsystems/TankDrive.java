@@ -51,12 +51,11 @@ public class TankDrive extends SubsystemBase {
      right2.follow(right1);
      
      drivetrain = new DifferentialDrive(left1, right1);
+     enabledbreaks();
+
      
 
-     left1.setIdleMode(IdleMode.kBrake);
-     left2.setIdleMode(IdleMode.kBrake);
-     right1.setIdleMode(IdleMode.kBrake);
-     right2.setIdleMode(IdleMode.kBrake);
+     
 
      left1.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
      left2.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
@@ -115,6 +114,23 @@ public class TankDrive extends SubsystemBase {
   left2.getEncoder().setPosition(0);
   right1.getEncoder().setPosition(0);
   right2.getEncoder().setPosition(0);
+
+  }
+  public void enabledbreaks(){
+   
+     left1.setIdleMode(IdleMode.kBrake);
+     left2.setIdleMode(IdleMode.kBrake);
+     right1.setIdleMode(IdleMode.kBrake);
+     right2.setIdleMode(IdleMode.kBrake);
+
+
+      
+  }
+  public void disabledbreaks(){
+    left1.setIdleMode(IdleMode.kCoast);
+    left2.setIdleMode(IdleMode.kCoast);
+    right1.setIdleMode(IdleMode.kCoast);
+    right2.setIdleMode(IdleMode.kCoast);
 
   }
 }

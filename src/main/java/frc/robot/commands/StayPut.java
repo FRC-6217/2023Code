@@ -28,7 +28,7 @@ public class StayPut extends PIDCommand {
       // Close the loop on the turn rate
       mTankDrive::getRobotPosition,
       // Setpoint is 0
-      18,
+      0,
       // Pipe the output to the turning controls
       output -> mTankDrive.drive(output, 0),
       // Require the robot drive
@@ -43,7 +43,7 @@ public class StayPut extends PIDCommand {
   public void initialize() {
     super.initialize();
     mTankDrive.resetPosition();
-    getController().setSetpoint(mTankDrive.getRobotPosition() -6*3);
+    getController().setSetpoint(mTankDrive.getRobotPosition() );
     this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
     this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
     this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
@@ -55,6 +55,11 @@ public class StayPut extends PIDCommand {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  @Override
+  public void execute() {
+    super.execute();
   }
 /*
   @Override
