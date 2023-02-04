@@ -14,17 +14,20 @@ import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.TestCommandCoolBeans;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
+import frc.robot.subsystems.SimpleMotorController;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TestCoolBeans;
 import frc.robot.subsystems.sensor.Gyro;
 import frc.robot.subsystems.sensor.Xcelerameter;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -42,6 +45,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final TankDrive mTankDrive = new TankDrive();
+
+  private final SimpleMotorController bigArm = new SimpleMotorController(10, "BigArm");
+  private final SimpleMotorController littleArm = new SimpleMotorController(11, "LittleArm");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
@@ -66,14 +72,19 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
 
+    driveJoystick.button(1).onTrue(Commands.runOnce(littleArm::on, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
+    driveJoystick.button(2).onTrue(Commands.runOnce(bigArm::on, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));
+
+    //CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
+    mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
+/*
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
-   driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));
+    driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));
+*/
+
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -87,5 +98,37 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+  public PersistenceData getmData() {
+    return mData;
+  }
+
+  public ExampleSubsystem getM_exampleSubsystem() {
+    return m_exampleSubsystem;
+  }
+
+  public TankDrive getmTankDrive() {
+    return mTankDrive;
+  }
+
+  public SimpleMotorController getBigArm() {
+    return bigArm;
+  }
+
+  public CommandJoystick getDriveJoystick() {
+    return driveJoystick;
+  }
+
+  public Gyro getGyro() {
+    return gyro;
+  }
+
+  public PDP getPdp() {
+    return pdp;
+  }
+
+  public TestCoolBeans getT() {
+    return t;
   }
 }

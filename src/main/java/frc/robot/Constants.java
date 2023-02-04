@@ -38,12 +38,19 @@ public final class Constants {
   }
 
   public static class DriveTrainConstants {
+    public static final int LEFT_1 = 18;
+    public static final int LEFT_2 = 19;
+    public static final int RIGHT_1 = 17;
+    public static final int RIGHT_2 = 20;
+  }
+/* turtle
+ *   public static class DriveTrainConstants {
     public static final int LEFT_1 = 40;
     public static final int LEFT_2 = 41;
     public static final int RIGHT_1 = 42;
     public static final int RIGHT_2 = 43;
   }
-
+ */
   public static class PDPConstants {
     public static final int ID = 1;
   }
