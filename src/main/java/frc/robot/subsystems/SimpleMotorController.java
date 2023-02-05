@@ -33,6 +33,11 @@ public class SimpleMotorController extends SubsystemBase {
     SmartDashboard.putString(name + stateKey, "on");
   }
 
+  public void reverse(){
+    controller.set(-SmartDashboard.getNumber(name + speedKey, 0));
+    SmartDashboard.putString(name + stateKey, "reverse");
+  }
+
   public void off() {
     controller.set(0);
     SmartDashboard.putString(name + stateKey, "off");

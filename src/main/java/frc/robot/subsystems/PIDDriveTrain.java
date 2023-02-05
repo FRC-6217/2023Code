@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.GyroConstants;
-import frc.robot.subsystems.sensor.Gyro;
 
 public class PIDDriveTrain extends SubsystemBase {
 

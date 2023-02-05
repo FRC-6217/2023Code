@@ -23,10 +23,10 @@ public final class Constants {
     public static final int buttonUnused0 = 0;
     public static final int buttonUnused1 = 1;
     public static final int buttonUnused2 = 2;
-    public static final int buttonUnused3 = 3;
-    public static final int buttonUnused4 = 4;
-    public static final int buttonUnused5 = 5;
-    public static final int buttonUnused6 = 6;
+    public static final int bigArmBack = 3;
+    public static final int littleArmBack = 4;
+    public static final int bigArmForward = 5;
+    public static final int littleArmFoward = 6;
     public static final int disableRotationButton = 7;
     public static final int stayPutCommandButton = 8;
     public static final int disableRotationButtonbottonunused =9 ;
@@ -56,8 +56,9 @@ public final class Constants {
   }
 
   public static class GyroConstants {
-    public static final int pigeonID = 10;
+    public static final int pigeonID = 50;
     public static final int NUM_TAPS = 10;
+    public static final double balanceRange = 2.5;
   }
 
   public static class StayPutCommandConstants {

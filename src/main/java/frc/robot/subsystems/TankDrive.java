@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -15,8 +17,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants;
 import frc.robot.Constants.DriveTrainConstants;
+import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.NumberConstants;
 
 public class TankDrive extends SubsystemBase {
@@ -32,7 +35,8 @@ public class TankDrive extends SubsystemBase {
   //todo
   private final double POSITION_CONVERSION_FACTOR = 1.7391;
   private final double VELOCITY_CONVERSION_FACTOR  = 0.001388889;
-  
+  private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
+
 
   public TankDrive() {
 
@@ -71,7 +75,7 @@ public class TankDrive extends SubsystemBase {
      right1.getEncoder().setPosition(0);
      right2.getEncoder().setPosition(0);
 
-
+    gyro.reset();
      
   }
 
@@ -80,13 +84,18 @@ public class TankDrive extends SubsystemBase {
     if(xspeed != 0){
       xspeed = xspeed;
     }
-    if(xspeed != 0)
-    System.out.println(xspeed);
-    //Fix this for Auto need Arcade for auto
-    //drivetrain.curvatureDrive(xspeed, zrotation, true);
+    drivetrain.curvatureDrive(xspeed, zrotation, true);
+    }
+
+  public void autoDrive(double xspeed, double zrotation){
+
+    if(xspeed != 0){
+      xspeed = xspeed;
+      xspeed = xspeed;
+      zrotation = zrotation;
+    }
     drivetrain.arcadeDrive(xspeed, zrotation);
   }
-
   public double getAvergeFPS() {
     return left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2;
   }
@@ -94,6 +103,12 @@ public class TankDrive extends SubsystemBase {
   public double getRobotPosition() {
     return (position);
   }
+
+  public boolean isBalanced() {
+    // if within 2.5 deg
+    return(Math.abs(gyro.getPitch()) < Constants.GyroConstants.balanceRange);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -101,9 +116,12 @@ public class TankDrive extends SubsystemBase {
     SmartDashboard.putNumber("robotposition",getRobotPosition());
 
     SmartDashboard.putNumber("left1", left1.getEncoder().getPosition());
-    SmartDashboard.putNumber("left2", left2.getEncoder().getPosition());
     SmartDashboard.putNumber("right1", right1.getEncoder().getPosition());
-    SmartDashboard.putNumber("right2", right2.getEncoder().getPosition());
+
+    SmartDashboard.putNumber("Robot Tilt",(int) gyro.getPitch());
+    SmartDashboard.putBoolean("Is Balanced", isBalanced());
+    SmartDashboard.putData("Gyro", gyro);
+    //System.out.println("Roll " + gyro.getRoll() + ", Pitch " + gyro.getPitch() + ", Yaw " + gyro.getYaw());
 
     SmartDashboard.putNumber("Robot FPS", getAvergeFPS());
   }
@@ -132,5 +150,28 @@ public class TankDrive extends SubsystemBase {
     right1.setIdleMode(IdleMode.kCoast);
     right2.setIdleMode(IdleMode.kCoast);
 
+  }
+  public WPI_Pigeon2 getGyro(){
+    return gyro;
+  }
+
+  public RobotPosition getStartPosition(){
+    return new RobotPosition(left1.getEncoder().getPosition(), right1.getEncoder().getPosition(), gyro.getYaw());
+  }
+
+  public RobotPosition getRelativePosition(RobotPosition sPosition){
+    return new RobotPosition( left1.getEncoder().getPosition() - sPosition.leftposition, right1.getEncoder().getPosition() - sPosition.rightposition, gyro.getYaw() - sPosition.angle);
+  }
+  public class RobotPosition{
+    public double leftposition;
+    public double rightposition;
+    public double angle;
+    public double averagePosition;
+    public RobotPosition(double l, double r, double a){
+      leftposition = l;
+      rightposition = r;
+      angle = a;
+      averagePosition = (l+r)/2;
+    }
   }
 }

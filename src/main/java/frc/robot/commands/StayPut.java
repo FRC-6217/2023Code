@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.TankDrive;
-import frc.robot.subsystems.sensor.Gyro;
 import frc.robot.Constants.StayPutCommandConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -19,7 +18,7 @@ public class StayPut extends PIDCommand {
 
   /** Creates a new StayPut. */
     TankDrive mTankDrive;
-  public StayPut(TankDrive mTankDrive, Gyro gyro) {
+  public StayPut(TankDrive mTankDrive) {
     super(
       new PIDController(
       Preferences.getDouble(StayPutCommandConstants.p, 0),

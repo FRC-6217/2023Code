@@ -14,12 +14,11 @@ import frc.robot.subsystems.sensor.*;
 public class AutoLevel extends CommandBase {
   /** Creates a new AutoLevel. */
   private TankDrive tankDrive;
-  private Gyro gyro;
-  public AutoLevel(TankDrive tankDrive, Gyro gyro) {
+
+  public AutoLevel(TankDrive tankDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
-    this.gyro = gyro;
     
   }
   enum AutoLevelState {
@@ -97,7 +96,7 @@ public class AutoLevel extends CommandBase {
   // drive forward until we are at 11deg then return true
   private boolean doDrivingTo() {
    
-    if(gyro.getRoll() > 15){
+    if(tankDrive.getGyro().getRoll() > 15){
       tankDrive.drive(0, 0);
       tankDrive.resetPosition();
       return true;
