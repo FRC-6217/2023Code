@@ -28,15 +28,13 @@ public class TankDrive extends SubsystemBase {
   CANSparkMax left2;
   CANSparkMax right1;
   CANSparkMax right2;
-  MotorControllerGroup leftgroup;
-  MotorControllerGroup rightgroup;
   DifferentialDrive drivetrain;
   double position = 0;
   //todo
   private final double POSITION_CONVERSION_FACTOR = 1.7391;
   private final double VELOCITY_CONVERSION_FACTOR  = 0.001388889;
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
-
+  private boolean enableBreaks = true;
 
   public TankDrive() {
 
@@ -55,8 +53,8 @@ public class TankDrive extends SubsystemBase {
      right2.follow(right1);
      
      drivetrain = new DifferentialDrive(left1, right1);
-     enabledbreaks();
-
+     //enableBreaks();
+      disabledbreaks();
      
 
      
@@ -77,6 +75,21 @@ public class TankDrive extends SubsystemBase {
 
     gyro.reset();
      
+  }
+
+  public void toggleBreaks() {
+    enableBreaks = !enableBreaks;
+
+    if (enableBreaks) {
+      this.enableBreaks();
+    } else {
+      this.disabledbreaks();
+    }
+  }
+
+  public void setDriveVoltage(double leftvoltage, double rightvoltage){
+    left1.setVoltage(leftvoltage);
+    right1.setVoltage(rightvoltage);
   }
 
   public void drive(double xspeed, double zrotation){
@@ -134,7 +147,7 @@ public class TankDrive extends SubsystemBase {
   right2.getEncoder().setPosition(0);
 
   }
-  public void enabledbreaks(){
+  public void enableBreaks(){
    
      left1.setIdleMode(IdleMode.kBrake);
      left2.setIdleMode(IdleMode.kBrake);

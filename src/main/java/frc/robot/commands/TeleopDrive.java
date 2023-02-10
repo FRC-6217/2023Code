@@ -40,9 +40,9 @@ public class TeleopDrive extends CommandBase  {
     double rotationAllowanceZ = Math.abs(commandJoystick.getZ()) > .1 ? commandJoystick.getZ() : 0;
     double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
     if (isTurningEnabled==true){
-      tankDrive.drive(-rotationAllowanceY*governer, -rotationAllowanceZ*governer);
+      tankDrive.drive(rotationAllowanceY*governer, rotationAllowanceZ*governer);
     } else{
-      tankDrive.drive(-rotationAllowanceY*governer, 0);
+      tankDrive.drive(rotationAllowanceY*governer, 0);
     }
     
 

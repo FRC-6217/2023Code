@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoLevel;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FindKs;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
@@ -51,14 +52,14 @@ public class RobotContainer {
   private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
   private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
 
-  private final SimpleMotorController bigArm = new SimpleMotorController(10, "BigArm");
-  private final SimpleMotorController littleArm = new SimpleMotorController(11, "LittleArm");
+  //private final SimpleMotorController bigArm = new SimpleMotorController(10, "BigArm");
+  //private final SimpleMotorController littleArm = new SimpleMotorController(11, "LittleArm");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final PDP pdp = new PDP();
-  private final TestCoolBeans t = new TestCoolBeans();
+  //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -76,9 +77,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    driveJoystick.button(1).onTrue(new FindKs(mTankDrive));
+   // driveJoystick.button(1).onTrue(new SequentialCommandGroup(new InchesDrive(mTankDrive, 12, 0.3), new InchesDrive(mTankDrive, -12, 0.3)));
+   // driveJoystick.button(2).onTrue(new GoToAngle(mTankDrive, -360, .36));
 
-    driveJoystick.button(1).onTrue(new SequentialCommandGroup(new InchesDrive(mTankDrive, 12, 0.3), new InchesDrive(mTankDrive, -12, 0.3)));
-    driveJoystick.button(2).onTrue(new GoToAngle(mTankDrive, -360, .36));
+    driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
 
     /*driveJoystick.button(OperatorConstants.littleArmFoward).onTrue(Commands.runOnce(littleArm::on, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
     driveJoystick.button(OperatorConstants.bigArmForward).onTrue(Commands.runOnce(bigArm::on, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));
@@ -89,8 +92,8 @@ public class RobotContainer {
 /*
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
     driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));
+    
 */
-
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

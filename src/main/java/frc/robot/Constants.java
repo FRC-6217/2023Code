@@ -20,9 +20,8 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int outlevelbutton = 1;
-    public static final int buttonUnused0 = 0;
-    public static final int buttonUnused1 = 1;
-    public static final int buttonUnused2 = 2;
+    //public static final int buttonUnused1 = 1;
+    public static final int toggleBreak2 = 2;
     public static final int bigArmBack = 3;
     public static final int littleArmBack = 4;
     public static final int bigArmForward = 5;
@@ -34,7 +33,7 @@ public final class Constants {
     public static final int buttonUnused11 = 11;
     public static final int stayPutCommandButtonbottonunsed12 = 12;
 
-
+// left turtle ks=.16
   }
 
   public static class DriveTrainConstants {
