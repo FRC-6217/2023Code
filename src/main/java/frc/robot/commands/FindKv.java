@@ -11,6 +11,7 @@ import frc.robot.subsystems.TankDrive;
 public class FindKv extends InchesDrive {
 private double leftVelocitySum = 0;
 private double rightVelocitySum = 0;
+private double batterySum = 0;
 private int counter = 0;
 
   
@@ -25,7 +26,10 @@ private int counter = 0;
   @Override
   public void initialize() {
     super.initialize();
-    
+    leftVelocitySum = 0;
+    rightVelocitySum = 0;
+    batterySum = 0;
+    counter = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +39,7 @@ private int counter = 0;
     counter++;
     leftVelocitySum = tankDrive.getLeftVelocity() + leftVelocitySum;
     rightVelocitySum += tankDrive.getRightVelocity();
+    batterySum += RobotController.getBatteryVoltage();
     
   }
 
@@ -44,7 +49,9 @@ private int counter = 0;
     super.end(interrupted);
     double leftAverage = leftVelocitySum/counter;
     double rightAverage = rightVelocitySum/counter;
-    System.out.println("Left KV: "+ leftAverage/RobotController.getBatteryVoltage() + "\nRight KV: " +rightAverage/RobotController.getBatteryVoltage());
+    double batteryAverage = batterySum/counter;
+
+    System.out.println("Left KV: "+ batteryAverage/leftAverage + "\nRight KV: " +batteryAverage/rightAverage);
   }
 
   // Returns true when the command should end.

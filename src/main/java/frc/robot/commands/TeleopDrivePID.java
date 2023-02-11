@@ -5,18 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.TankDrive;
 
-public class TeleopDrive extends CommandBase {
+public class TeleopDrivePID extends CommandBase {
   /** Creates a new TeleopDrive. */
-  private TankDrive tankDrive;
+  private PIDDriveTrain tankDrive;
 
   private CommandJoystick commandJoystick;
   private boolean isTurningEnabled = true;
 
-  public TeleopDrive(TankDrive tankDrive, CommandJoystick commandJoystick) {
+  public TeleopDrivePID(PIDDriveTrain tankDrive, CommandJoystick commandJoystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;

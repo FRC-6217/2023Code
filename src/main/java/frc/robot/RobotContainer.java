@@ -6,12 +6,16 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.CancelDriveTrain;
 import frc.robot.commands.FindKs;
+import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.TeleopDrivePID;
 import frc.robot.commands.AutoCommands.InchesDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
+import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.TankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,9 +36,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final TankDrive mTankDrive = new TankDrive();
+  //public final PIDDriveTrain mTankDrive = new PIDDriveTrain();
   
-  private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
-  private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
+  //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
+ // private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
 
   //private final SimpleMotorController bigArm = new SimpleMotorController(10, "BigArm");
   //private final SimpleMotorController littleArm = new SimpleMotorController(11, "LittleArm");
@@ -62,19 +67,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driveJoystick.button(1).onTrue(new FindKs(mTankDrive));
+    //driveJoystick.button(1).onTrue(new FindKv(mTankDrive));
    // driveJoystick.button(1).onTrue(new SequentialCommandGroup(new InchesDrive(mTankDrive, 12, 0.3), new InchesDrive(mTankDrive, -12, 0.3)));
    // driveJoystick.button(2).onTrue(new GoToAngle(mTankDrive, -360, .36));
 
     driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
+   // mTankDrive.setDefaultCommand( new TeleopDrivePID(mTankDrive, driveJoystick));
+    mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
 
+    driveJoystick.button(11).onTrue(new CancelDriveTrain(mTankDrive));
     /*driveJoystick.button(OperatorConstants.littleArmFoward).onTrue(Commands.runOnce(littleArm::on, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
     driveJoystick.button(OperatorConstants.bigArmForward).onTrue(Commands.runOnce(bigArm::on, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));
     driveJoystick.button(OperatorConstants.littleArmBack).onTrue(Commands.runOnce(littleArm::reverse, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
     driveJoystick.button(OperatorConstants.bigArmBack).onTrue(Commands.runOnce(bigArm::reverse, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));*/
     //CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
-    mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
-    driveJoystick.button(OperatorConstants.stayPutCommandButtonbottonunsed12).onTrue(new FindKs(mTankDrive));
+    //driveJoystick.button(OperatorConstants.stayPutCommandButtonbottonunsed12).onTrue(new FindKs(mTankDrive));
 /*
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
     driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));

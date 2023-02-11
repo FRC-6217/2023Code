@@ -28,7 +28,9 @@ public class TankDrive extends SubsystemBase {
   private final double POSITION_CONVERSION_FACTOR = 1.7391;
   private final double VELOCITY_CONVERSION_FACTOR = 0.001388889;
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
-  private boolean enableBreaks = true;
+  private boolean enableBreaks = false;
+
+  private double maxFPS = 0;
 
   public TankDrive() {
 
@@ -64,6 +66,9 @@ public class TankDrive extends SubsystemBase {
     right2.getEncoder().setPosition(0);
 
     gyro.reset();
+
+
+
   }
 
   public void toggleBreaks() {
@@ -72,7 +77,7 @@ public class TankDrive extends SubsystemBase {
     if (enableBreaks) {
       this.enableBreaks();
     } else {
-      this.disabledbreaks();
+      this.disableBreaks();
     }
   }
 
@@ -93,6 +98,10 @@ public class TankDrive extends SubsystemBase {
 
   public double getAvergeFPS() {
     return left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2;
+  }
+
+  public double getMaxFPS() {
+    return maxFPS;
   }
 
   public double getRightVelocity() {
@@ -128,6 +137,13 @@ public class TankDrive extends SubsystemBase {
     // gyro.getYaw());
 
     SmartDashboard.putNumber("Robot FPS", getAvergeFPS());
+
+    double fps = Math.abs(getAvergeFPS());
+    if (fps> maxFPS) {
+      maxFPS = fps;
+    }
+
+    SmartDashboard.putNumber("maxFPS", getMaxFPS());
   }
 
   public void resetPosition() {
@@ -146,7 +162,7 @@ public class TankDrive extends SubsystemBase {
     right2.setIdleMode(IdleMode.kBrake);
   }
 
-  public void disabledbreaks() {
+  public void disableBreaks() {
     left1.setIdleMode(IdleMode.kCoast);
     left2.setIdleMode(IdleMode.kCoast);
     right1.setIdleMode(IdleMode.kCoast);

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.TankDrive;
@@ -11,31 +13,22 @@ import frc.robot.subsystems.TankDrive;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DisableBreaks extends InstantCommand {
+public class CancelDriveTrain extends InstantCommand {
   TankDrive tankDrive;
-  PIDDriveTrain pidTankDrive;
-
-  public DisableBreaks(TankDrive tankDrive) {
+  PIDDriveTrain p;
+  public CancelDriveTrain(TankDrive tankDrive) {
     this.tankDrive = tankDrive;
     addRequirements(tankDrive);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public DisableBreaks(PIDDriveTrain tankDrive) {
-    this.pidTankDrive = tankDrive;
-    addRequirements(pidTankDrive);
+  public CancelDriveTrain(PIDDriveTrain p) {
+    this.p = p;
+    addRequirements(p);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (null != tankDrive)
-    tankDrive.disableBreaks();
-    if (null != pidTankDrive)
-    pidTankDrive.disableBreaks();
-  }
-
-  @Override
-  public boolean runsWhenDisabled() {
-    return true;
   }
 }

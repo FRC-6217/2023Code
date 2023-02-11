@@ -74,14 +74,18 @@ public final class Constants {
     }
 
     @Override
-    public MotorConstants getLeftDriveTrainMotorConstants() {
-      // TODO Auto-generated method stub
+    public final MotorConstants getLeftDriveTrainMotorConstants() {
       return new MotorConstants(0, 0); // todo
     }
 
     @Override
-    public MotorConstants getRightDriveTrainMotorConstants() {
+    public final MotorConstants getRightDriveTrainMotorConstants() {
       return new MotorConstants(0, 0); // todo
+    }
+
+    @Override
+    public final double getDistanceBetweenWheelsInches() {
+      return 24.5;
     }
   }
 
@@ -93,13 +97,18 @@ public final class Constants {
     }
 
     @Override
-    public MotorConstants getLeftDriveTrainMotorConstants() {
-      return new MotorConstants(0.1224, 0.5311440867980148);
+    public final MotorConstants getLeftDriveTrainMotorConstants() {
+      return new MotorConstants(0.1224, (1.8179824940435525*3.3));
     }
 
     @Override
-    public MotorConstants getRightDriveTrainMotorConstants() {
-      return new MotorConstants(0.1364, 0.5338932847351741);
+    public final MotorConstants getRightDriveTrainMotorConstants() {
+      return new MotorConstants(0.1364, (1.8601248134570176 *3.3));
+    }
+
+    @Override
+    public final double getDistanceBetweenWheelsInches() {
+      return 16;
     }
   }
 
@@ -130,6 +139,8 @@ public final class Constants {
     public MotorConstants getRightDriveTrainMotorConstants();
 
     public String getName();
+
+    public double getDistanceBetweenWheelsInches();
   }
 
   public static class MotorConstants {
