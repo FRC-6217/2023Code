@@ -5,37 +5,20 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AutoLevel;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FindKs;
-import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
-import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
-import frc.robot.commands.TestCommandCoolBeans;
-import frc.robot.commands.AutoCommands.GoToAngle;
 import frc.robot.commands.AutoCommands.InchesDrive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
-import frc.robot.subsystems.SimpleMotorController;
 import frc.robot.subsystems.TankDrive;
-import frc.robot.subsystems.TestCoolBeans;
-import frc.robot.subsystems.sensor.Xcelerameter;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**

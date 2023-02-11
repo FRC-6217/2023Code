@@ -26,7 +26,6 @@ public class Xcelerameter extends SubsystemBase {
   public void periodic() {
     double z = accelerometer.getZ() > 1 ? 1 : accelerometer.getZ();
     filteraccel = filter.calculate(z);
-    double degrees = Math.toDegrees(Math.acos(filteraccel));
     // This method will be called once per scheduler run
 
   }

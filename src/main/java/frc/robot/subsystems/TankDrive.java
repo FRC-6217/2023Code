@@ -82,20 +82,12 @@ public class TankDrive extends SubsystemBase {
   }
 
   public void drive(double xspeed, double zrotation) {
-
-    if (xspeed != 0) {
-      xspeed = xspeed;
-    }
+    
     drivetrain.curvatureDrive(xspeed, zrotation, true);
   }
 
   public void autoDrive(double xspeed, double zrotation) {
 
-    if (xspeed != 0) {
-      xspeed = xspeed;
-      xspeed = xspeed;
-      zrotation = zrotation;
-    }
     drivetrain.arcadeDrive(xspeed, zrotation);
   }
 
