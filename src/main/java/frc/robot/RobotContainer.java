@@ -9,6 +9,7 @@ import frc.robot.commands.AutoLevel;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FindKs;
+import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
@@ -47,7 +48,7 @@ public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final TankDrive mTankDrive = new TankDrive();
+  public final TankDrive mTankDrive = new TankDrive();
   
   private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
   private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
@@ -62,6 +63,7 @@ public class RobotContainer {
   //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    System.out.println("RUNNING ROBOT: " + Constants.uniqueRobotConstants.getName());
     // Configure the trigger bindings
     configureBindings();
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -89,6 +91,7 @@ public class RobotContainer {
     driveJoystick.button(OperatorConstants.bigArmBack).onTrue(Commands.runOnce(bigArm::reverse, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));*/
     //CommandScheduler.getInstance().setDefaultCommand(mTankDrive, new TeleopDrive(mTankDrive, driveJoystick));
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
+    driveJoystick.button(OperatorConstants.stayPutCommandButtonbottonunsed12).onTrue(new FindKs(mTankDrive));
 /*
     driveJoystick.button(OperatorConstants.stayPutCommandButton).whileTrue(new StayPut(mTankDrive, gyro));
     driveJoystick.button(OperatorConstants.outlevelbutton).whileTrue(new AutoLevel(mTankDrive,gyro));
@@ -100,6 +103,8 @@ public class RobotContainer {
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
+
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

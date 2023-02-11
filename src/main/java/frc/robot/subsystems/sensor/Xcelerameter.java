@@ -6,17 +6,17 @@ package frc.robot.subsystems.sensor;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Xcelerameter extends SubsystemBase {
   /** Creates a new Aceelerameter. */
   Accelerometer accelerometer;
+
   int Counter = 0;
   LinearFilter filter;
   double filteraccel = 0;
+
   public Xcelerameter() {
     filter = LinearFilter.movingAverage(10);
     accelerometer = new BuiltInAccelerometer();
@@ -28,11 +28,11 @@ public class Xcelerameter extends SubsystemBase {
     filteraccel = filter.calculate(z);
     double degrees = Math.toDegrees(Math.acos(filteraccel));
     // This method will be called once per scheduler run
-    
+
   }
 
   public double getRobotTilt() {
-    //spiderman 
+    // spiderman
     return filteraccel;
   }
 }

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PDPConstants;
 
 public class PDP extends SubsystemBase {
-  
+
   PowerDistribution pdp;
 
   /** Creates a new PDP. */

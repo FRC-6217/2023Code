@@ -6,17 +6,16 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class SimpleMotorController extends SubsystemBase {
-  
+
   private final String speedKey = " speed:";
   private final String stateKey = " state:";
   /** Creates a new SimpleMotorController. */
   private CANSparkMax controller;
+
   String name;
 
   public SimpleMotorController(int sparkMaxID, String name) {
@@ -25,7 +24,6 @@ public class SimpleMotorController extends SubsystemBase {
 
     SmartDashboard.putNumber(name + speedKey, 0);
     SmartDashboard.putString(name + stateKey, "init");
-
   }
 
   public void on() {
@@ -33,7 +31,7 @@ public class SimpleMotorController extends SubsystemBase {
     SmartDashboard.putString(name + stateKey, "on");
   }
 
-  public void reverse(){
+  public void reverse() {
     controller.set(-SmartDashboard.getNumber(name + speedKey, 0));
     SmartDashboard.putString(name + stateKey, "reverse");
   }
@@ -44,9 +42,5 @@ public class SimpleMotorController extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-
-
-    
-  }
+  public void periodic() {}
 }

@@ -8,8 +8,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.subsystems.TankDrive;
 import frc.robot.Constants.StayPutCommandConstants;
+import frc.robot.subsystems.TankDrive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -17,22 +17,23 @@ import frc.robot.Constants.StayPutCommandConstants;
 public class StayPut extends PIDCommand {
 
   /** Creates a new StayPut. */
-    TankDrive mTankDrive;
+  TankDrive mTankDrive;
+
   public StayPut(TankDrive mTankDrive) {
     super(
-      new PIDController(
-      Preferences.getDouble(StayPutCommandConstants.p, 0),
-      Preferences.getDouble(StayPutCommandConstants.i, 0),
-      Preferences.getDouble(StayPutCommandConstants.d, 0)),
-      // Close the loop on the turn rate
-      mTankDrive::getRobotPosition,
-      // Setpoint is 0
-      0,
-      // Pipe the output to the turning controls
-      output -> mTankDrive.drive(output, 0),
-      // Require the robot drive
+        new PIDController(
+            Preferences.getDouble(StayPutCommandConstants.p, 0),
+            Preferences.getDouble(StayPutCommandConstants.i, 0),
+            Preferences.getDouble(StayPutCommandConstants.d, 0)),
+        // Close the loop on the turn rate
+        mTankDrive::getRobotPosition,
+        // Setpoint is 0
+        0,
+        // Pipe the output to the turning controls
+        output -> mTankDrive.drive(output, 0),
+        // Require the robot drive
         mTankDrive);
-        mTankDrive.resetPosition();
+    mTankDrive.resetPosition();
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     this.mTankDrive = mTankDrive;
@@ -42,7 +43,7 @@ public class StayPut extends PIDCommand {
   public void initialize() {
     super.initialize();
     mTankDrive.resetPosition();
-    getController().setSetpoint(mTankDrive.getRobotPosition() );
+    getController().setSetpoint(mTankDrive.getRobotPosition());
     this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
     this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
     this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
@@ -60,11 +61,11 @@ public class StayPut extends PIDCommand {
   public void execute() {
     super.execute();
   }
-/*
+  /*
   @Override
   public void execute() {
     super.execute();
-    if (Preferences.getBoolean(StayPutCommandConstants.enableTuning, false)){ 
+    if (Preferences.getBoolean(StayPutCommandConstants.enableTuning, false)){
     if (Preferences.getDouble(StayPutCommandConstants.p, 0) != this.getController().getP()){
       this.getController().setP(Preferences.getDouble(StayPutCommandConstants.p, 0));
     }
@@ -72,11 +73,11 @@ public class StayPut extends PIDCommand {
       this.getController().setI(Preferences.getDouble(StayPutCommandConstants.i, 0));
    }
      if (Preferences.getDouble(StayPutCommandConstants.d, 0) != this.getController().getD()){
-      this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));    
+      this.getController().setD(Preferences.getDouble(StayPutCommandConstants.d, 0));
     }
     if(SmartDashboard.getNumber("Setpoints", 0) != this.getController().getSetpoint()) {
       this.getController().setSetpoint(SmartDashboard.getNumber("Setpoints", 0));
-    }  
+    }
     }
     System.out.println(getController().getP());
     SmartDashboard.putNumber("Setpoints", getController().getSetpoint());
@@ -84,7 +85,7 @@ public class StayPut extends PIDCommand {
   }*/
 
   @Override
-  public void end(boolean coolbeans){
+  public void end(boolean coolbeans) {
     System.out.println("ending now" + coolbeans);
   }
 }

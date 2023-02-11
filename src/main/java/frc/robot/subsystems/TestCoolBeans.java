@@ -6,23 +6,21 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TestCoolBeans extends SubsystemBase{
+public class TestCoolBeans extends SubsystemBase {
   /** Creates a new TestCoolBeans. */
   CANSparkMax mController;
+
   public TestCoolBeans() {
     mController = new CANSparkMax(22, MotorType.kBrushless);
-  mController.restoreFactoryDefaults();
+    mController.restoreFactoryDefaults();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
- // SmartDashboard.putData(mController);
+    // SmartDashboard.putData(mController);
   }
 
   public void setMotor(double speed) {

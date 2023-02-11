@@ -11,6 +11,7 @@ import frc.robot.subsystems.TankDrive.RobotPosition;
 public class FindKs extends CommandBase {
   /** Creates a new FindKs. */
   TankDrive tankdrive;
+
   double leftvoltage;
   double rightvoltage;
   double voltageIncrement;
@@ -19,12 +20,13 @@ public class FindKs extends CommandBase {
   int counterRight = 0;
   double aveVoltageLeft = 0;
   double aveVoltageRight = 0;
-boolean leftdone = false;
-boolean rightdone = false;
+  boolean leftdone = false;
+  boolean rightdone = false;
+
   public FindKs(TankDrive tankDrive) {
-    this.tankdrive=tankDrive;
+    this.tankdrive = tankDrive;
     addRequirements(tankDrive);
-    leftvoltage = 0; 
+    leftvoltage = 0;
     rightvoltage = 0;
     voltageIncrement = 0.001;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,8 +45,9 @@ boolean rightdone = false;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    tankdrive.setDriveVoltage(leftvoltage,rightvoltage);
-    System.out.println("left voltage: " + leftvoltage + " rightvoltage: "+ rightvoltage);  }
+    tankdrive.setDriveVoltage(leftvoltage, rightvoltage);
+    System.out.println("left voltage: " + leftvoltage + " rightvoltage: " + rightvoltage);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -54,7 +57,7 @@ boolean rightdone = false;
     counterLeft = 0;
     counterRight = 0;
     tankdrive.drive(0, 0);
-    System.out.println("ave: leftvoltage: " + aveVoltageLeft + " rightvoltage: "+aveVoltageRight);
+    System.out.println("ave: leftvoltage: " + aveVoltageLeft + " rightvoltage: " + aveVoltageRight);
     aveVoltageLeft = 0;
     aveVoltageRight = 0;
     leftdone = false;
@@ -67,28 +70,29 @@ boolean rightdone = false;
     RobotPosition currentposition = tankdrive.getRelativePosition(startingPosition);
     if (currentposition.leftposition > 0) {
       leftdone = true;
-     } else {
-       leftvoltage = voltageIncrement + leftvoltage;
-     }
-     if (currentposition.rightposition > 0) {
-      rightdone =true;
-     } else {
-       rightvoltage = voltageIncrement + rightvoltage;
-     }
-     if(rightdone && leftdone){
-        counterLeft = counterLeft+1;
-        counterRight = counterRight+1;
+    } else {
+      leftvoltage = voltageIncrement + leftvoltage;
+    }
+    if (currentposition.rightposition > 0) {
+      rightdone = true;
+    } else {
+      rightvoltage = voltageIncrement + rightvoltage;
+    }
+    if (rightdone && leftdone) {
+      counterLeft = counterLeft + 1;
+      counterRight = counterRight + 1;
 
-        aveVoltageLeft += leftvoltage;
-        aveVoltageRight += rightvoltage;
+      aveVoltageLeft += leftvoltage;
+      aveVoltageRight += rightvoltage;
 
-        if (counterLeft == 10 ){
-          return true;
-        } else {
-          this.initialize();
+      if (counterLeft == 10) {
+        return true;
+      } else {
+        this.initialize();
       }
-     }
+    }
     return false;
-
   }
+
+  
 }

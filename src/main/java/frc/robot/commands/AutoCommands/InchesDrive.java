@@ -10,7 +10,7 @@ import frc.robot.subsystems.TankDrive.RobotPosition;
 
 public class InchesDrive extends CommandBase {
 RobotPosition startPosition; 
-TankDrive tankDrive;
+public TankDrive tankDrive;
 double inches; 
 double speed; 
   /** Creates a new InchesDrive. */

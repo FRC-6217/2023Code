@@ -4,19 +4,19 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.subsystems.TankDrive;
-import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.TankDrive;
 
-public class TeleopDrive extends CommandBase  {
+public class TeleopDrive extends CommandBase {
   /** Creates a new TeleopDrive. */
   private TankDrive tankDrive;
+
   private CommandJoystick commandJoystick;
-  private boolean isTurningEnabled =true;
-  public TeleopDrive(TankDrive tankDrive, CommandJoystick commandJoystick ) {
+  private boolean isTurningEnabled = true;
+
+  public TeleopDrive(TankDrive tankDrive, CommandJoystick commandJoystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
@@ -30,24 +30,20 @@ public class TeleopDrive extends CommandBase  {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double governer = -commandJoystick.getThrottle()*.5+.5;
-    if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()){
-      isTurningEnabled=true;
+    double governer = -commandJoystick.getThrottle() * .5 + .5;
+    if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()) {
+      isTurningEnabled = true;
     }
-    if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()){
-      isTurningEnabled=false;
+    if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()) {
+      isTurningEnabled = false;
     }
     double rotationAllowanceZ = Math.abs(commandJoystick.getZ()) > .1 ? commandJoystick.getZ() : 0;
     double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
-    if (isTurningEnabled==true){
-      tankDrive.drive(rotationAllowanceY*governer, rotationAllowanceZ*governer);
-    } else{
-      tankDrive.drive(rotationAllowanceY*governer, 0);
+    if (isTurningEnabled == true) {
+      tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceZ * governer);
+    } else {
+      tankDrive.drive(rotationAllowanceY * governer, 0);
     }
-    
-
-    
-    
   }
 
   // Called once the command ends or is interrupted.

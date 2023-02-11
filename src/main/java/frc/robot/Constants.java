@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import java.nio.DoubleBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -17,10 +13,13 @@ import java.util.Iterator;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  // public static final IUniqueRobotConstants UNIQUE_ROBOT_CONSTANTS = new TurtleShell();
+  public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int outlevelbutton = 1;
-    //public static final int buttonUnused1 = 1;
+    // public static final int buttonUnused1 = 1;
     public static final int toggleBreak2 = 2;
     public static final int bigArmBack = 3;
     public static final int littleArmBack = 4;
@@ -28,12 +27,12 @@ public final class Constants {
     public static final int littleArmFoward = 6;
     public static final int disableRotationButton = 7;
     public static final int stayPutCommandButton = 8;
-    public static final int disableRotationButtonbottonunused =9 ;
+    public static final int disableRotationButtonbottonunused = 9;
     public static final int enableRotationButton = 10;
     public static final int buttonUnused11 = 11;
     public static final int stayPutCommandButtonbottonunsed12 = 12;
 
-// left turtle ks=.16
+    // left turtle ks=.16
   }
 
   public static class DriveTrainConstants {
@@ -42,14 +41,7 @@ public final class Constants {
     public static final int RIGHT_1 = 17;
     public static final int RIGHT_2 = 20;
   }
-/* turtle
- *   public static class DriveTrainConstants {
-    public static final int LEFT_1 = 40;
-    public static final int LEFT_2 = 41;
-    public static final int RIGHT_1 = 42;
-    public static final int RIGHT_2 = 43;
-  }
- */
+
   public static class PDPConstants {
     public static final int ID = 1;
   }
@@ -69,8 +61,46 @@ public final class Constants {
   }
 
   public static class NumberConstants {
-    public static final double WHEEL_DIAMETER = 6;//inches
+    public static final double WHEEL_DIAMETER = 6; // inches
     public static final double PI = 3.14;
+  }
+
+  public static class TurtleShell implements IUniqueRobotConstants {
+
+    @Override
+    public String getName() {
+      // TODO Auto-generated method stub
+      return "Turtle";
+    }
+
+    @Override
+    public MotorConstants getLeftDriveTrainMotorConstants() {
+      // TODO Auto-generated method stub
+      return new MotorConstants(0, 0); // todo
+    }
+
+    @Override
+    public MotorConstants getRightDriveTrainMotorConstants() {
+      return new MotorConstants(0, 0); // todo
+    }
+  }
+
+  public static class TorinRobot implements IUniqueRobotConstants {
+
+    @Override
+    public String getName() {
+      return "Torin";
+    }
+
+    @Override
+    public MotorConstants getLeftDriveTrainMotorConstants() {
+      return new MotorConstants(0.1224, 0.5311440867980148);
+    }
+
+    @Override
+    public MotorConstants getRightDriveTrainMotorConstants() {
+      return new MotorConstants(0.1364, 0.5338932847351741);
+    }
   }
 
   public static class PeristentMemory {
@@ -81,9 +111,7 @@ public final class Constants {
       new KeyValue<Double>(StayPutCommandConstants.d, 0.0),
       new KeyValue<Double>(StayPutCommandConstants.f, 0.0),
       new KeyValue<Boolean>(StayPutCommandConstants.enableTuning, true),
-
     };
-
   }
 
   public static class KeyValue<T> {
@@ -91,9 +119,34 @@ public final class Constants {
     public T value;
 
     public KeyValue(String key, T value) {
-        this.key = key;
-        this.value = value;
+      this.key = key;
+      this.value = value;
+    }
+  }
+
+  public interface IUniqueRobotConstants {
+    public MotorConstants getLeftDriveTrainMotorConstants();
+
+    public MotorConstants getRightDriveTrainMotorConstants();
+
+    public String getName();
+  }
+
+  public static class MotorConstants {
+    public double ks;
+    public double kv;
+    public double ka;
+
+    public MotorConstants(double ks, double kv) {
+      this.ks = ks;
+      this.kv = kv;
+      this.ka = 0;
     }
 
+    public MotorConstants(double ks, double kv, double ka) {
+      this.ks = ks;
+      this.kv = kv;
+      this.ka = ka;
+    }
   }
 }
