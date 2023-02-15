@@ -8,6 +8,8 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,14 +25,16 @@ public class TankDrive extends SubsystemBase {
   CANSparkMax right1;
   CANSparkMax right2;
   DifferentialDrive drivetrain;
-  double position = 0;
-  // todo
-  private final double POSITION_CONVERSION_FACTOR = 1.7391;
-  private final double VELOCITY_CONVERSION_FACTOR = 0.001388889;
+  RobotPosition position = new RobotPosition(0, 0,0);
+  // these are not in freedom units in meters :(
+  private final double POSITION_CONVERSION_FACTOR = .0373987729;
+  private final double VELOCITY_CONVERSION_FACTOR = .000402063138642;
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
+  private boolean isTurningEnabled = true;
+  private double maxMPS = 0;
 
-  private double maxFPS = 0;
+  private double prevTilt = 0;
 
   public TankDrive() {
 
@@ -70,7 +74,9 @@ public class TankDrive extends SubsystemBase {
 
 
   }
-
+  public void toggleturning(){
+    isTurningEnabled = !isTurningEnabled;
+  }
   public void toggleBreaks() {
     enableBreaks = !enableBreaks;
 
@@ -87,21 +93,23 @@ public class TankDrive extends SubsystemBase {
   }
 
   public void drive(double xspeed, double zrotation) {
-    
-    drivetrain.curvatureDrive(xspeed, zrotation, true);
+    if(!isTurningEnabled){
+zrotation = 0;
+    }
+    drivetrain.curvatureDrive(xspeed, -zrotation, true);
   }
 
   public void autoDrive(double xspeed, double zrotation) {
 
-    drivetrain.arcadeDrive(xspeed, zrotation);
+    drivetrain.arcadeDrive(xspeed, -zrotation);
   }
 
-  public double getAvergeFPS() {
+  public double getAvergeVelocity() {
     return left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2;
   }
 
-  public double getMaxFPS() {
-    return maxFPS;
+  public double getMaxMPS() {
+    return maxMPS;
   }
 
   public double getRightVelocity() {
@@ -112,42 +120,50 @@ public class TankDrive extends SubsystemBase {
     return left1.getEncoder().getVelocity();
   }
 
-  public double getRobotPosition() {
-    return (position);
+  /*public RobotPosition getRobotPosition() {
+    return 0;
   }
-
+*/
   public boolean isBalanced() {
     // if within 2.5 deg
     return (Math.abs(gyro.getPitch()) < Constants.GyroConstants.balanceRange);
   }
 
+  public double getRobotPosition(){
+    return 0;
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    position = left1.getEncoder().getPosition();
-    SmartDashboard.putNumber("robotposition", getRobotPosition());
-
-    SmartDashboard.putNumber("left1", left1.getEncoder().getPosition());
-    SmartDashboard.putNumber("right1", right1.getEncoder().getPosition());
+    SmartDashboard.putNumber("left1 (raw): ", left1.getEncoder().getPosition());
+    SmartDashboard.putNumber("right1 (raw): ", right1.getEncoder().getPosition());
+    SmartDashboard.putNumber("left1 speed (raw): ", left1.getEncoder().getVelocity());
+    SmartDashboard.putNumber("right1 speed (raw): ", right1.getEncoder().getVelocity());
+    System.out.println("wheelspeed: " + left1.getEncoder().getVelocity() + " ctilt: " + gyro.getPitch() + "-pTilt: " + prevTilt + "\n =     "  + (gyro.getPitch() - prevTilt));
+    SmartDashboard.putNumber("left1 (feet): ", Units.metersToFeet(left1.getEncoder().getPosition()));
+    SmartDashboard.putNumber("right1 (feet): ", Units.metersToFeet(right1.getEncoder().getPosition()));
 
     SmartDashboard.putNumber("Robot Tilt", (int) gyro.getPitch());
     SmartDashboard.putBoolean("Is Balanced", isBalanced());
     SmartDashboard.putData("Gyro", gyro);
-    // System.out.println("Roll " + gyro.getRoll() + ", Pitch " + gyro.getPitch() + ", Yaw " +
-    // gyro.getYaw());
 
-    SmartDashboard.putNumber("Robot FPS", getAvergeFPS());
+    SmartDashboard.putNumber("Robot FPS: ", Units.metersToFeet(getAvergeVelocity()));
+    SmartDashboard.putNumber("Robot speed (raw): ", getAvergeVelocity());
 
-    double fps = Math.abs(getAvergeFPS());
-    if (fps> maxFPS) {
-      maxFPS = fps;
+
+    double mps = Math.abs(getAvergeVelocity());
+    if (mps> maxMPS) {
+      maxMPS = mps;
     }
 
-    SmartDashboard.putNumber("maxFPS", getMaxFPS());
+    SmartDashboard.putNumber("maxFPS", Units.metersToFeet(getMaxMPS()));
+    SmartDashboard.putNumber("maxMPS", getMaxMPS());
+
+    prevTilt = this.getGyro().getPitch();
   }
 
   public void resetPosition() {
-    position = 0;
+
     left1.getEncoder().setPosition(0);
     left2.getEncoder().setPosition(0);
     right1.getEncoder().setPosition(0);
@@ -185,7 +201,7 @@ public class TankDrive extends SubsystemBase {
         gyro.getYaw() - sPosition.angle);
   }
 
-  public class RobotPosition {
+  public class RobotPosition extends Object{
     public double leftposition;
     public double rightposition;
     public double angle;
@@ -197,5 +213,7 @@ public class TankDrive extends SubsystemBase {
       angle = a;
       averagePosition = (l + r) / 2;
     }
+
+
   }
 }

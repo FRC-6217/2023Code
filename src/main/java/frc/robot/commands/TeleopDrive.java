@@ -14,7 +14,7 @@ public class TeleopDrive extends CommandBase {
   private TankDrive tankDrive;
 
   private CommandJoystick commandJoystick;
-  private boolean isTurningEnabled = true;
+ 
 
   public TeleopDrive(TankDrive tankDrive, CommandJoystick commandJoystick) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,6 +22,8 @@ public class TeleopDrive extends CommandBase {
     this.tankDrive = tankDrive;
     this.commandJoystick = commandJoystick;
   }
+
+ 
 
 
   // Called when the command is initially scheduled.
@@ -32,19 +34,12 @@ public class TeleopDrive extends CommandBase {
   @Override
   public void execute() {
     double governer = -commandJoystick.getThrottle() * .5 + .5;
-    if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()) {
-      isTurningEnabled = true;
-    }
-    if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()) {
-      isTurningEnabled = false;
-    }
-    double rotationAllowanceZ = Math.abs(commandJoystick.getZ()) > .1 ? commandJoystick.getZ() : 0;
+   
+    double rotationAllowanceX = Math.abs(commandJoystick.getX()) > .1 ? commandJoystick.getX() : 0;
     double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
-    if (isTurningEnabled == true) {
-      tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceZ * governer);
-    } else {
-      tankDrive.drive(rotationAllowanceY * governer, 0);
-    }
+    
+    tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceX * governer);
+    
   }
 
   // Called once the command ends or is interrupted.
