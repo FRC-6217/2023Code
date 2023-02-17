@@ -35,6 +35,8 @@ public class TankDrive extends SubsystemBase {
 
   private double prevTilt = 0;
 
+  private double invert = 0;
+
   public TankDrive() {
 
     left1 = new CANSparkMax(DriveTrainConstants.LEFT_1, MotorType.kBrushless);
@@ -47,13 +49,14 @@ public class TankDrive extends SubsystemBase {
     right1.restoreFactoryDefaults();
     right2.restoreFactoryDefaults();
     if(Constants.uniqueRobotConstants.getDrivetraininversion()){
-      right1.setInverted(true);
-      right2.setInverted(true);
+      invert = -1;
     }else{
       //IF ROBOT DOESN'T WORK CHECK THIS
-      left1.setInverted(true);
-      left2.setInverted(true);
+      invert = 1;
     }
+
+    left1.setInverted(true);
+    left2.setInverted(true);
 
     left2.follow(left1);
     right2.follow(right1);
@@ -77,6 +80,7 @@ public class TankDrive extends SubsystemBase {
 
     gyro.reset();
 
+    //todo quick fix
 
 
   }
@@ -106,8 +110,8 @@ zrotation = 0;
   }
 
   public void autoDrive(double xspeed, double zrotation) {
-
-    drivetrain.arcadeDrive(xspeed, -zrotation);
+    //todo invert zroate??
+    drivetrain.arcadeDrive(invert*xspeed, -zrotation);
   }
 
   public double getAvergeVelocity() {

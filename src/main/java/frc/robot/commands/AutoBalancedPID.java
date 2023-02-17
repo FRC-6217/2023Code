@@ -18,6 +18,7 @@ public class AutoBalancedPID extends PIDCommand {
   public AutoBalancedPID(TankDrive tankDrive) {
     super(
         // The controller that the command will use
+        //new PIDController(0.032000, 0, -0.005000), torin constants
         new PIDController(0.032000, 0, -0.005000),
         // This should return the measurement
         () -> tankDrive.getGyro().getPitch(),
