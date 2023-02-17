@@ -96,14 +96,13 @@ public final class Constants {
 
     @Override
     public double getDriveTrainVelocityConversion() {
-      // TODO Auto-generated method stub
-      return 0;
+
+      return 0.001388889;
     }
 
     @Override
     public double getDriveTrainPositionConversion() {
-      // TODO Auto-generated method stub
-      return 0;
+      return 1.7391;
     }
   }
 

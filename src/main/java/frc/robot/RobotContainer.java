@@ -82,7 +82,7 @@ public class RobotContainer {
     driveJoystick.button(11).onTrue(new CancelDriveTrain(mTankDrive));
     driveJoystick.button(3).whileTrue(new AutoBalancedPID(mTankDrive).andThen(Commands.print("hey")));
     driveJoystick.button(6).onTrue(new Drivetounbalence(mTankDrive).andThen(new AngleDrive(mTankDrive)));
-    driveJoystick.button(7).onTrue(new InchesDrive( mTankDrive,-2,.4));
+    driveJoystick.button(7).onTrue(new InchesDrive( mTankDrive,-20,.4));
     /*driveJoystick.button(OperatorConstants.littleArmFoward).onTrue(Commands.runOnce(littleArm::on, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
     driveJoystick.button(OperatorConstants.bigArmForward).onTrue(Commands.runOnce(bigArm::on, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));
     driveJoystick.button(OperatorConstants.littleArmBack).onTrue(Commands.runOnce(littleArm::reverse, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
