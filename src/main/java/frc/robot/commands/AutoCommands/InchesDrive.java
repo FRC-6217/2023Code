@@ -32,9 +32,9 @@ double speed;
   @Override
   public void execute() {
     if(inches > 0){
-    tankDrive.autoDrive(Math.abs(speed), 0);
+      tankDrive.autoDrive(Math.abs(speed), 0);
     }else{
-    tankDrive.autoDrive(-Math.abs(speed), 0);
+      tankDrive.autoDrive(-Math.abs(speed), 0);
     }
   }
   // Called once the command ends or is interrupted.
@@ -47,6 +47,8 @@ double speed;
   @Override
   public boolean isFinished() {
     RobotPosition cPosition = tankDrive.getRelativePosition(startPosition);
+    System.out.println("Pos: " + cPosition.averagePosition);
+
     if(inches >= 0){
       if(cPosition.averagePosition >= inches){
       return true;

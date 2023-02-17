@@ -13,8 +13,8 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  // public static final IUniqueRobotConstants UNIQUE_ROBOT_CONSTANTS = new TurtleShell();
-  public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
+   public static final IUniqueRobotConstants uniqueRobotConstants = new TurtleShell();
+  //public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -87,6 +87,24 @@ public final class Constants {
     public final double getDistanceBetweenWheelsInches() {
       return 24.5;
     }
+
+    @Override
+    public boolean getDrivetraininversion() {
+
+      return false;
+    }
+
+    @Override
+    public double getDriveTrainVelocityConversion() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    @Override
+    public double getDriveTrainPositionConversion() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
   }
 
   public static class TorinRobot implements IUniqueRobotConstants {
@@ -109,6 +127,22 @@ public final class Constants {
     @Override
     public final double getDistanceBetweenWheelsInches() {
       return 16;
+    }
+
+    @Override
+    public boolean getDrivetraininversion() {
+
+      return false;
+    }
+
+    @Override
+    public double getDriveTrainVelocityConversion() {
+      return .000402063138642;
+    }
+
+    @Override
+    public double getDriveTrainPositionConversion() {
+      return .0373987729;
     }
   }
 
@@ -141,6 +175,10 @@ public final class Constants {
     public String getName();
 
     public double getDistanceBetweenWheelsInches();
+    public boolean getDrivetraininversion();
+
+    public double getDriveTrainVelocityConversion();
+    public double getDriveTrainPositionConversion();
   }
 
   public static class MotorConstants {

@@ -27,8 +27,7 @@ public class TankDrive extends SubsystemBase {
   DifferentialDrive drivetrain;
   RobotPosition position = new RobotPosition(0, 0,0);
   // these are not in freedom units in meters :(
-  private final double POSITION_CONVERSION_FACTOR = .0373987729;
-  private final double VELOCITY_CONVERSION_FACTOR = .000402063138642;
+
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
   private boolean isTurningEnabled = true;
@@ -47,22 +46,29 @@ public class TankDrive extends SubsystemBase {
     left2.restoreFactoryDefaults();
     right1.restoreFactoryDefaults();
     right2.restoreFactoryDefaults();
-    left1.setInverted(true);
-    left2.setInverted(true);
+    if(Constants.uniqueRobotConstants.getDrivetraininversion()){
+      right1.setInverted(true);
+      right2.setInverted(true);
+    }else{
+      //IF ROBOT DOESN'T WORK CHECK THIS
+      left1.setInverted(true);
+      left2.setInverted(true);
+    }
+
     left2.follow(left1);
     right2.follow(right1);
 
     drivetrain = new DifferentialDrive(left1, right1);
     enableBreaks();
 
-    left1.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
-    left2.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
-    right1.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
-    right2.getEncoder().setVelocityConversionFactor(VELOCITY_CONVERSION_FACTOR);
-    left1.getEncoder().setPositionConversionFactor(POSITION_CONVERSION_FACTOR);
-    left2.getEncoder().setPositionConversionFactor(POSITION_CONVERSION_FACTOR);
-    right1.getEncoder().setPositionConversionFactor(POSITION_CONVERSION_FACTOR);
-    right2.getEncoder().setPositionConversionFactor(POSITION_CONVERSION_FACTOR);
+    left1.getEncoder().setVelocityConversionFactor(Constants.uniqueRobotConstants.getDriveTrainVelocityConversion());
+    left2.getEncoder().setVelocityConversionFactor(Constants.uniqueRobotConstants.getDriveTrainVelocityConversion());
+    right1.getEncoder().setVelocityConversionFactor(Constants.uniqueRobotConstants.getDriveTrainVelocityConversion());
+    right2.getEncoder().setVelocityConversionFactor(Constants.uniqueRobotConstants.getDriveTrainVelocityConversion());
+    left1.getEncoder().setPositionConversionFactor(Constants.uniqueRobotConstants.getDriveTrainPositionConversion());
+    left2.getEncoder().setPositionConversionFactor(Constants.uniqueRobotConstants.getDriveTrainPositionConversion());
+    right1.getEncoder().setPositionConversionFactor(Constants.uniqueRobotConstants.getDriveTrainPositionConversion());
+    right2.getEncoder().setPositionConversionFactor(Constants.uniqueRobotConstants.getDriveTrainPositionConversion());
 
     left1.getEncoder().setPosition(0);
     left2.getEncoder().setPosition(0);
@@ -139,7 +145,7 @@ zrotation = 0;
     SmartDashboard.putNumber("right1 (raw): ", right1.getEncoder().getPosition());
     SmartDashboard.putNumber("left1 speed (raw): ", left1.getEncoder().getVelocity());
     SmartDashboard.putNumber("right1 speed (raw): ", right1.getEncoder().getVelocity());
-    System.out.println("wheelspeed: " + left1.getEncoder().getVelocity() + " ctilt: " + gyro.getPitch() + "-pTilt: " + prevTilt + "\n =     "  + (gyro.getPitch() - prevTilt));
+    //System.out.println("wheelspeed: " + left1.getEncoder().getVelocity() + " ctilt: " + gyro.getPitch() + "-pTilt: " + prevTilt + "\n =     "  + (gyro.getPitch() - prevTilt));
     SmartDashboard.putNumber("left1 (feet): ", Units.metersToFeet(left1.getEncoder().getPosition()));
     SmartDashboard.putNumber("right1 (feet): ", Units.metersToFeet(right1.getEncoder().getPosition()));
 
