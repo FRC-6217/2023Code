@@ -104,7 +104,7 @@ public final class Constants {
 
       return true;
     }
-
+  // these are not in freedom units in meters :(
     @Override
     public double getDriveTrainVelocityConversion() {
 
@@ -138,7 +138,7 @@ public final class Constants {
     public String getName() {
       return "Torin";
     }
-
+  // these are not in freedom units in meters :(
     @Override
     public final MotorConstants getLeftDriveTrainMotorConstants() {
       return new MotorConstants(0.1224, (1.8179824940435525*3.3));

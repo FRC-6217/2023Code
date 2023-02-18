@@ -14,6 +14,7 @@ import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.StayPut;
+import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.TeleopDrivePID;
 import frc.robot.commands.AutoCommands.AutoBalance;
@@ -41,6 +42,8 @@ public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final TankDrive mTankDrive = new TankDrive();
+
+  boolean stayPutOrCancel = false;
   //public final PneumaticController pneumatics = new PneumaticController();
   
   //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
@@ -53,6 +56,11 @@ public class RobotContainer {
   //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final PDP pdp = new PDP();
+
+  StayPutAllDOF stayPutCommand = new StayPutAllDOF(mTankDrive);
+  CancelDriveTrain cancelCommand = new CancelDriveTrain(mTankDrive);
+
+
   //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,12 +84,21 @@ public class RobotContainer {
    // driveJoystick.button(1).onTrue(new SequentialCommandGroup(new InchesDrive(mTankDrive, 12, 0.3), new InchesDrive(mTankDrive, -12, 0.3)));
    // driveJoystick.button(2).onTrue(new GoToAngle(mTankDrive, -360, .36));
 
-    driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleturning, mTankDrive));
+    AutoBalancedPID autoBalanceCommand = new AutoBalancedPID(mTankDrive);
+    AutoBalancedPID autoBalanceCommandSeperate = new AutoBalancedPID(mTankDrive);
+
+    DriveUntilUnBalanced driveToChargingStation = new DriveUntilUnBalanced(mTankDrive);
+
+    driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleTurning, mTankDrive));
     driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
-    driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(new CancelDriveTrain(mTankDrive));
-    driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(new AutoBalancedPID(mTankDrive));
-    driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(new DriveUntilUnBalanced(mTankDrive).andThen(new AutoBalancedPID(mTankDrive)));
-    driveJoystick.button(1).whileTrue(new StayPut(mTankDrive));
+    driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(cancelCommand);
+    driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(autoBalanceCommandSeperate);
+    driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
+
+    // todo toggle between stayput and driving
+    driveJoystick.button(1).whileTrue(stayPutCommand);
+
+
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
 
 
@@ -107,6 +124,15 @@ public class RobotContainer {
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
+
+  public Command getStayPutOrCancel() {
+    stayPutOrCancel = !stayPutOrCancel;
+    if (stayPutOrCancel) {
+      return stayPutCommand;
+    } else {
+      return cancelCommand;
+    }
+  }
   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

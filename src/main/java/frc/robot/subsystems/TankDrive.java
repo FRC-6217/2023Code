@@ -26,15 +26,12 @@ public class TankDrive extends SubsystemBase {
   CANSparkMax right2;
   DifferentialDrive drivetrain;
   RobotPosition position = new RobotPosition(0, 0,0);
-  // these are not in freedom units in meters :(
+
 
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
   private boolean isTurningEnabled = true;
   private double maxMPS = 0;
-
-  private double prevTilt = 0;
-
   private double invert = 0;
 
   public TankDrive() {
@@ -84,9 +81,10 @@ public class TankDrive extends SubsystemBase {
 
 
   }
-  public void toggleturning(){
+  public void toggleTurning(){
     isTurningEnabled = !isTurningEnabled;
   }
+
   public void toggleBreaks() {
     enableBreaks = !enableBreaks;
 
@@ -114,6 +112,10 @@ public class TankDrive extends SubsystemBase {
     drivetrain.arcadeDrive(invert*xspeed, -zrotation);
   }
 
+  public void autoDriveDifferential(double leftSpeed, double rightSpeed) {
+    drivetrain.tankDrive(leftSpeed, rightSpeed);
+  }
+  
   public double getAvergeVelocity() {
     return left1.getEncoder().getVelocity() + right1.getEncoder().getVelocity() / 2;
   }
@@ -130,18 +132,15 @@ public class TankDrive extends SubsystemBase {
     return left1.getEncoder().getVelocity();
   }
 
-  /*public RobotPosition getRobotPosition() {
-    return 0;
-  }
-*/
   public boolean isBalanced() {
     // if within 2.5 deg
     return (Math.abs(gyro.getPitch()) < Constants.GyroConstants.balanceRange);
   }
 
-  public double getRobotPosition(){
+  public double getRobotPositionOld() {
     return 0;
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -168,8 +167,6 @@ public class TankDrive extends SubsystemBase {
 
     SmartDashboard.putNumber("maxFPS", Units.metersToFeet(getMaxMPS()));
     SmartDashboard.putNumber("maxMPS", getMaxMPS());
-
-    prevTilt = this.getGyro().getPitch();
   }
 
   public void resetPosition() {
@@ -186,6 +183,7 @@ public class TankDrive extends SubsystemBase {
     left2.setIdleMode(IdleMode.kBrake);
     right1.setIdleMode(IdleMode.kBrake);
     right2.setIdleMode(IdleMode.kBrake);
+    enableBreaks = true;
   }
 
   public void disableBreaks() {
@@ -193,6 +191,7 @@ public class TankDrive extends SubsystemBase {
     left2.setIdleMode(IdleMode.kCoast);
     right1.setIdleMode(IdleMode.kCoast);
     right2.setIdleMode(IdleMode.kCoast);
+    enableBreaks = false;
   }
 
   public WPI_Pigeon2 getGyro() {
@@ -211,11 +210,18 @@ public class TankDrive extends SubsystemBase {
         gyro.getYaw() - sPosition.angle);
   }
 
-  public class RobotPosition extends Object{
+  public class RobotPosition {
     public double leftposition;
     public double rightposition;
     public double angle;
     public double averagePosition;
+
+    public RobotPosition() {
+      leftposition = 0;
+      rightposition = 0;
+      angle = 0;
+      averagePosition = 0;
+    }
 
     public RobotPosition(double l, double r, double a) {
       leftposition = l;
