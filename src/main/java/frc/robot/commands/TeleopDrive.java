@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.TankDrive;
 
 public class TeleopDrive extends CommandBase {

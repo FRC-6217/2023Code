@@ -5,20 +5,23 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.AutoBalancedPID;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CancelDriveTrain;
-import frc.robot.commands.Drivetounbalence;
+import frc.robot.commands.DriveUntilUnBalanced;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
+import frc.robot.commands.StayPut;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.TeleopDrivePID;
-import frc.robot.commands.AutoCommands.AngleDrive;
-import frc.robot.commands.AutoCommands.InchesDrive;
+import frc.robot.commands.AutoCommands.AutoBalance;
+import frc.robot.commands.AutoCommands.DriveToDistanceInches;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
+import frc.robot.subsystems.PneumaticController;
 import frc.robot.subsystems.TankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,10 +39,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
-  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final TankDrive mTankDrive = new TankDrive();
-  //public final PIDDriveTrain mTankDrive = new PIDDriveTrain();
+  //public final PneumaticController pneumatics = new PneumaticController();
   
   //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
  // private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
@@ -74,15 +76,19 @@ public class RobotContainer {
    // driveJoystick.button(1).onTrue(new SequentialCommandGroup(new InchesDrive(mTankDrive, 12, 0.3), new InchesDrive(mTankDrive, -12, 0.3)));
    // driveJoystick.button(2).onTrue(new GoToAngle(mTankDrive, -360, .36));
 
-   driveJoystick.button(12).onTrue(Commands.runOnce(mTankDrive::toggleturning, mTankDrive));
+    driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleturning, mTankDrive));
     driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
-    //mTankDrive.setDefaultCommand( new TeleopDrivePID(mTankDrive, driveJoystick));
+    driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(new CancelDriveTrain(mTankDrive));
+    driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(new AutoBalancedPID(mTankDrive));
+    driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(new DriveUntilUnBalanced(mTankDrive).andThen(new AutoBalancedPID(mTankDrive)));
+    driveJoystick.button(1).whileTrue(new StayPut(mTankDrive));
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
-    driveJoystick.button(4).onTrue(Commands.runOnce(mTankDrive::resetPosition, mTankDrive));
-    driveJoystick.button(11).onTrue(new CancelDriveTrain(mTankDrive));
-    driveJoystick.button(3).whileTrue(new AutoBalancedPID(mTankDrive).andThen(Commands.print("hey")));
-    driveJoystick.button(6).onTrue(new Drivetounbalence(mTankDrive).andThen(new AngleDrive(mTankDrive)));
-    driveJoystick.button(7).onTrue(new InchesDrive( mTankDrive,-20,.4));
+
+
+
+    //driveJoystick.button(OperatorConstants.resetRobotPosition4).onTrue(Commands.runOnce(mTankDrive::resetPosition, mTankDrive));
+    //driveJoystick.button(6).onTrue(new Drivetounbalence(mTankDrive).andThen(new AngleDrive(mTankDrive)));
+
     /*driveJoystick.button(OperatorConstants.littleArmFoward).onTrue(Commands.runOnce(littleArm::on, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));
     driveJoystick.button(OperatorConstants.bigArmForward).onTrue(Commands.runOnce(bigArm::on, bigArm)).onFalse(Commands.runOnce(bigArm::off, bigArm));
     driveJoystick.button(OperatorConstants.littleArmBack).onTrue(Commands.runOnce(littleArm::reverse, littleArm)).onFalse(Commands.runOnce(littleArm::off, littleArm));

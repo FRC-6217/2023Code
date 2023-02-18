@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // todo remove for competition
+    // todo remove for competition Enable breaks on init, disable breaks on disable
     new Trigger(this::isEnabled).negate().debounce(3).onTrue(new DisableBreaks(this.m_robotContainer.mTankDrive));
     new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive));
    // new Trigger(this::isEnabled).negate().debounce(3).whenActive(Commands.runOnce(this.m_robotContainer.mTankDrive::disabledbreaks, this.m_robotContainer.mTankDrive));

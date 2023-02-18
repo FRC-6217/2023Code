@@ -7,10 +7,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TankDrive;
 
-public class Drivetounbalence extends CommandBase {
+public class DriveUntilUnBalanced extends CommandBase {
   /** Creates a new Drivetounbalence. */
   TankDrive tankDrive;
-  public Drivetounbalence(TankDrive tankDrive) {
+  public DriveUntilUnBalanced(TankDrive tankDrive) {
     this.tankDrive = tankDrive;
     addRequirements(tankDrive);
     // Use addRequirements() here to declare subsystem dependencies.

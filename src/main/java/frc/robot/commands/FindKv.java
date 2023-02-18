@@ -5,10 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.commands.AutoCommands.InchesDrive;
+import frc.robot.commands.AutoCommands.DriveToDistanceInches;
 import frc.robot.subsystems.TankDrive;
 
-public class FindKv extends InchesDrive {
+public class FindKv extends DriveToDistanceInches {
 private double leftVelocitySum = 0;
 private double rightVelocitySum = 0;
 private double batterySum = 0;

@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TankDrive.RobotPosition;
 
-public class GoToAngle extends CommandBase {
+public class RotateToAngle extends CommandBase {
   RobotPosition startPosition; 
   TankDrive tankDrive;
   double angle; 
   double speed; 
     /** Creates a new InchesDrive. */
-    public GoToAngle(TankDrive tankDrive, double angle, double speed) {
+    public RotateToAngle(TankDrive tankDrive, double angle, double speed) {
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(tankDrive);
       this.tankDrive = tankDrive;

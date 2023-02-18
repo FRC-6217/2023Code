@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.Constants;
@@ -12,6 +13,7 @@ import frc.robot.Constants.KeyValue;
 /** Add your docs here. */
 public class PersistenceData {
 
+  @SuppressWarnings("rawtype")
   KeyValue[] list = Constants.PeristentMemory.list;
 
   public PersistenceData() {

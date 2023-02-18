@@ -5,11 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.PIDDriveTrain;
-import frc.robot.subsystems.TankDrive;
 
 public class TeleopDrivePID extends CommandBase {
   /** Creates a new TeleopDrive. */
@@ -34,12 +32,6 @@ public class TeleopDrivePID extends CommandBase {
   @Override
   public void execute() {
     double governer = -commandJoystick.getThrottle() * .5 + .5;
-    if (commandJoystick.button(OperatorConstants.enableRotationButton).getAsBoolean()) {
-      isTurningEnabled = true;
-    }
-    if (commandJoystick.button(OperatorConstants.disableRotationButton).getAsBoolean()) {
-      isTurningEnabled = false;
-    }
     double rotationAllowanceZ = Math.abs(commandJoystick.getZ()) > .1 ? commandJoystick.getZ() : 0;
     double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
     if (isTurningEnabled == true) {

@@ -18,21 +18,29 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+
     public static final int outlevelbutton = 1;
-    // public static final int buttonUnused1 = 1;
     public static final int toggleBreak2 = 2;
     public static final int bigArmBack = 3;
     public static final int littleArmBack = 4;
     public static final int bigArmForward = 5;
-    public static final int littleArmFoward = 6;
-    public static final int disableRotationButton = 7;
+    public static final int fullBalanceAct6 = 6;
+    public static final int buttonUnused7 = 7;
     public static final int stayPutCommandButton = 8;
-    public static final int disableRotationButtonbottonunused = 9;
-    public static final int enableRotationButton = 10;
-    public static final int buttonUnused11 = 11;
-    public static final int stayPutCommandButtonbottonunsed12 = 12;
+    public static final int buttonUnused9 = 9;
+    public static final int doAutoBalance10 = 10;
+    public static final int cancelDrive11 = 11;
+    public static final int toggleTurning12 = 12;
 
     // left turtle ks=.16
+  }
+
+  public static class PneumaticConstants {
+      public static final String compressorKey = "compressor ";
+      public static class Claw {
+        public static final int channel = 1;
+        public static final String key = "Claw: ";
+      }
   }
 
   public static class DriveTrainConstants {
@@ -48,7 +56,6 @@ public final class Constants {
 
   public static class GyroConstants {
     public static final int pigeonID = 50;
-    public static final int NUM_TAPS = 10;
     public static final double balanceRange = 2.5;
   }
 
@@ -58,6 +65,10 @@ public final class Constants {
     public static final String d = "StayPut D";
     public static final String f = "StayPut F";
     public static final String enableTuning = "Enable StayPut Tuning";
+  }
+
+  public static class BalanceConstants {
+    public static final double debounceTime = 0.1;
   }
 
   public static class NumberConstants {
@@ -104,6 +115,21 @@ public final class Constants {
     public double getDriveTrainPositionConversion() {
       return 1.7391;
     }
+
+    @Override
+    public double getAutoBalanceP() {
+      return 0.032000;
+    }
+
+    @Override
+    public double getAutoBalanceI() {
+      return 0.001000;
+    }
+
+    @Override
+    public double getAutoBalanceD() {
+      return 0.002000;
+    }
   }
 
   public static class TorinRobot implements IUniqueRobotConstants {
@@ -143,6 +169,21 @@ public final class Constants {
     public double getDriveTrainPositionConversion() {
       return .0373987729;
     }
+
+    @Override
+    public double getAutoBalanceP() {
+      return 0.032000;
+    }
+
+    @Override
+    public double getAutoBalanceI() {
+      return 0.001000;
+    }
+
+    @Override
+    public double getAutoBalanceD() {
+      return 0.002000;
+    }
   }
 
   public static class PeristentMemory {
@@ -175,9 +216,11 @@ public final class Constants {
 
     public double getDistanceBetweenWheelsInches();
     public boolean getDrivetraininversion();
-
     public double getDriveTrainVelocityConversion();
     public double getDriveTrainPositionConversion();
+    public double getAutoBalanceP();
+    public double getAutoBalanceI();
+    public double getAutoBalanceD();
   }
 
   public static class MotorConstants {

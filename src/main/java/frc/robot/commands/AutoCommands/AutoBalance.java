@@ -6,17 +6,16 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TankDrive.RobotPosition;
 
-public class AngleDrive extends CommandBase {
+public class AutoBalance extends CommandBase {
   /** Creates a new AngleDrive. */
   double maxDistanceInches = 48;
   RobotPosition sPosition;
   TankDrive tankDrive;
   double factor = .03;
-  public AngleDrive(TankDrive tankDrive) {
+  public AutoBalance(TankDrive tankDrive) {
     SmartDashboard.putNumber("Tilt Factor", factor);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
@@ -32,6 +31,7 @@ public class AngleDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    @SuppressWarnings("unused")
     RobotPosition cPosition = tankDrive.getRelativePosition(sPosition);
     double tilt = tankDrive.getGyro().getPitch();
     SmartDashboard.getNumber("Tilt Factor", factor);
