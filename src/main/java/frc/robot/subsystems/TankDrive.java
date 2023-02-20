@@ -59,6 +59,8 @@ public class TankDrive extends SubsystemBase {
     right2.follow(right1);
 
     drivetrain = new DifferentialDrive(left1, right1);
+    //REMOVE THIS AT SOMEPOINT IF YOU FEEL LIKE IT
+    drivetrain.setSafetyEnabled(false);
     enableBreaks();
 
     left1.getEncoder().setVelocityConversionFactor(Constants.uniqueRobotConstants.getDriveTrainVelocityConversion());

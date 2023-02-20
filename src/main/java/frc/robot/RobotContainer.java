@@ -6,10 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
-import frc.robot.commands.AutoBalancedPID;
-import frc.robot.commands.Autos;
 import frc.robot.commands.CancelDriveTrain;
-import frc.robot.commands.DriveUntilUnBalanced;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
@@ -18,16 +15,26 @@ import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.TeleopDrivePID;
 import frc.robot.commands.AutoCommands.AutoBalance;
+import frc.robot.commands.AutoCommands.AutoBalancedPID;
+import frc.robot.commands.AutoCommands.DriveToBalanced;
 import frc.robot.commands.AutoCommands.DriveToDistanceInches;
+import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
+import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
+import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.PneumaticController;
+import frc.robot.subsystems.PotentiameterTest;
+import frc.robot.subsystems.ServoTEST;
 import frc.robot.subsystems.TankDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,6 +49,9 @@ public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final TankDrive mTankDrive = new TankDrive();
+  public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  public final PotentiameterTest pT = new PotentiameterTest();
+  public final ServoTEST servoTEST = new ServoTEST();
 
   boolean stayPutOrCancel = false;
   //public final PneumaticController pneumatics = new PneumaticController();
@@ -59,15 +69,17 @@ public class RobotContainer {
 
   StayPutAllDOF stayPutCommand = new StayPutAllDOF(mTankDrive);
   CancelDriveTrain cancelCommand = new CancelDriveTrain(mTankDrive);
-
-
+  DriveToDistanceInches leftLeaveAuto =  new DriveToDistanceInches(mTankDrive, 20, .4);
+  DriveToDistanceInches rightLeaveAuto =  new DriveToDistanceInches(mTankDrive, 10, .4);
+  DriveToDistanceInches middleBalanceAuto =  new DriveToDistanceInches(mTankDrive, 5, .4);
   //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     System.out.println("RUNNING ROBOT: " + Constants.uniqueRobotConstants.getName());
     // Configure the trigger bindings
     configureBindings();
-    SmartDashboard.putData(CommandScheduler.getInstance());
+    SmartDashboard.putData(autoChooser);
+  
   }
 
   /**
@@ -87,19 +99,25 @@ public class RobotContainer {
     AutoBalancedPID autoBalanceCommand = new AutoBalancedPID(mTankDrive);
     AutoBalancedPID autoBalanceCommandSeperate = new AutoBalancedPID(mTankDrive);
 
-    DriveUntilUnBalanced driveToChargingStation = new DriveUntilUnBalanced(mTankDrive);
+    DriveUntilUnBalanced driveToChargingStation = new DriveUntilUnBalanced(mTankDrive, Direction.forwards);
 
     driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleTurning, mTankDrive));
     driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
     driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(cancelCommand);
     driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(autoBalanceCommandSeperate);
     driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
-
+    //driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, -10, .4));
+    driveJoystick.button(OperatorConstants.buttonUnused9).whileTrue(getMiddleLeaveBalance());
+    driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(Commands.runOnce(servoTEST::servoTo90, servoTEST)).onFalse(Commands.runOnce(servoTEST::servoToZero, servoTEST));
     // todo toggle between stayput and driving
-    driveJoystick.button(1).whileTrue(stayPutCommand);
+    driveJoystick.button(1).toggleOnTrue(stayPutCommand);
+
 
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
+    autoChooser.addOption("LeftLeave", leftLeaveAuto);
+    autoChooser.addOption("RightLeave", new DriveToDistanceInches(mTankDrive, 5, .4));
+    autoChooser.addOption("MiddleLeaveBalance", new DriveToDistanceInches(mTankDrive, 7, .4));
 
 
 
@@ -124,16 +142,6 @@ public class RobotContainer {
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
-
-  public Command getStayPutOrCancel() {
-    stayPutOrCancel = !stayPutOrCancel;
-    if (stayPutOrCancel) {
-      return stayPutCommand;
-    } else {
-      return cancelCommand;
-    }
-  }
-  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -141,6 +149,19 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    //return autoChooser.getSelected();
+    //return new DriveToDistanceInches(mTankDrive, 10, .4);
+    return leftLeaveAuto;
+  }
+
+  public SequentialCommandGroup getMiddleLeaveBalance(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -84, .8));
+    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, .8));
+    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
+    commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
+    return commandGroup;
   }
 }

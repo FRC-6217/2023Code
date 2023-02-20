@@ -13,12 +13,19 @@ RobotPosition startPosition;
 public TankDrive tankDrive;
 double inches; 
 double speed; 
+double direction;
   /** Creates a new InchesDrive. */
   public DriveToDistanceInches(TankDrive tankDrive, double inches, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
+    if(inches < 0){
+      direction = -1;
+    }
+    else{
+      direction = 1;
+    }
     this.tankDrive = tankDrive;
-    this.inches = inches;
+    this.inches = Math.abs(inches);
     this.speed = speed;
   }
 
@@ -26,21 +33,19 @@ double speed;
   @Override
   public void initialize() {
     startPosition = tankDrive.getStartPosition();
+    System.out.println("This Is Better");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(inches > 0){
-      tankDrive.autoDrive(Math.abs(speed), 0);
-    }else{
-      tankDrive.autoDrive(-Math.abs(speed), 0);
-    }
+  tankDrive.autoDrive(Math.abs(speed)*direction, 0);
   }
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     tankDrive.autoDrive(0, 0);
+    System.out.println("Could Be Bad" + interrupted);
   }
 
   // Returns true when the command should end.
@@ -48,16 +53,6 @@ double speed;
   public boolean isFinished() {
     RobotPosition cPosition = tankDrive.getRelativePosition(startPosition);
     System.out.println("Pos: " + cPosition.averagePosition);
-
-    if(inches >= 0){
-      if(cPosition.averagePosition >= inches){
-      return true;
-      }
-    }else{
-      if(cPosition.averagePosition <= inches){
-        return true;
-      }
-    }
-    return false;
+    return Math.abs(cPosition.averagePosition) > inches;
   }
 }
