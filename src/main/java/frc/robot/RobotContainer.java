@@ -19,6 +19,7 @@ import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
 import frc.robot.commands.AutoCommands.DriveToDistanceInches;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
+import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -69,9 +70,6 @@ public class RobotContainer {
 
   StayPutAllDOF stayPutCommand = new StayPutAllDOF(mTankDrive);
   CancelDriveTrain cancelCommand = new CancelDriveTrain(mTankDrive);
-  DriveToDistanceInches leftLeaveAuto =  new DriveToDistanceInches(mTankDrive, 20, .4);
-  DriveToDistanceInches rightLeaveAuto =  new DriveToDistanceInches(mTankDrive, 10, .4);
-  DriveToDistanceInches middleBalanceAuto =  new DriveToDistanceInches(mTankDrive, 5, .4);
   //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -115,9 +113,9 @@ public class RobotContainer {
 
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
-    autoChooser.addOption("LeftLeave", leftLeaveAuto);
-    autoChooser.addOption("RightLeave", new DriveToDistanceInches(mTankDrive, 5, .4));
-    autoChooser.addOption("MiddleLeaveBalance", new DriveToDistanceInches(mTankDrive, 7, .4));
+    autoChooser.setDefaultOption("LeftLeave", new DriveToDistanceInches(mTankDrive, -100, .8));
+    autoChooser.addOption("RightLeave", new DriveToDistanceInches(mTankDrive, -50, .8));
+    autoChooser.addOption("MiddleLeaveBalance", getMiddleLeaveBalance());
 
 
 
@@ -149,17 +147,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return autoChooser.getSelected();
-    //return new DriveToDistanceInches(mTankDrive, 10, .4);
-    return leftLeaveAuto;
+    return new EnableBrakes(mTankDrive).andThen(autoChooser.getSelected());
   }
 
   public SequentialCommandGroup getMiddleLeaveBalance(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -84, .8));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -84, .7));
     commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, .8));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -40, .8));
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
     commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
     return commandGroup;

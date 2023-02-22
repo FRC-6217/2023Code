@@ -33,7 +33,6 @@ double direction;
   @Override
   public void initialize() {
     startPosition = tankDrive.getStartPosition();
-    System.out.println("This Is Better");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +44,6 @@ double direction;
   @Override
   public void end(boolean interrupted) {
     tankDrive.autoDrive(0, 0);
-    System.out.println("Could Be Bad" + interrupted);
   }
 
   // Returns true when the command should end.

@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
 
     // todo remove for competition Enable breaks on init, disable breaks on disable
     new Trigger(this::isEnabled).negate().debounce(3).onTrue(new DisableBreaks(this.m_robotContainer.mTankDrive));
-    new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive));
+    //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive));
    // new Trigger(this::isEnabled).negate().debounce(3).whenActive(Commands.runOnce(this.m_robotContainer.mTankDrive::disabledbreaks, this.m_robotContainer.mTankDrive));
     SmartDashboard.putData(CommandScheduler.getInstance());
   }
@@ -73,17 +73,12 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      System.out.println("Not to Bad");
-    }else{
-      System.out.println("VERY VERY VERY BAD");
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    System.out.println("AutoPeriodic");
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -92,7 +87,6 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (m_autonomousCommand != null) {
-      System.out.println("cancelled");
       m_autonomousCommand.cancel();
     }
   }

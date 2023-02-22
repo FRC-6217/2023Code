@@ -27,7 +27,10 @@ public class TeleopDrive extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    //This doesn't let you have brakes off
+    tankDrive.enableBreaks();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

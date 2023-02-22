@@ -185,6 +185,7 @@ public class TankDrive extends SubsystemBase {
     left2.setIdleMode(IdleMode.kBrake);
     right1.setIdleMode(IdleMode.kBrake);
     right2.setIdleMode(IdleMode.kBrake);
+    System.out.println("Brakes");
     enableBreaks = true;
   }
 
