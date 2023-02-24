@@ -10,6 +10,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +30,13 @@ public class TankDrive extends SubsystemBase {
   DifferentialDrive drivetrain;
   RobotPosition position = new RobotPosition(0, 0,0);
 
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  NetworkTableEntry tx = table.getEntry("tx");
+  NetworkTableEntry ty = table.getEntry("ty");
+  NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry pipeline = table.getEntry("pipeline");
+
+  private LimeData  limeData = new LimeData();
 
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
@@ -169,7 +179,25 @@ public class TankDrive extends SubsystemBase {
 
     SmartDashboard.putNumber("maxFPS", Units.metersToFeet(getMaxMPS()));
     SmartDashboard.putNumber("maxMPS", getMaxMPS());
+
+
+    double x = tx.getDouble(0.0);
+    limeData.setTx(x);
+    double y = ty.getDouble(0.0);
+    limeData.setTy(y);
+    double area = ta.getDouble(0.0);
+    limeData.setTa(area);
+
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", area);
+
   }
+
+  public LimeData getLimeData() {
+    return limeData;
+  }
+
 
   public void resetPosition() {
 
@@ -232,7 +260,35 @@ public class TankDrive extends SubsystemBase {
       angle = a;
       averagePosition = (l + r) / 2;
     }
+  }
 
+  public class LimeData {
+    private double tx = 0,ty = 0,ta = 0;
 
+    public void setTx(double tx) {
+      this.tx = tx;
+    }
+
+    public double getTx() {
+      return tx;
+    }
+    public void setTy(double ty) {
+      this.ty = ty;
+    }
+
+    public double getTy() {
+      return ty;
+    }
+    public void setTa(double ta) {
+      this.ta = ta;
+    }
+
+    public double getTa() {
+      return ta;
+    }
+
+    public void setPipeline(int pipeline){
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline);
+    }
   }
 }

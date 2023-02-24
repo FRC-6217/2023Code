@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.CancelDriveTrain;
+import frc.robot.commands.DriveToObject;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
@@ -22,6 +23,7 @@ import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
 import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
+import frc.robot.commands.DriveToObject.ObjectType;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -105,9 +107,9 @@ public class RobotContainer {
     driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(autoBalanceCommandSeperate);
     driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
     //driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, -10, .4));
-    driveJoystick.button(OperatorConstants.buttonUnused9).whileTrue(getMiddleLeaveBalance());
-    driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(Commands.runOnce(servoTEST::servoTo90, servoTEST)).onFalse(Commands.runOnce(servoTEST::servoToZero, servoTEST));
-    // todo toggle between stayput and driving
+    //driveJoystick.button(OperatorConstants.buttonUnused9).whileTrue(getMiddleLeaveBalance());
+    driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToObject(mTankDrive, ObjectType.CONE));
+    driveJoystick.button(OperatorConstants.buttonUnused9).onTrue(new DriveToObject(mTankDrive, ObjectType.CUBE));
     driveJoystick.button(1).toggleOnTrue(stayPutCommand);
 
 
