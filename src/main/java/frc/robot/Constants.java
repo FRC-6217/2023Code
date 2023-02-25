@@ -13,20 +13,21 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-   public static final IUniqueRobotConstants uniqueRobotConstants = new TurtleShell();
-  //public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
+  //public static final IUniqueRobotConstants uniqueRobotConstants = new TurtleShell();
+  public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int buttonBoxPort = 1;
 
-    public static final int outlevelbutton = 1;
+    public static final int stayPut1 = 1;
     public static final int toggleBreak2 = 2;
-    public static final int bigArmBack = 3;
-    public static final int littleArmBack = 4;
-    public static final int bigArmForward = 5;
+    public static final int buttonUnused3 = 3;
+    public static final int buttonUnused4 = 4;
+    public static final int buttonUnused5 = 5;
     public static final int fullBalanceAct6 = 6;
     public static final int buttonUnused7 = 7;
-    public static final int stayPutCommandButton = 8;
+    public static final int buttonUnused8 = 8;
     public static final int buttonUnused9 = 9;
     public static final int doAutoBalance10 = 10;
     public static final int cancelDrive11 = 11;
@@ -43,11 +44,22 @@ public final class Constants {
   public static class PneumaticConstants {
       public static final String compressorKey = "compressor ";
       public static class Claw {
-        public static final int channel = 1;
+        public static final int clawChannelForwards = 0;
+        public static final int clawChannelBackwards = 2;
         public static final String key = "Claw: ";
+      }
+      public static class BigArmBrake {
+        public static final int channelForwards = 3;
+        public static final int channelBackwards = 4;
+        public static final String key = "BigArmBrake: ";
       }
   }
 
+  public static class ArmSystemConstants {
+    public static final int bigArmCANID = 11;
+    public static final int littleArmCANID = 10;
+    public static final int bigArmZeroChannel = 9;
+  }
   public static class DriveTrainConstants {
     public static final int LEFT_1 = 18;
     public static final int LEFT_2 = 19;
@@ -90,7 +102,7 @@ public final class Constants {
     public static final double middleLeaveOffPlatformInches = -40;
     public static final double middleLeaveOnPlatformSpeed = .7;
     public static final double middleLeaveOffPlatformSpeed = .8;
-    public static final double AutoKnockObjectOffDistanceInches = 12;
+    public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
   }
   public static class TurtleShell implements IUniqueRobotConstants {

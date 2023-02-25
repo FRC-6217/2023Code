@@ -38,10 +38,10 @@ public class TeleopDrive extends CommandBase {
   public void execute() {
     double governer = -commandJoystick.getThrottle() * .5 + .5;
    
-    double rotationAllowanceX = Math.abs(commandJoystick.getX()) > OperatorConstants.deadBandX ? commandJoystick.getX() : 0;
+    double rotationAllowanceX = Math.abs(commandJoystick.getZ()) > OperatorConstants.deadBandX ? commandJoystick.getZ() : 0;
     double rotationAllowanceY = Math.abs(commandJoystick.getY()) > OperatorConstants.deadBandY ? commandJoystick.getY() : 0;
     
-    tankDrive.drive(rotationAllowanceY * governer, -rotationAllowanceX * governer);
+    tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceX * governer);
     
   }
 

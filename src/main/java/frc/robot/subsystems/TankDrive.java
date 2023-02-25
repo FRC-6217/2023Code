@@ -116,7 +116,7 @@ public class TankDrive extends SubsystemBase {
     if(!isTurningEnabled){
       zrotation = 0;
     }
-    drivetrain.curvatureDrive(xspeed, -zrotation, true);
+    drivetrain.curvatureDrive(xspeed, zrotation, true);
   }
 
   public void autoDrive(double xspeed, double zrotation) {
