@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.TankDrive;
 
 public class TeleopDrive extends CommandBase {
@@ -37,10 +38,10 @@ public class TeleopDrive extends CommandBase {
   public void execute() {
     double governer = -commandJoystick.getThrottle() * .5 + .5;
    
-    double rotationAllowanceX = Math.abs(commandJoystick.getX()) > .1 ? commandJoystick.getX() : 0;
-    double rotationAllowanceY = Math.abs(commandJoystick.getY()) > .1 ? commandJoystick.getY() : 0;
+    double rotationAllowanceX = Math.abs(commandJoystick.getX()) > OperatorConstants.deadBandX ? commandJoystick.getX() : 0;
+    double rotationAllowanceY = Math.abs(commandJoystick.getY()) > OperatorConstants.deadBandY ? commandJoystick.getY() : 0;
     
-    tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceX * governer);
+    tankDrive.drive(rotationAllowanceY * governer, -rotationAllowanceX * governer);
     
   }
 

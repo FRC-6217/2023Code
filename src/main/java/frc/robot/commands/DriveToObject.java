@@ -36,13 +36,10 @@ public class DriveToObject extends CommandBase {
     // setup pipeline
     if(objectType == ObjectType.CUBE){
       limedata.setPipeline(2);  
-      System.out.println("Pipeline: 2");
     }else if(objectType == ObjectType.CONE){
     limedata.setPipeline(1);
-    System.out.println("Pipeline: 1");
     } else{
     limedata.setPipeline(0);
-    System.out.println("Pipeline: 0");
     }
     done = false;
   }
@@ -50,9 +47,9 @@ public class DriveToObject extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limedata.getTx() < -4){
+    if (limedata.getTx() > 4){
       zrotation = -0.3;
-    }else if(limedata.getTx() > 4){
+    }else if(limedata.getTx() < -4){
       zrotation = 0.3;
     }else if(limedata.getTa() < 7){
       zrotation = 0.0;

@@ -32,6 +32,11 @@ public final class Constants {
     public static final int cancelDrive11 = 11;
     public static final int toggleTurning12 = 12;
 
+
+    public static final double deadBandX = 0.1;
+    public static final double deadBandY = 0.1;
+    
+
     // left turtle ks=.16
   }
 
@@ -76,6 +81,18 @@ public final class Constants {
     public static final double PI = 3.14;
   }
 
+  public static class AutoConstants {
+    public static final double leftLeaveSpeed = 0.7;
+    public static final double rightLeaveSpeed = 0.7;
+    public static final double leftLeaveDistanceInches = -168;
+    public static final double rightLeaveDistanceInches = -168;
+    public static final double middleLeaveOnPlatformInches = -84;
+    public static final double middleLeaveOffPlatformInches = -40;
+    public static final double middleLeaveOnPlatformSpeed = .7;
+    public static final double middleLeaveOffPlatformSpeed = .8;
+    public static final double AutoKnockObjectOffDistanceInches = 12;
+    public static final double AutoKnockObjectOffSpeed = .7;
+  }
   public static class TurtleShell implements IUniqueRobotConstants {
 
     @Override

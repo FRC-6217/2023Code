@@ -20,6 +20,7 @@ public class AutoBalancedPID extends PIDCommand {
 
   TankDrive tankDrive;
   Debouncer debounceSetPoint = new Debouncer(BalanceConstants.debounceTime, DebounceType.kRising);
+  String name = "AutoBalancePID: "; 
 
   public AutoBalancedPID(TankDrive tankDrive) {
     super(
@@ -37,18 +38,18 @@ public class AutoBalancedPID extends PIDCommand {
         addRequirements(tankDrive);
         this.tankDrive = tankDrive;
 
-        SmartDashboard.putNumber(" pvalue", 0.033000);
-        SmartDashboard.putNumber(" ivalue", 0.0010);
-        SmartDashboard.putNumber(" dvalue", 0.003000);
+        SmartDashboard.putNumber(name + " pvalue", 0.033000);
+        SmartDashboard.putNumber(name + " ivalue", 0.0010);
+        SmartDashboard.putNumber(name + " dvalue", 0.003000);
 
         m_controller.setTolerance(Constants.GyroConstants.balanceRange);
   }
   @Override 
   public void initialize() {
     super.initialize();
-    m_controller.setP(SmartDashboard.getNumber(" pvalue", 0)); 
-    m_controller.setI(SmartDashboard.getNumber(" ivalue", 0)); 
-    m_controller.setD(SmartDashboard.getNumber(" dvalue", 0)); 
+    m_controller.setP(SmartDashboard.getNumber(name + " pvalue", 0)); 
+    m_controller.setI(SmartDashboard.getNumber(name + " ivalue", 0)); 
+    m_controller.setD(SmartDashboard.getNumber(name + " dvalue", 0)); 
     debounceSetPoint.calculate(false);
   }
 

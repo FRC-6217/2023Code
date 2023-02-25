@@ -50,7 +50,6 @@ double direction;
   @Override
   public boolean isFinished() {
     RobotPosition cPosition = tankDrive.getRelativePosition(startPosition);
-    System.out.println("Pos: " + cPosition.averagePosition);
     return Math.abs(cPosition.averagePosition) > inches;
   }
 }

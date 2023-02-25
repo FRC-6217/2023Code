@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.CancelDriveTrain;
@@ -11,10 +12,8 @@ import frc.robot.commands.DriveToObject;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
-import frc.robot.commands.StayPut;
 import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
-import frc.robot.commands.TeleopDrivePID;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
@@ -24,12 +23,12 @@ import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.commands.DriveToObject.ObjectType;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.PneumaticController;
 import frc.robot.subsystems.PotentiameterTest;
 import frc.robot.subsystems.ServoTEST;
+import frc.robot.subsystems.SimpleMotorController;
 import frc.robot.subsystems.TankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,20 +49,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final TankDrive mTankDrive = new TankDrive();
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   public final PotentiameterTest pT = new PotentiameterTest();
   public final ServoTEST servoTEST = new ServoTEST();
 
-  boolean stayPutOrCancel = false;
   //public final PneumaticController pneumatics = new PneumaticController();
   
   //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
  // private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
 
-  //private final SimpleMotorController bigArm = new SimpleMotorController(10, "BigArm");
-  //private final SimpleMotorController littleArm = new SimpleMotorController(11, "LittleArm");
+  //private final SimpleMotorController bigArm = new SimpleMotorController(11, "BigArm");
+  //private final SimpleMotorController littleArm = new SimpleMotorController(10, "LittleArm");
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
@@ -115,8 +112,8 @@ public class RobotContainer {
 
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
-    autoChooser.setDefaultOption("LeftLeave", new DriveToDistanceInches(mTankDrive, -100, .8));
-    autoChooser.addOption("RightLeave", new DriveToDistanceInches(mTankDrive, -50, .8));
+    autoChooser.setDefaultOption("LeftLeave", new DriveToDistanceInches(mTankDrive, AutoConstants.leftLeaveDistanceInches, AutoConstants.leftLeaveSpeed));
+    autoChooser.addOption("RightLeave", new DriveToDistanceInches(mTankDrive, AutoConstants.rightLeaveDistanceInches, AutoConstants.rightLeaveSpeed));
     autoChooser.addOption("MiddleLeaveBalance", getMiddleLeaveBalance());
 
 
@@ -149,15 +146,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new EnableBrakes(mTankDrive).andThen(autoChooser.getSelected());
+    return new EnableBrakes(mTankDrive).andThen(new DriveToDistanceInches(mTankDrive, AutoConstants.AutoKnockObjectOffDistanceInches, AutoConstants.AutoKnockObjectOffSpeed)).andThen(autoChooser.getSelected());
   }
 
   public SequentialCommandGroup getMiddleLeaveBalance(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -84, .7));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
     commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -40, .8));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
     commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
     return commandGroup;
