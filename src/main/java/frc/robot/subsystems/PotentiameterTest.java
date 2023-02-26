@@ -17,7 +17,7 @@ public class PotentiameterTest extends SubsystemBase {
   private DMA dma = new DMA();
   DMASample dmaSample = new DMASample();
   AnalogInput ai = new AnalogInput(0);
-  private DigitalOutput m_dmaTrigger = new DigitalOutput(2);;
+  private DigitalOutput m_dmaTrigger = new DigitalOutput(2);
   public PotentiameterTest() {
     dma.addAnalogInput(ai);
     dma.setExternalTrigger(m_dmaTrigger, false, true);
@@ -40,3 +40,4 @@ public class PotentiameterTest extends SubsystemBase {
    // }
   }
 }
+

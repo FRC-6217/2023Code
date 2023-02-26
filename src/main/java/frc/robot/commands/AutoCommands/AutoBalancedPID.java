@@ -60,8 +60,10 @@ public class AutoBalancedPID extends PIDCommand {
   }
   @Override
   public void end(boolean interrupted) {
+    System.out.println(this.getClass().getName() + " cancelled");
+
     super.end(interrupted);
-    tankDrive.autoDrive(0, 0);
+    tankDrive.stopDrive();
   }
   @Override
   public void execute() {

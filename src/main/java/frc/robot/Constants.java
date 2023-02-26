@@ -36,6 +36,8 @@ public final class Constants {
 
     public static final double deadBandX = 0.1;
     public static final double deadBandY = 0.1;
+
+    public static final double defaultRotationGoverner = 0.5;
     
 
     // left turtle ks=.16
@@ -59,12 +61,15 @@ public final class Constants {
     public static final int bigArmCANID = 11;
     public static final int littleArmCANID = 10;
     public static final int bigArmZeroChannel = 9;
+    public static final int littleArmPotAnalogInChannel = 3;
+    public static final int DMA_DIO_INPUT_CHANNEL = 0;
   }
   public static class DriveTrainConstants {
     public static final int LEFT_1 = 18;
     public static final int LEFT_2 = 19;
     public static final int RIGHT_1 = 17;
     public static final int RIGHT_2 = 20;
+    public static final double rampSpeedInSeconds = 0.75;
   }
 
   public static class PDPConstants {
@@ -82,10 +87,14 @@ public final class Constants {
     public static final String d = "StayPut D";
     public static final String f = "StayPut F";
     public static final String enableTuning = "Enable StayPut Tuning";
+
+    public static double P = 2.5;
+    public static double I = 0;
+    public static double D = 0.1;
   }
 
   public static class BalanceConstants {
-    public static final double debounceTime = 0.1;
+    public static final double debounceTime = 0.5;
   }
 
   public static class NumberConstants {

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.OperatorConstants;
@@ -21,6 +22,7 @@ public class TeleopDrive extends CommandBase {
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
     this.commandJoystick = commandJoystick;
+    SmartDashboard.putNumber("Rotation Governer Multiple: ", OperatorConstants.defaultRotationGoverner);
   }
 
  
@@ -30,25 +32,28 @@ public class TeleopDrive extends CommandBase {
   @Override
   public void initialize() {
     //This doesn't let you have brakes off
-    tankDrive.enableBreaks();
+   // tankDrive.enableBreaks();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double governer = -commandJoystick.getThrottle() * .5 + .5;
+
+    double rotationGoverner = SmartDashboard.getNumber("Rotation Governer Multiple: ", OperatorConstants.defaultRotationGoverner);
+
    
-    double rotationAllowanceX = Math.abs(commandJoystick.getZ()) > OperatorConstants.deadBandX ? commandJoystick.getZ() : 0;
-    double rotationAllowanceY = Math.abs(commandJoystick.getY()) > OperatorConstants.deadBandY ? commandJoystick.getY() : 0;
+    double rotation = Math.abs(commandJoystick.getZ()) > OperatorConstants.deadBandX ? commandJoystick.getZ() : 0;
+    double speed = Math.abs(commandJoystick.getY()) > OperatorConstants.deadBandY ? commandJoystick.getY() : 0;
     
-    tankDrive.drive(rotationAllowanceY * governer, rotationAllowanceX * governer);
+    tankDrive.drive(speed * governer, rotation * governer* rotationGoverner);
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    tankDrive.drive(0, 0);
+    tankDrive.stopDrive();
   }
 
   // Returns true when the command should end.

@@ -44,7 +44,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     
-    tankDrive.drive(0, 0);
+    tankDrive.stopDrive();
   }
 
   // Returns true when the command should end.

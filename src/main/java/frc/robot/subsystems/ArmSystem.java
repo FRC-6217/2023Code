@@ -7,7 +7,13 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DMA;
+import edu.wpi.first.wpilibj.DMASample;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -17,20 +23,26 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmSystemConstants;
 import frc.robot.Constants.PneumaticConstants;
 
 public class ArmSystem extends SubsystemBase {
   /** Creates a new ArmSystem. */
-  public final CANSparkMax bigArm = new CANSparkMax(Constants.ArmSystemConstants.bigArmCANID, MotorType.kBrushless);
-  public final CANSparkMax littleArm = new CANSparkMax(Constants.ArmSystemConstants.littleArmCANID, MotorType.kBrushless);
+  public final CANSparkMax bigArm = new CANSparkMax(ArmSystemConstants.bigArmCANID, MotorType.kBrushless);
+  public final CANSparkMax littleArm = new CANSparkMax(ArmSystemConstants.littleArmCANID, MotorType.kBrushless);
   
   PneumaticHub pHub = new PneumaticHub();
   private final DoubleSolenoid claw = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticConstants.Claw.clawChannelForwards, PneumaticConstants.Claw.clawChannelBackwards);
   private final DoubleSolenoid brakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.PneumaticConstants.BigArmBrake.channelForwards, Constants.PneumaticConstants.BigArmBrake.channelBackwards);
 
   public final DigitalInput bigArmZero = new DigitalInput(Constants.ArmSystemConstants.bigArmZeroChannel);
+  Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-
+  private DMA dma = new DMA();
+  DMASample dmaSample = new DMASample();
+  AnalogInput analogLittleArmInput = new AnalogInput(ArmSystemConstants.littleArmPotAnalogInChannel);
+  private DigitalOutput m_dmaTrigger = new DigitalOutput(ArmSystemConstants.DMA_DIO_INPUT_CHANNEL);
+  
   private final double bigArmMaxAngle = 40;
   private final double bigArmMinAngle = -50;
 
@@ -39,16 +51,23 @@ public class ArmSystem extends SubsystemBase {
   private final double littleArmMaxAngle = 0;
 
 
+  private double littleArmAngle = 0;
+
+
   public ArmSystem() {
+    // Trigger to zero out big arm
     new Trigger(bigArmZero::get).onTrue(Commands.runOnce(this::zeroBigArm, this));
 
     bigArm.getEncoder().setPositionConversionFactor(2);
     littleArm.getEncoder().setPositionConversionFactor(40);
-
+    //compressor.disable();
     SmartDashboard.putNumber("LittleArm speed: ", 0.3);
     SmartDashboard.putNumber("BigArm speed: ", 0.3);
 
-   // SmartDashboard.putData(brakePiston);
+    dma.addAnalogInput(analogLittleArmInput);
+    dma.setExternalTrigger(m_dmaTrigger, false, true);
+    m_dmaTrigger.set(true);
+    dma.start(1024);
 
   }
 
@@ -60,12 +79,21 @@ public class ArmSystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+
+    m_dmaTrigger.set(false);
+    DMASample.DMAReadStatus readStatus = dmaSample.update(dma, Units.millisecondsToSeconds(1));
+    m_dmaTrigger.set(true);
+
+    if (readStatus == DMASample.DMAReadStatus.kOk) {
+      double analogVoltage = dmaSample.getAnalogInputVoltage(analogLittleArmInput);
+      littleArmAngle =  this.analogInputToAngle(analogVoltage);
+    }
 
     SmartDashboard.putBoolean("BigArmZero: ", bigArmZero.get());
     SmartDashboard.putNumber("BigArm Angle: ", bigArm.getEncoder().getPosition());
-    SmartDashboard.putNumber("Little Angle: ", littleArm.getEncoder().getPosition());
+    SmartDashboard.putNumber("Little Angle: ", littleArmAngle);
     SmartDashboard.putString("Big ArmBrake State: ", brakePiston.get().toString());
+
   }
 
   public void littleArmForward(){
@@ -136,13 +164,19 @@ public class ArmSystem extends SubsystemBase {
     }
 
   public void toggleClaw() {
-    /*
+    
     if (claw.get().equals(Value.kForward)){
       claw.set(Value.kReverse);
     } else{
       claw.set(Value.kForward);
     }
-    */
-    claw.toggle();
+    
+    //claw.toggle();
+  }
+
+
+  private double analogInputToAngle(double input) {
+    // todo
+    return input;
   }
 }

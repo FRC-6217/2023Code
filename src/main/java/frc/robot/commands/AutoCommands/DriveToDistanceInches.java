@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TankDrive.RobotPosition;
@@ -11,7 +12,7 @@ import frc.robot.subsystems.TankDrive.RobotPosition;
 public class DriveToDistanceInches extends CommandBase {
 RobotPosition startPosition; 
 public TankDrive tankDrive;
-double inches; 
+double distanceMeters; 
 double speed; 
 double direction;
   /** Creates a new InchesDrive. */
@@ -25,7 +26,7 @@ double direction;
       direction = 1;
     }
     this.tankDrive = tankDrive;
-    this.inches = Math.abs(inches);
+    this.distanceMeters = Units.inchesToMeters(Math.abs(inches));
     this.speed = speed;
   }
 
@@ -43,13 +44,14 @@ double direction;
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    tankDrive.autoDrive(0, 0);
+    System.out.println(this.getClass().getName() + " cancelled");
+    tankDrive.stopDrive();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     RobotPosition cPosition = tankDrive.getRelativePosition(startPosition);
-    return Math.abs(cPosition.averagePosition) > inches;
+    return Math.abs(cPosition.averagePosition) > distanceMeters;
   }
 }

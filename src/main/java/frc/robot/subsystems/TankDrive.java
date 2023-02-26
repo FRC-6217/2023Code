@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -38,11 +39,12 @@ public class TankDrive extends SubsystemBase {
 
   private LimeData  limeData = new LimeData();
 
+  SlewRateLimiter slewFilter = new SlewRateLimiter(DriveTrainConstants.rampSpeedInSeconds);
+  
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
   private boolean isTurningEnabled = true;
   private double maxMPS = 0;
-  private double invert = 0;
 
   public TankDrive() {
 
@@ -55,12 +57,6 @@ public class TankDrive extends SubsystemBase {
     left2.restoreFactoryDefaults();
     right1.restoreFactoryDefaults();
     right2.restoreFactoryDefaults();
-    if(Constants.uniqueRobotConstants.getDrivetraininversion()){
-      invert = -1;
-    }else{
-      //IF ROBOT DOESN'T WORK CHECK THIS
-      invert = 1;
-    }
 
     left1.setInverted(true);
     left2.setInverted(true);
@@ -89,9 +85,6 @@ public class TankDrive extends SubsystemBase {
 
     gyro.reset();
 
-    //todo quick fix
-
-
   }
   public void toggleTurning(){
     isTurningEnabled = !isTurningEnabled;
@@ -116,16 +109,23 @@ public class TankDrive extends SubsystemBase {
     if(!isTurningEnabled){
       zrotation = 0;
     }
-    drivetrain.curvatureDrive(xspeed, zrotation, true);
+    //drivetrain.curvatureDrive(-xspeed, -zrotation, true);
+
+    drivetrain.curvatureDrive(-slewFilter.calculate(xspeed), -zrotation, true);
   }
 
   public void autoDrive(double xspeed, double zrotation) {
     //todo invert zroate??
-    drivetrain.arcadeDrive(invert*xspeed, -zrotation);
+    drivetrain.arcadeDrive(xspeed, -zrotation);
+    //drivetrain.arcadeDrive(slewFilter.calculate(xspeed), -zrotation);
   }
 
   public void autoDriveDifferential(double leftSpeed, double rightSpeed) {
     drivetrain.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public void stopDrive(){
+    drivetrain.tankDrive(0, 0);
   }
   
   public double getAvergeVelocity() {

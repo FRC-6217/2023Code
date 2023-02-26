@@ -55,8 +55,6 @@ public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
   public final TankDrive mTankDrive = new TankDrive();
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  public final PotentiameterTest pT = new PotentiameterTest();
-  public final ServoTEST servoTEST = new ServoTEST();
 
   //public final PneumaticController pneumatics = new PneumaticController();
   
@@ -107,9 +105,9 @@ public class RobotContainer {
     driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(cancelCommand);
     driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(autoBalanceCommandSeperate);
     driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
-    //driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, -10, .4));
+    driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, 10, .4));
     //driveJoystick.button(OperatorConstants.buttonUnused9).whileTrue(getMiddleLeaveBalance());
-    driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToObject(mTankDrive, ObjectType.CONE));
+   // driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToObject(mTankDrive, ObjectType.CONE));
     driveJoystick.button(OperatorConstants.buttonUnused9).onTrue(new DriveToObject(mTankDrive, ObjectType.CUBE));
     driveJoystick.button(OperatorConstants.stayPut1).toggleOnTrue(stayPutCommand);
 

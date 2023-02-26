@@ -56,7 +56,7 @@ public class FindKs extends CommandBase {
     aveVoltageRight /= counterRight;
     counterLeft = 0;
     counterRight = 0;
-    tankdrive.drive(0, 0);
+    //tankDrive.stopDrive();
     System.out.println("ave: leftvoltage: " + aveVoltageLeft + " rightvoltage: " + aveVoltageRight);
     aveVoltageLeft = 0;
     aveVoltageRight = 0;

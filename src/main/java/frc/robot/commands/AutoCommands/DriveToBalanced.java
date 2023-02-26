@@ -33,7 +33,7 @@ public class DriveToBalanced extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    tankDrive.autoDrive(0, 0);
+    tankDrive.stopDrive();
   }
 
   // Returns true when the command should end.
