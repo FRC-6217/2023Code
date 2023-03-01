@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.ArmSystem.ArmPosition;
+import frc.robot.subsystems.ArmSystem.Position;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -63,6 +66,46 @@ public final class Constants {
     public static final int bigArmZeroChannel = 9;
     public static final int littleArmPotAnalogInChannel = 3;
     public static final int DMA_DIO_INPUT_CHANNEL = 0;
+
+    public static class LittleArmAngle{
+    public static final double ObjectSafety = 1;
+    public static final double GroundPickUp = 0;
+    public static final double SubstationPickUp = 0;
+    public static final double HighSafteyPositionFront = 0;
+    public static final double HighSafteyPositionBack = 0;
+    public static final double High_Drop_Off_Cone = 0;
+    public static final double High_Drop_Off_Cube = 0;
+    public static final double Mid_Drop_Off_Cone = 0;
+    public static final double Mid_Drop_Off_Cube = 0;
+    public static final double Low_Drop_Off_Both = 0;
+    public static final double Safe_Position = 0;
+    public static final double Home_Position = 0;
+    
+    public static final double Pvalue = 0;
+    public static final double Ivalue = 0;
+    public static final double Dvalue = 0;
+
+    }
+
+    public static class BigArmAngle{
+
+        public static final double ObjectSafety = 0;
+        public static final double GroundPickUp = 0;
+        public static final double SubstationPickUp = 0;
+        public static final double HighSafteyPositionFront = 0;
+        public static final double HighSafteyPositionBack = 0;
+        public static final double High_Drop_Off_Cone = 0;
+        public static final double High_Drop_Off_Cube = 0;
+        public static final double Mid_Drop_Off_Cone = 0;
+        public static final double Mid_Drop_Off_Cube = 0;
+        public static final double Low_Drop_Off_Both = 0;
+        public static final double Safe_Position = 0;
+        public static final double Home_Position = 0;
+
+        public static final double Ivalue = 0;
+        public static final double Dvalue = 0;
+        public static final double Pvalue = 0;
+    }
   }
   public static class DriveTrainConstants {
     public static final int LEFT_1 = 18;
@@ -108,11 +151,13 @@ public final class Constants {
     public static final double leftLeaveDistanceInches = -168;
     public static final double rightLeaveDistanceInches = -168;
     public static final double middleLeaveOnPlatformInches = -84;
-    public static final double middleLeaveOffPlatformInches = -40;
+    public static final double middleLeaveOffPlatformInches = -50;
     public static final double middleLeaveOnPlatformSpeed = .7;
-    public static final double middleLeaveOffPlatformSpeed = .8;
+    public static final double middleLeaveOffPlatformSpeed = .7;
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
+
+    //public static final ArmPosition WITH_OBJECT_HOME_STATE = new ArmPosition(Position.WITH_OBJECT_HOME, 10, 6);
   }
   public static class TurtleShell implements IUniqueRobotConstants {
 
