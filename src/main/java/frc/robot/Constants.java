@@ -68,6 +68,8 @@ public final class Constants {
     public static final int DMA_DIO_INPUT_CHANNEL = 0;
 
     public static class LittleArmAngle{
+      
+    public static final double Home = 0;
     public static final double ObjectSafety = 1;
     public static final double GroundPickUp = 0;
     public static final double SubstationPickUp = 0;
@@ -80,15 +82,19 @@ public final class Constants {
     public static final double Low_Drop_Off_Both = 0;
     public static final double Safe_Position = 0;
     public static final double Home_Position = 0;
-    
+
     public static final double Pvalue = 0;
     public static final double Ivalue = 0;
     public static final double Dvalue = 0;
+
+    public static final double maxAngle = 0;
+    public static final double minAngle = 0;
 
     }
 
     public static class BigArmAngle{
 
+        public static final double Home = 0;
         public static final double ObjectSafety = 0;
         public static final double GroundPickUp = 0;
         public static final double SubstationPickUp = 0;
@@ -105,8 +111,12 @@ public final class Constants {
         public static final double Ivalue = 0;
         public static final double Dvalue = 0;
         public static final double Pvalue = 0;
+
+        public static final double maxAngle = 40;
+        public static final double minAngle = -50;
     }
   }
+
   public static class DriveTrainConstants {
     public static final int LEFT_1 = 18;
     public static final int LEFT_2 = 19;
@@ -159,6 +169,7 @@ public final class Constants {
 
     //public static final ArmPosition WITH_OBJECT_HOME_STATE = new ArmPosition(Position.WITH_OBJECT_HOME, 10, 6);
   }
+
   public static class TurtleShell implements IUniqueRobotConstants {
 
     @Override

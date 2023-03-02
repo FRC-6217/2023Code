@@ -16,6 +16,7 @@ import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.PotentiameterTest;
 import frc.robot.subsystems.ServoTEST;
 import frc.robot.subsystems.SimpleMotorController;
 import frc.robot.subsystems.TankDrive;
+import frc.robot.subsystems.ArmSystem.ARM_SELECTION;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -121,6 +123,12 @@ public class RobotContainer {
     buttonBox.button(5).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
     buttonBox.button(6).onTrue(Commands.runOnce(armSystem::enableBigArmBreak, armSystem));
     buttonBox.button(7).onTrue(Commands.runOnce(armSystem::disableBigArmBreak, armSystem));
+
+    //todo set buttons
+    buttonBox.button(0).onTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 0, true));
+    buttonBox.button(0).onTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0 , true));
+
+
     //auto
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));

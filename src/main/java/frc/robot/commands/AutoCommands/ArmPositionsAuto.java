@@ -45,13 +45,13 @@ public class ArmPositionsAuto extends CommandBase {
   @Override
   public void execute() {
     Position nextPosition;
-    Position currentPosition = armSystem.getCurrentArmState().positionName;
+    Position currentPosition = armSystem.getCurrentPosition();
     if(currentPosition.ordinal() > goalPosition.ordinal()){
       nextPosition = Position.values()[currentPosition.ordinal() - 1];
     }else if (currentPosition.ordinal() < goalPosition.ordinal()){
       nextPosition = Position.values()[currentPosition.ordinal() + 1];
     }else{
-      nextPosition = armSystem.getCurrentArmState().positionName;
+      nextPosition = currentPosition;
     }
   
     System.out.println("Current Position: " + currentPosition + "   Next Position: " + nextPosition + "   Goal Position: " + goalPosition);
@@ -69,6 +69,7 @@ public class ArmPositionsAuto extends CommandBase {
     }else{
       armSystem.setBigArm(0);
       armSystem.setLittleArm(0);
+      armSystem.setPostion(nextPosition);
     }
   }
 
@@ -82,7 +83,7 @@ public class ArmPositionsAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return armSystem.getCurrentArmState().positionName == goalPosition;
+    return armSystem.getCurrentPosition()== goalPosition;
   }
 
  

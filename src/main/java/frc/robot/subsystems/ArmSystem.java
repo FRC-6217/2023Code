@@ -32,7 +32,13 @@ import frc.robot.Constants.PneumaticConstants;
 public class ArmSystem extends SubsystemBase {
   /** Creates a new ArmSystem. */
 
-  ArmPosition currentPostion = new ArmPosition();
+  public static enum ARM_SELECTION {
+    BIG_ARM,
+    LITTLE_ARM,
+  };
+
+
+  Position currentPostion = Position.WITH_OBJECT_HOME;
 
   public static enum Position {
     WITH_OBJECT_HOME,
@@ -62,20 +68,13 @@ public class ArmSystem extends SubsystemBase {
 
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-  private DMA dma = new DMA();
-  DMASample dmaSample = new DMASample();
-  AnalogInput analogLittleArmInput = new AnalogInput(ArmSystemConstants.littleArmPotAnalogInChannel);
-  private DigitalOutput m_dmaTrigger = new DigitalOutput(ArmSystemConstants.DMA_DIO_INPUT_CHANNEL);
-  
-  private final double bigArmMaxAngle = 40;
-  private final double bigArmMinAngle = -50;
-
-  // todo
-  private final double littleArmMinAngle = 0;
-  private final double littleArmMaxAngle = 0;
+  //private DMA dma = new DMA();
+  //DMASample dmaSample = new DMASample();
+  ///AnalogInput analogLittleArmInput = new AnalogInput(ArmSystemConstants.littleArmPotAnalogInChannel);
+  //private DigitalOutput m_dmaTrigger = new DigitalOutput(ArmSystemConstants.DMA_DIO_INPUT_CHANNEL);
 
 
-  private double littleArmAngle = 0;
+ // private double littleArmAngle = 0;
 
 
 
@@ -144,7 +143,7 @@ public class ArmSystem extends SubsystemBase {
     littleArm.set(-littleSpeed);
   }
   public void bigArmForward(){
-    if(bigArm.getEncoder().getPosition() >= bigArmMaxAngle){
+    if(bigArm.getEncoder().getPosition() >= ArmSystemConstants.BigArmAngle.maxAngle){
       bigArm.set(0);
     }
     else{
@@ -154,15 +153,13 @@ public class ArmSystem extends SubsystemBase {
   }
 
   public void bigArmBackward(){
-    if(bigArm.getEncoder().getPosition() <= bigArmMinAngle){
+    if(bigArm.getEncoder().getPosition() <= ArmSystemConstants.BigArmAngle.minAngle){
       bigArm.set(0);
     }
     else{
       double bigSpeed = SmartDashboard.getNumber("BigArm speed: ", 0);
       bigArmStart(-bigSpeed);
     }
-
-    
   }
 
   public void littleArmOff(){
@@ -181,10 +178,8 @@ public class ArmSystem extends SubsystemBase {
   private void bigArmStart(double speed) {
     disableBigArmBreak();
     if (isBigArmBraked()) {
-      System.out.println("brakes engaged?");
       bigArm.set(0);
     } else {
-      System.out.println("bruakes disabled");
       bigArm.set(speed);
     }
 
@@ -200,7 +195,7 @@ public class ArmSystem extends SubsystemBase {
 
   private boolean isBigArmBraked() { 
     return brakePiston.get() == (Value.kForward);
-    }
+  }
 
   public void toggleClaw() {
     
@@ -236,58 +231,64 @@ public class ArmSystem extends SubsystemBase {
   public  ArmPosition getSetPointsFor(Position position) {
     switch(position) {
       case WITH_OBJECT_HOME:
-        return new ArmPosition(position, littleArmAngle, bigArmMaxAngle);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Home, Constants.ArmSystemConstants.BigArmAngle.Home);
       case WITH_OBJECT_SAFETY:
-          return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.ObjectSafety,Constants.ArmSystemConstants.BigArmAngle.ObjectSafety);
-
+          return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.ObjectSafety,Constants.ArmSystemConstants.BigArmAngle.ObjectSafety);
       case GROUND_PICK_UP:
-      return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.GroundPickUp,Constants.ArmSystemConstants.BigArmAngle.GroundPickUp);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.GroundPickUp,Constants.ArmSystemConstants.BigArmAngle.GroundPickUp);
       case SUBSTATION_PICK_UP:
-      return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.SubstationPickUp,Constants.ArmSystemConstants.BigArmAngle.SubstationPickUp);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.SubstationPickUp,Constants.ArmSystemConstants.BigArmAngle.SubstationPickUp);
       case HIGH_SAFTEY_POSITION_FRONT:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.HighSafteyPositionFront,Constants.ArmSystemConstants.BigArmAngle.HighSafteyPositionFront);
-      
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.HighSafteyPositionFront,Constants.ArmSystemConstants.BigArmAngle.HighSafteyPositionFront);
       case HIGH_SAFTEY_POSITION_BACK:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.HighSafteyPositionBack,Constants.ArmSystemConstants.BigArmAngle.HighSafteyPositionBack);
-
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.HighSafteyPositionBack,Constants.ArmSystemConstants.BigArmAngle.HighSafteyPositionBack);
       case HIGH_DROP_OFF_CONE:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.High_Drop_Off_Cone,Constants.ArmSystemConstants.BigArmAngle.High_Drop_Off_Cone);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.High_Drop_Off_Cone,Constants.ArmSystemConstants.BigArmAngle.High_Drop_Off_Cone);
       case HIGH_DROP_OFF_CUBE:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.High_Drop_Off_Cube,Constants.ArmSystemConstants.BigArmAngle.High_Drop_Off_Cube);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.High_Drop_Off_Cube,Constants.ArmSystemConstants.BigArmAngle.High_Drop_Off_Cube);
       case MID_DROP_OFF_CONE:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.Mid_Drop_Off_Cone,Constants.ArmSystemConstants.BigArmAngle.Mid_Drop_Off_Cone);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Mid_Drop_Off_Cone,Constants.ArmSystemConstants.BigArmAngle.Mid_Drop_Off_Cone);
       case MID_DROP_OFF_CUBE:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.Mid_Drop_Off_Cube,Constants.ArmSystemConstants.BigArmAngle.Mid_Drop_Off_Cube);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Mid_Drop_Off_Cube,Constants.ArmSystemConstants.BigArmAngle.Mid_Drop_Off_Cube);
       case LOW_DROP_OFF_BOTH:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.Low_Drop_Off_Both,Constants.ArmSystemConstants.BigArmAngle.Low_Drop_Off_Both);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Low_Drop_Off_Both,Constants.ArmSystemConstants.BigArmAngle.Low_Drop_Off_Both);
       case SAFE_POSITION:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.Safe_Position,Constants.ArmSystemConstants.BigArmAngle.Safe_Position);
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Safe_Position,Constants.ArmSystemConstants.BigArmAngle.Safe_Position);
       case HOME_POSITION:
-        return new ArmPosition(position, Constants.ArmSystemConstants.LittleArmAngle.Home_Position,Constants.ArmSystemConstants.BigArmAngle.Home_Position);
-  
+        return new ArmPosition(Constants.ArmSystemConstants.LittleArmAngle.Home_Position,Constants.ArmSystemConstants.BigArmAngle.Home_Position);
       default:
-
-    }return null;
+      System.out.println("Unexpected Arm State");
+      return null;
+    }
   }
 
+  public CANSparkMax getBigArmController() {
+    return bigArm;
+  }
 
-  public ArmPosition getCurrentArmState(){
+  public CANSparkMax getLittleArmController() {
+    return littleArm;
+  }
+
+  public Position getCurrentPosition(){
     return currentPostion;
   }
+
+  public void setPostion(Position position) {
+    currentPostion = position;
+  }
+
   public class ArmPosition{
     
-    public Position positionName;
     public double littleArmSetPoint;
     public double bigArmSetPoint;
 
-    public ArmPosition(Position position, double littleArmPosition, double bigArmPosition){
-      this.positionName = position;
+    public ArmPosition(double littleArmPosition, double bigArmPosition){
       this.littleArmSetPoint = littleArmPosition;
       this.bigArmSetPoint = bigArmPosition;
     }
 
     public ArmPosition(){
-      positionName = Position.HOME_POSITION;
       littleArmSetPoint = 0;
       bigArmSetPoint = 0;
     }

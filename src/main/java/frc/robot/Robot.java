@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     // todo remove for competition Enable breaks on init, disable breaks on disable
-    new Trigger(this::isEnabled).negate().debounce(3).onTrue(new DisableBreaks(this.m_robotContainer.mTankDrive));
+    //new Trigger(this::isEnabled).negate().debounce(3).onTrue(new DisableBreaks(this.m_robotContainer.mTankDrive));
     //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive));
    // new Trigger(this::isEnabled).negate().debounce(3).whenActive(Commands.runOnce(this.m_robotContainer.mTankDrive::disabledbreaks, this.m_robotContainer.mTankDrive));
     SmartDashboard.putData(CommandScheduler.getInstance());
@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
 
     EnableBigArmBrake enableBigArmBrakeCommand = new EnableBigArmBrake(m_robotContainer.armSystem);
     enableBigArmBrakeCommand.schedule();
+
   }
 
   /** This function is called periodically during operator control. */
