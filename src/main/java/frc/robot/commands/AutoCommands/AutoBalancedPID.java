@@ -4,6 +4,7 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -31,7 +32,7 @@ public class AutoBalancedPID extends PIDCommand {
         () -> 0,
         // This uses the output
         output -> {
-        tankDrive.autoDrive(-output, 0);
+          tankDrive.autoDrive(-MathUtil.clamp(output, -BalanceConstants.MaxSpeed, BalanceConstants.MaxSpeed), 0);
         });
 
 
@@ -58,6 +59,7 @@ public class AutoBalancedPID extends PIDCommand {
   public boolean isFinished() {
     return debounceSetPoint.calculate(m_controller.atSetpoint());
   }
+  
   @Override
   public void end(boolean interrupted) {
     System.out.println(this.getClass().getName() + " cancelled");

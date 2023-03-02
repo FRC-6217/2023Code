@@ -84,9 +84,11 @@ public class ArmSystem extends SubsystemBase {
     //new Trigger(littleArm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
     new Trigger(littleArm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
 
+    bigArm.restoreFactoryDefaults();
+    littleArm.restoreFactoryDefaults();
 
     bigArm.getEncoder().setPositionConversionFactor(2);
-    littleArm.getEncoder().setPositionConversionFactor(40);
+    littleArm.getEncoder().setPositionConversionFactor(2.3819);
     //compressor.disable();
     SmartDashboard.putNumber("LittleArm speed: ", 0.3);
     SmartDashboard.putNumber("BigArm speed: ", 0.3);

@@ -23,7 +23,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int buttonBoxPort = 1;
 
-    public static final int stayPut1 = 1;
+    public static final int stayPut11 = 11;
     public static final int toggleBreak2 = 2;
     public static final int buttonUnused3 = 3;
     public static final int buttonUnused4 = 4;
@@ -33,7 +33,7 @@ public final class Constants {
     public static final int buttonUnused8 = 8;
     public static final int buttonUnused9 = 9;
     public static final int doAutoBalance10 = 10;
-    public static final int cancelDrive11 = 11;
+    public static final int cancelDrive11 = 1;
     public static final int toggleTurning12 = 12;
 
 
@@ -83,12 +83,14 @@ public final class Constants {
     public static final double Safe_Position = 0;
     public static final double Home_Position = 0;
 
-    public static final double Pvalue = 0;
+    public static final double Pvalue = 0.025000;
     public static final double Ivalue = 0;
     public static final double Dvalue = 0;
 
     public static final double maxAngle = 0;
     public static final double minAngle = 0;
+
+    public static final double maxSpeed = .5;
 
     }
 
@@ -114,6 +116,8 @@ public final class Constants {
 
         public static final double maxAngle = 40;
         public static final double minAngle = -50;
+
+        public static final double maxSpeed = .5;
     }
   }
 
@@ -148,6 +152,7 @@ public final class Constants {
 
   public static class BalanceConstants {
     public static final double debounceTime = 0.5;
+    public static final double MaxSpeed = .5;
   }
 
   public static class NumberConstants {
@@ -162,8 +167,8 @@ public final class Constants {
     public static final double rightLeaveDistanceInches = -168;
     public static final double middleLeaveOnPlatformInches = -84;
     public static final double middleLeaveOffPlatformInches = -50;
-    public static final double middleLeaveOnPlatformSpeed = .7;
-    public static final double middleLeaveOffPlatformSpeed = .7;
+    public static final double middleLeaveOnPlatformSpeed = .5;
+    public static final double middleLeaveOffPlatformSpeed = .5;
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
 

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmSystemConstants;
 import frc.robot.subsystems.ArmSystem;
 import frc.robot.subsystems.ArmSystem.ARM_SELECTION;
+import pabeles.concurrency.IntOperatorTask.Max;
 
 public class ArmGoToAngle extends CommandBase {
   /** Creates a new ArmPIDTuner. */
@@ -69,6 +70,8 @@ public class ArmGoToAngle extends CommandBase {
   @Override
   public void initialize() {
 
+    pidController.reset();
+
     switch (selection) {
       case BIG_ARM:
         pidController.setP(SmartDashboard.getNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue));
@@ -103,8 +106,18 @@ public class ArmGoToAngle extends CommandBase {
     switch (selection) {
       case BIG_ARM:
         speed = pidController.calculate(armSystem.getBigArmPosition());
+        if((speed ) > ArmSystemConstants.BigArmAngle.maxSpeed){
+          speed =  ArmSystemConstants.BigArmAngle.maxSpeed;
+        } else if (speed < -ArmSystemConstants.BigArmAngle.maxSpeed){
+          speed =  -ArmSystemConstants.BigArmAngle.maxSpeed;
+        }
       case LITTLE_ARM:
         speed = pidController.calculate(armSystem.getLittleArmPositon());
+        if((speed ) > ArmSystemConstants.LittleArmAngle.maxSpeed){
+          speed =  ArmSystemConstants.LittleArmAngle.maxSpeed;
+        } else if (speed < -ArmSystemConstants.LittleArmAngle.maxSpeed){
+          speed =  -ArmSystemConstants.LittleArmAngle.maxSpeed;
+        }
     }
 
     arm.set(speed);
