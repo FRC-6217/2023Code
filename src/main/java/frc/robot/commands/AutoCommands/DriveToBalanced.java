@@ -25,9 +25,9 @@ public class DriveToBalanced extends CommandBase {
   @Override
   public void execute() {
     if(direction == DirectionB.forwards)
-    tankDrive.autoDrive(-.6, 0);
+    tankDrive.autoDrive(-.5, 0);
     else
-    tankDrive.autoDrive(.6, 0);
+    tankDrive.autoDrive(.5, 0);
   }
 
   // Called once the command ends or is interrupted.
