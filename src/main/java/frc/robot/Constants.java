@@ -111,8 +111,8 @@ public final class Constants {
         public static final double Home_Position = 0;
 
         public static final double Ivalue = 0;
-        public static final double Dvalue = 0;
-        public static final double Pvalue = 0;
+        public static final double Dvalue = 0.01;
+        public static final double Pvalue = 0.06;
 
         public static final double maxAngle = 40;
         public static final double minAngle = -50;
@@ -127,6 +127,7 @@ public final class Constants {
     public static final int RIGHT_1 = 17;
     public static final int RIGHT_2 = 20;
     public static final double rampSpeedInSeconds = 0.75;
+    public static final double rampSpeedInSecondsRotation = .5;
   }
 
   public static class PDPConstants {
@@ -152,7 +153,7 @@ public final class Constants {
 
   public static class BalanceConstants {
     public static final double debounceTime = 0.5;
-    public static final double MaxSpeed = .5;
+    public static final double MaxSpeed = .8;
   }
 
   public static class NumberConstants {
@@ -166,7 +167,7 @@ public final class Constants {
     public static final double leftLeaveDistanceInches = -168;
     public static final double rightLeaveDistanceInches = -168;
     public static final double middleLeaveOnPlatformInches = -84;
-    public static final double middleLeaveOffPlatformInches = -50;
+    public static final double middleLeaveOffPlatformInches = -74;
     public static final double middleLeaveOnPlatformSpeed = .5;
     public static final double middleLeaveOffPlatformSpeed = .5;
     public static final double AutoKnockObjectOffDistanceInches = 18;

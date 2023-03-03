@@ -40,11 +40,14 @@ public class TankDrive extends SubsystemBase {
   private LimeData  limeData = new LimeData();
 
   SlewRateLimiter slewFilter = new SlewRateLimiter(DriveTrainConstants.rampSpeedInSeconds);
+  SlewRateLimiter rotateFilter = new SlewRateLimiter(DriveTrainConstants.rampSpeedInSecondsRotation);
   
   private WPI_Pigeon2 gyro = new WPI_Pigeon2(GyroConstants.pigeonID);
   private boolean enableBreaks = false;
   private boolean isTurningEnabled = true;
   private double maxMPS = 0;
+
+  private double slowRotate = 1;
 
   public TankDrive() {
 
@@ -111,7 +114,7 @@ public class TankDrive extends SubsystemBase {
     }
     //drivetrain.curvatureDrive(-xspeed, -zrotation, true);
 
-    drivetrain.curvatureDrive(-slewFilter.calculate(xspeed), -zrotation, true);
+    drivetrain.curvatureDrive(-slewFilter.calculate(xspeed), -zrotation*slowRotate, true);
   }
 
   public void autoDrive(double xspeed, double zrotation) {
@@ -151,6 +154,14 @@ public class TankDrive extends SubsystemBase {
 
   public double getRobotPositionOld() {
     return 0;
+  }
+
+  public void slowRotate () {
+    slowRotate = 0.1;
+  }
+
+  public void normalRotate () {
+    slowRotate = 1;
   }
 
   @Override

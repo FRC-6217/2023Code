@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -45,8 +46,12 @@ public class TeleopDrive extends CommandBase {
    
     double rotation = Math.abs(commandJoystick.getZ()) > OperatorConstants.deadBandX ? commandJoystick.getZ() : 0;
     double speed = Math.abs(commandJoystick.getY()) > OperatorConstants.deadBandY ? commandJoystick.getY() : 0;
-    
-    tankDrive.drive(speed * governer, rotation * governer* rotationGoverner);
+
+    double rotateMultipler = 1;
+    if (commandJoystick.button(1).getAsBoolean()) {
+      rotateMultipler = 0.3;
+    }
+    tankDrive.drive(speed * governer, rotation *( governer* rotationGoverner) * rotateMultipler);
     
   }
 

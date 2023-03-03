@@ -9,7 +9,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -68,6 +71,7 @@ public class ArmSystem extends SubsystemBase {
 
   Compressor compressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
+
   //private DMA dma = new DMA();
   //DMASample dmaSample = new DMASample();
   ///AnalogInput analogLittleArmInput = new AnalogInput(ArmSystemConstants.littleArmPotAnalogInChannel);
@@ -80,10 +84,11 @@ public class ArmSystem extends SubsystemBase {
 
   public ArmSystem() {
     // Trigger to zero out big arm
-    new Trigger(bigArmZero::get).onTrue(Commands.runOnce(this::zeroBigArm, this));
+    //new Trigger(bigArmZero::get).onTrue(Commands.runOnce(this::zeroBigArm, this));
     //new Trigger(littleArm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
     new Trigger(littleArm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
-
+    new Trigger(bigArm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroBigArm, this));
+    new Trigger(bigArm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(new PrintCommand(" reverse Limit hit"));
     bigArm.restoreFactoryDefaults();
     littleArm.restoreFactoryDefaults();
 
@@ -102,6 +107,9 @@ public class ArmSystem extends SubsystemBase {
     littleArm.setIdleMode(IdleMode.kBrake);
   }
 
+  public void bigArmLimit() {
+    System.out.println("big arm hit limmit");
+  }
 
   public void zeroBigArm() {
     System.out.println("Zero Big Arm From: " + bigArm.getEncoder().getPosition());
@@ -139,26 +147,36 @@ public class ArmSystem extends SubsystemBase {
   public void littleArmForward(){
     double littleSpeed = SmartDashboard.getNumber("LittleArm speed: ", 0);
     littleArm.set(littleSpeed);
+   // littleArm.set(littleSpeed);
+
   }
   public void littleArmBackward(){
     double littleSpeed = SmartDashboard.getNumber("LittleArm speed: ", 0);
-    littleArm.set(-littleSpeed);
+    littleArm.set((-littleSpeed));
+    //littleArm.set(-littleSpeed);
   }
   public void bigArmForward(){
+    System.out.println("Big Arm Forward");
+    /*
     if(bigArm.getEncoder().getPosition() >= ArmSystemConstants.BigArmAngle.maxAngle){
       bigArm.set(0);
     }
-    else{
+    else
+    */{
       double bigSpeed = SmartDashboard.getNumber("BigArm speed: ", 0);
       bigArmStart(bigSpeed);
     }
   }
 
   public void bigArmBackward(){
+
+    /* 
     if(bigArm.getEncoder().getPosition() <= ArmSystemConstants.BigArmAngle.minAngle){
       bigArm.set(0);
     }
-    else{
+    else
+    */
+    {
       double bigSpeed = SmartDashboard.getNumber("BigArm speed: ", 0);
       bigArmStart(-bigSpeed);
     }
@@ -169,12 +187,14 @@ public class ArmSystem extends SubsystemBase {
   }
 
   public void bigArmOff(){
+    System.out.println("Big Arm Stop");
     bigArmStop();
   }
 
   private void bigArmStop() {
     bigArm.set(0);
     this.enableBigArmBreak();
+
   }
 
   private void bigArmStart(double speed) {
@@ -183,6 +203,7 @@ public class ArmSystem extends SubsystemBase {
       bigArm.set(0);
     } else {
       bigArm.set(speed);
+      //bigArm.set(speed);
     }
 
   }

@@ -48,6 +48,8 @@ public class ArmGoToAngle extends CommandBase {
         break;
     }
 
+    pidController.setTolerance(2);
+
     SmartDashboard.putNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue);
     SmartDashboard.putNumber(bigArmKey + iKey, ArmSystemConstants.BigArmAngle.Ivalue);
     SmartDashboard.putNumber(bigArmKey + dKey, ArmSystemConstants.BigArmAngle.Dvalue);
@@ -77,8 +79,10 @@ public class ArmGoToAngle extends CommandBase {
         pidController.setP(SmartDashboard.getNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue));
         pidController.setI(SmartDashboard.getNumber(bigArmKey + iKey, ArmSystemConstants.BigArmAngle.Ivalue));
         pidController.setD(SmartDashboard.getNumber(bigArmKey + dKey, ArmSystemConstants.BigArmAngle.Dvalue));
+        armSystem.disableBigArmBreak();
         if (isTuning) {
           pidController.setSetpoint(SmartDashboard.getNumber(bigArmKey + setPointKey, 0));
+          System.out.println(SmartDashboard.getNumber(bigArmKey + setPointKey, -555));
         }else {
           pidController.setSetpoint(setPoint);
 
@@ -105,12 +109,13 @@ public class ArmGoToAngle extends CommandBase {
     double speed = 0;
     switch (selection) {
       case BIG_ARM:
-        speed = pidController.calculate(armSystem.getBigArmPosition());
+        speed = -pidController.calculate(armSystem.getBigArmPosition());
         if((speed ) > ArmSystemConstants.BigArmAngle.maxSpeed){
-          speed =  ArmSystemConstants.BigArmAngle.maxSpeed;
-        } else if (speed < -ArmSystemConstants.BigArmAngle.maxSpeed){
           speed =  -ArmSystemConstants.BigArmAngle.maxSpeed;
+        } else if (speed < -ArmSystemConstants.BigArmAngle.maxSpeed){
+          speed =  ArmSystemConstants.BigArmAngle.maxSpeed;
         }
+        break;
       case LITTLE_ARM:
         speed = pidController.calculate(armSystem.getLittleArmPositon());
         if((speed ) > ArmSystemConstants.LittleArmAngle.maxSpeed){
@@ -119,7 +124,6 @@ public class ArmGoToAngle extends CommandBase {
           speed =  -ArmSystemConstants.LittleArmAngle.maxSpeed;
         }
     }
-
     arm.set(speed);
   }
 
@@ -127,6 +131,7 @@ public class ArmGoToAngle extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     arm.set(0);
+    armSystem.enableBigArmBreak();  
   }
 
   // Returns true when the command should end.
