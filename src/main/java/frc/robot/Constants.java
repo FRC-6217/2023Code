@@ -40,7 +40,7 @@ public final class Constants {
     public static final double deadBandX = 0.1;
     public static final double deadBandY = 0.1;
 
-    public static final double defaultRotationGoverner = 0.5;
+    public static final double defaultRotationGoverner = 0.4;
     
 
     // left turtle ks=.16
@@ -66,6 +66,12 @@ public final class Constants {
     public static final int bigArmZeroChannel = 9;
     public static final int littleArmPotAnalogInChannel = 3;
     public static final int DMA_DIO_INPUT_CHANNEL = 0;
+    public static final double BIG_SLEW_SPEED_RATE = .4;
+    public static final double BIG_SLEW_POS_RATE = 1;
+    public static final double BIG_SLEW_NEG_RATE = -1;
+    public static final double LITTLE_SLEW_SPEED_RATE = .6;
+    public static final double LITTLE_SLEW_POS_RATE = .6;
+    public static final double LITTLE_SLEW_NEG_RATE = -.6;
 
     public static class LittleArmAngle{
       
@@ -126,7 +132,7 @@ public final class Constants {
     public static final int LEFT_2 = 19;
     public static final int RIGHT_1 = 17;
     public static final int RIGHT_2 = 20;
-    public static final double rampSpeedInSeconds = 0.75;
+    public static final double rampSpeedInSeconds = 2.5;
     public static final double rampSpeedInSecondsRotation = .5;
   }
 
@@ -162,12 +168,12 @@ public final class Constants {
   }
 
   public static class AutoConstants {
-    public static final double leftLeaveSpeed = 0.7;
-    public static final double rightLeaveSpeed = 0.7;
+    public static final double leftLeaveSpeed = 0.6;
+    public static final double rightLeaveSpeed = 0.6;
     public static final double leftLeaveDistanceInches = -168;
     public static final double rightLeaveDistanceInches = -168;
     public static final double middleLeaveOnPlatformInches = -84;
-    public static final double middleLeaveOffPlatformInches = -74;
+    public static final double middleLeaveOffPlatformInches = -24;
     public static final double middleLeaveOnPlatformSpeed = .5;
     public static final double middleLeaveOffPlatformSpeed = .5;
     public static final double AutoKnockObjectOffDistanceInches = 18;

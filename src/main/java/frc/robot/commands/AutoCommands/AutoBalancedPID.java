@@ -25,23 +25,28 @@ public class AutoBalancedPID extends PIDCommand {
 
   public AutoBalancedPID(TankDrive tankDrive) {
     super(
-        new PIDController(0.031000, 0.0010, 0.00265000),
+        new PIDController(0.026000, 0.000, 0.0000),
         // This should return the measurement
         () -> tankDrive.getGyro().getPitch(),
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
         output -> {
-          tankDrive.autoDrive(-MathUtil.clamp(output, -BalanceConstants.MaxSpeed, BalanceConstants.MaxSpeed), 0);
+          //tankDrive.autoDrive(-MathUtil.clamp(output, -BalanceConstants.MaxSpeed, BalanceConstants.MaxSpeed), 0);
+          SmartDashboard.putNumber("Negative Auto Max Speed", -.7);
+          SmartDashboard.putNumber("Positive Auto Max Speed", .7);
+          double negativeMax = SmartDashboard.getNumber("Negative Auto Max Speed", -.7);
+          double positiveMax = SmartDashboard.getNumber("Positive Auto Max Speed", .7);
+          tankDrive.autoDrive(-MathUtil.clamp(output, negativeMax , positiveMax), 0);
         });
 
 
         addRequirements(tankDrive);
         this.tankDrive = tankDrive;
 
-        SmartDashboard.putNumber(name + " pvalue", 0.031000);
-        SmartDashboard.putNumber(name + " ivalue", 0.0010);
-        SmartDashboard.putNumber(name + " dvalue", 0.002650);
+        SmartDashboard.putNumber(name + " pvalue", 0.026000);
+        SmartDashboard.putNumber(name + " ivalue", 0.000);
+        SmartDashboard.putNumber(name + " dvalue", 0.000);
 
         m_controller.setTolerance(Constants.GyroConstants.balanceRange);
   }

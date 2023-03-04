@@ -128,6 +128,8 @@ public class TankDrive extends SubsystemBase {
   }
 
   public void stopDrive(){
+    slewFilter.reset(0);
+    rotateFilter.reset(0);
     drivetrain.tankDrive(0, 0);
   }
   

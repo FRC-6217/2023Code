@@ -6,6 +6,7 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TankDrive;
+import frc.robot.subsystems.TankDrive.RobotPosition;
 
 public class DriveUntilUnBalanced extends CommandBase {
   public static enum Direction{
@@ -14,6 +15,7 @@ public class DriveUntilUnBalanced extends CommandBase {
   /** Creates a new Drivetounbalence. */
   TankDrive tankDrive;
   Direction direction;
+  private RobotPosition sPosition;
   public DriveUntilUnBalanced(TankDrive tankDrive, Direction direction) {
     this.tankDrive = tankDrive;
     this.direction = direction;
@@ -23,7 +25,9 @@ public class DriveUntilUnBalanced extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    sPosition = tankDrive.getStartPosition();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,6 +49,7 @@ public class DriveUntilUnBalanced extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    boolean isTooFar = Math.abs(tankDrive.getRelativePosition(sPosition).averagePosition) > 80;
     return Math.abs(this.tankDrive.getGyro().getPitch())>10;
   }
 }

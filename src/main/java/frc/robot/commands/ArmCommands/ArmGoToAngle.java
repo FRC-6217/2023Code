@@ -48,7 +48,7 @@ public class ArmGoToAngle extends CommandBase {
         break;
     }
 
-    pidController.setTolerance(2);
+    pidController.setTolerance(3);
 
     SmartDashboard.putNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue);
     SmartDashboard.putNumber(bigArmKey + iKey, ArmSystemConstants.BigArmAngle.Ivalue);

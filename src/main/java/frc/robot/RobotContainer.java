@@ -9,14 +9,19 @@ import frc.robot.Constants.ArmSystemConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
+import frc.robot.Constants.ArmSystemConstants.LittleArmAngle;
 import frc.robot.commands.CancelDriveTrain;
 import frc.robot.commands.DriveToObject;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
+import frc.robot.commands.SlewRatedArmMovement;
 import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
+import frc.robot.commands.ArmCommands.BigArmToLimitSwitch;
+import frc.robot.commands.ArmCommands.SetArmZero;
+import frc.robot.commands.ArmCommands.ToggldeClaw;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
@@ -78,6 +83,8 @@ public class RobotContainer {
   //private final TestCoolBeans t = new TestCoolBeans();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    SmartDashboard.putNumber("BigAutoArmAngle", 0);
+    SmartDashboard.putNumber("LittleAutoArmAngle", 0);
     System.out.println("RUNNING ROBOT: " + Constants.uniqueRobotConstants.getName());
     // Configure the trigger bindings
     configureBindings();
@@ -108,7 +115,7 @@ public class RobotContainer {
     //driveJoystick.button(OperatorConstants.toggleBreak2).onTrue(Commands.runOnce(mTankDrive::toggleBreaks, mTankDrive));
     //driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(cancelCommand);
     driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(autoBalanceCommandSeperate);
-    driveJoystick.button(12).whileTrue(getMiddleLeaveBalance());
+   // driveJoystick.button(12).whileTrue(getMiddleLeaveBalance());
    // driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
     //driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, 10, .4));
     //driveJoystick.button(OperatorConstants.buttonUnused9).whileTrue(getMiddleLeaveBalance());
@@ -120,18 +127,26 @@ public class RobotContainer {
 //driveJoystick.button(6).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
 //driveJoystick.button(5).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
 //driveJoystick.button(3).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    //driveJoystick.button(4).whileTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0, true));
+    driveJoystick.button(4).whileTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0, true));
 
     //button box
 
     buttonBox.button(1).onTrue(Commands.runOnce(armSystem::toggleClaw, armSystem));
-    buttonBox.button(6).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    buttonBox.button(4).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    buttonBox.button(5).onTrue(Commands.runOnce(armSystem::bigArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    buttonBox.button(3).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    //buttonBox.button(6).onTrue(Commands.runOnce(armSystem::enableBigArmBreak, armSystem));
+    //buttonBox.button(6).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
+    // buttonBox.button(4).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
+    // buttonBox.button(5).onTrue(Commands.runOnce(armSystem::bigArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
+    // buttonBox.button(3).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
+    // //buttonBox.button(6).onTrue(Commands.runOnce(armSystem::enableBigArmBreak, armSystem));
     //buttonBox.button(7).onTrue(Commands.runOnce(armSystem::disableBigArmBreak, armSystem));
-
+    buttonBox.button(6).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.LITTLE_ARM, 1));
+    buttonBox.button(4).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.LITTLE_ARM, -1));
+    buttonBox.button(5).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, 1));
+    buttonBox.button(3).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, -1));
+    //buttonBox.button(8).whileTrue(getDummyAuto());
+    //REMOVE For sure
+    //buttonBox.button(7).whileTrue(extendToDrop());
+    //buttonBox.button(8).whileTrue(retractWhileDriving());
+    //buttonBox.button(9).whileTrue(zeroArms());
     //todo set buttons
    // buttonBox.button(7).whileTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 0, true));
     //buttonBox.button(0).onTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0 , true));
@@ -140,10 +155,14 @@ public class RobotContainer {
     //auto
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
-    autoChooser.setDefaultOption("LeftLeave", getLeftAuto());
-    autoChooser.addOption("RightLeave", getRightAuto());
-    autoChooser.addOption("MiddleLeaveBalance", getMiddleLeaveBalance());
-    autoChooser.addOption("DoNothing", getDoNothingCommand());
+    autoChooser.setDefaultOption("Left Leave", getLeftAuto());
+    autoChooser.addOption("Right Leave", getRightAuto(.5));
+    autoChooser.addOption("Middle Leave Balance", getMiddleLeaveBalance());
+    autoChooser.addOption("Do Nothing", getDoNothingCommand());
+    //autoChooser.addOption("1BallAndLeave", autoDropObject());
+    //autoChooser.addOption("NoPIDMiddle", getNoPIDMiddleLeaveBalance());
+    autoChooser.addOption("Low Drop Off Back Up", getLowDropOffBackUp());
+    autoChooser.addOption("high drop off", getAutoDropOffHigh());
 
 
 
@@ -176,51 +195,149 @@ public class RobotContainer {
   public SequentialCommandGroup getMiddleLeaveBalance(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(new PrintCommand("Driving off1"));
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
+    commandGroup.addCommands(new PrintCommand("Driving off2"));
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards));
+    commandGroup.addCommands(new PrintCommand("Driving off3"));
+    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.forwards));
+    commandGroup.addCommands(new PrintCommand("Driving off4"));
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
+    commandGroup.addCommands(new PrintCommand("Driving off5"));
     commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
+    commandGroup.addCommands(new PrintCommand("Driving off6"));
     commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
     return commandGroup;
   }
-
+  public SequentialCommandGroup getNoPIDMiddleLeaveBalance(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(new PrintCommand("Driving off1"));
+    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
+    commandGroup.addCommands(new PrintCommand("Driving off2"));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
+    commandGroup.addCommands(new PrintCommand("Driving off3"));
+    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.forwards)); //Make sure on the floor
+    commandGroup.addCommands(new PrintCommand("Driving off4"));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
+    commandGroup.addCommands(new PrintCommand("Driving off5"));
+    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
+    commandGroup.addCommands(new PrintCommand("Driving off6"));
+    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards, .3));
+    return commandGroup;
+  }
 
 
   public SequentialCommandGroup getLeftAuto() {
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    //commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
     commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(Commands.waitSeconds(.5));
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.leftLeaveDistanceInches, AutoConstants.leftLeaveSpeed));
     return commandGroup;
   }
 
-  public SequentialCommandGroup getRightAuto() {
+  public SequentialCommandGroup getRightAuto(double secondsToWait) {
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    //commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
     commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(Commands.waitSeconds(secondsToWait));
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.rightLeaveDistanceInches, AutoConstants.rightLeaveSpeed));
     return commandGroup;
   }
 
+  public SequentialCommandGroup getLowDropOffBackUp(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(Commands.waitSeconds(.5));
+    commandGroup.addCommands(getAutoDropOffLow());
+    commandGroup.addCommands(getRightAuto(0));
+
+    return commandGroup;
+  }
+
+  public SequentialCommandGroup getAutoDropOffLow() {
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -45));
+    commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+    commandGroup.addCommands(Commands.waitSeconds(.5));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0));
+
+    return commandGroup;
+  }
+
+  public SequentialCommandGroup getAutoDropOffMiddle(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -90));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 12, .3));
+    commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+    commandGroup.addCommands(Commands.waitSeconds(.5));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -12, 0.3));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0));
+  
+    return commandGroup;
+  }
+
+  public SequentialCommandGroup getAutoDropOffHigh(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(Commands.waitSeconds(.5));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -40));
+    commandGroup.addCommands(new BigArmToLimitSwitch(armSystem));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -150));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 12, .3));
+    commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+    commandGroup.addCommands(Commands.waitSeconds(.5));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -12, 0.3));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 10));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0));
+  
+    return commandGroup;
+  }
+
+  
   public Command getDoNothingCommand() {
     return new EnableBrakes(mTankDrive);
   }
 
 
-  public ParallelCommandGroup takeOutArms() {
+  public SequentialCommandGroup zeroArms() {
 
-    ParallelCommandGroup commandGroup = new ParallelCommandGroup();
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
 
     // Move Little and big arm
-    commandGroup.addCommands();
+    commandGroup.addCommands(new SetArmZero(armSystem, ARM_SELECTION.BIG_ARM));
+    commandGroup.addCommands(new SetArmZero(armSystem, ARM_SELECTION.LITTLE_ARM));
 
     return commandGroup;
   }
 
-  public ParallelCommandGroup extendToDrop() {
-    ParallelCommandGroup commandGroup = new ParallelCommandGroup();
+  public SequentialCommandGroup extendToDrop() {
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
 
     // Extend little and big arm
-    commandGroup.addCommands();
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, SmartDashboard.getNumber("BigAutoArmAngle", 0)));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, SmartDashboard.getNumber("LittleAutoArmAngle", 0)));
+    return commandGroup; 
+  }
+
+  public ParallelCommandGroup retractWhileDriving(){
+    ParallelCommandGroup parallelCommandGroup = new ParallelCommandGroup();
+    parallelCommandGroup.addCommands(new DriveToDistanceInches(mTankDrive, Constants.AutoConstants.leftLeaveDistanceInches, Constants.AutoConstants.leftLeaveSpeed));
+    parallelCommandGroup.addCommands(zeroArms());
+
+    return parallelCommandGroup;
+  }
+
+  public SequentialCommandGroup autoDropObject(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, 0.4));
+    commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+    commandGroup.addCommands(zeroArms());
+    commandGroup.addCommands(extendToDrop());
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 20, 0.4));
+    commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, 0.4));
+    commandGroup.addCommands(retractWhileDriving());
+
     return commandGroup;
   }
 

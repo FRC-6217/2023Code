@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DisableBreaks;
 import frc.robot.commands.EnableBigArmBrake;
+import frc.robot.commands.ArmCommands.ToggldeClaw;
+import frc.robot.commands.ArmCommands.ToggldeClaw.cState;
+import frc.robot.subsystems.TankDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -70,6 +73,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.mTankDrive.getGyro().reset();
+    m_robotContainer.armSystem.reset();
+    ToggldeClaw tClaw = new ToggldeClaw(m_robotContainer.armSystem, cState.OPEN);
+    tClaw.schedule();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     System.out.println(m_autonomousCommand.getName());
     // schedule the autonomous command (example)
@@ -94,6 +101,7 @@ public class Robot extends TimedRobot {
 
     EnableBigArmBrake enableBigArmBrakeCommand = new EnableBigArmBrake(m_robotContainer.armSystem);
     enableBigArmBrakeCommand.schedule();
+
 
   }
 
