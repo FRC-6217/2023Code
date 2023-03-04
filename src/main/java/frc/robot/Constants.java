@@ -89,7 +89,7 @@ public final class Constants {
     public static final double Safe_Position = 0;
     public static final double Home_Position = 0;
 
-    public static final double Pvalue = 0.025000;
+    public static final double Pvalue = 0.028000;
     public static final double Ivalue = 0;
     public static final double Dvalue = 0;
 

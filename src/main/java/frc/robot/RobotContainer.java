@@ -20,6 +20,7 @@ import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.BigArmToLimitSwitch;
+import frc.robot.commands.ArmCommands.LittleArmToLimitSwitch;
 import frc.robot.commands.ArmCommands.SetArmZero;
 import frc.robot.commands.ArmCommands.ToggldeClaw;
 import frc.robot.commands.AutoCommands.AutoBalance;
@@ -142,6 +143,7 @@ public class RobotContainer {
     buttonBox.button(4).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.LITTLE_ARM, -1));
     buttonBox.button(5).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, 1));
     buttonBox.button(3).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, -1));
+    buttonBox.button(10).whileTrue(new BigArmToLimitSwitch(armSystem));
     //buttonBox.button(8).whileTrue(getDummyAuto());
     //REMOVE For sure
     //buttonBox.button(7).whileTrue(extendToDrop());
@@ -163,6 +165,8 @@ public class RobotContainer {
     //autoChooser.addOption("NoPIDMiddle", getNoPIDMiddleLeaveBalance());
     autoChooser.addOption("Low Drop Off Back Up", getLowDropOffBackUp());
     autoChooser.addOption("high drop off", getAutoDropOffHigh());
+    autoChooser.addOption("HighDropWithBalance", AutoHighDropAndBalance());
+//    autoChooser.addOption("HighDropWithBalanceOverandBack", AutoHighDropAndBalanceOver());
 
 
 
@@ -246,11 +250,15 @@ public class RobotContainer {
     return commandGroup;
   }
 
+  public SequentialCommandGroup getHighDropAndLeave(){
+    return null;
+  }
+
   public SequentialCommandGroup getLowDropOffBackUp(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(Commands.waitSeconds(.5));
     commandGroup.addCommands(getAutoDropOffLow());
-    commandGroup.addCommands(getRightAuto(0));
+    commandGroup.addCommands(getRightAuto(0.1));
 
     return commandGroup;
   }
@@ -282,13 +290,14 @@ public class RobotContainer {
     commandGroup.addCommands(Commands.waitSeconds(.5));
     commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -40));
     commandGroup.addCommands(new BigArmToLimitSwitch(armSystem));
-    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -150));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 12, .3));
+    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -157));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 24, .45));
     commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
     commandGroup.addCommands(Commands.waitSeconds(.5));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -12, 0.3));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -24, 0.45));
     commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 10));
-    commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0));
+    commandGroup.addCommands(new LittleArmToLimitSwitch(armSystem));
+    System.out.println("Done With Little");
   
     return commandGroup;
   }
@@ -327,6 +336,27 @@ public class RobotContainer {
     return parallelCommandGroup;
   }
 
+  public SequentialCommandGroup AutoHighDropAndBalance(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(getAutoDropOffHigh());
+    commandGroup.addCommands(new PrintCommand("Driving off1"));
+    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
+    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -18, .7));
+    commandGroup.addCommands(new PrintCommand("Driving off3"));
+    commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
+    return commandGroup;
+
+  }
+
+ /* public SequentialCommandGroup AutoHighDropAndBalanceOver(){
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+    commandGroup.addCommands(new EnableBrakes(mTankDrive));
+    commandGroup.addCommands(getAutoDropOffHigh());
+    commandGroup.addCommands(getMiddleLeaveBalance());
+    return commandGroup;
+
+  }*/
   public SequentialCommandGroup autoDropObject(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, 0.4));

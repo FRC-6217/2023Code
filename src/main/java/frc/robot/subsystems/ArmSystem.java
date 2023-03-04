@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -83,6 +85,10 @@ public class ArmSystem extends SubsystemBase {
     new Trigger(bigArmZero::get).onTrue(Commands.runOnce(this::zeroBigArm, this));
     //new Trigger(littleArm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
     new Trigger(littleArm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::zeroLittleArm, this));
+
+    new Trigger(bigArm.getReverseLimitSwitch(Type.kNormallyOpen)::isPressed).onTrue(new PrintCommand("Big Arm Reverse Limit hit"));
+    new Trigger(littleArm.getReverseLimitSwitch(Type.kNormallyOpen)::isPressed).onTrue(new PrintCommand("Little Arm Reverse Limit hit"));
+
 
     bigArm.restoreFactoryDefaults();
     littleArm.restoreFactoryDefaults();
@@ -145,19 +151,13 @@ public class ArmSystem extends SubsystemBase {
     littleArm.set(-littleSpeed);
   }
   public void bigArmForward(){
-    if(bigArm.getEncoder().getPosition() >= ArmSystemConstants.BigArmAngle.maxAngle){
-      bigArm.set(0);
-    }
-    else{
+   {
       double bigSpeed = SmartDashboard.getNumber("BigArm speed: ", 0);
       bigArmStart(bigSpeed);
     }
   }
   public void bigArmForward(double speed){
-    if(bigArm.getEncoder().getPosition() >= ArmSystemConstants.BigArmAngle.maxAngle){
-      bigArm.set(0);
-    }
-    else{
+    {
       double bigSpeed = SmartDashboard.getNumber("BigArm speed: ", 0);
       bigArmStart(speed);
     }
