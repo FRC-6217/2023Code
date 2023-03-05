@@ -6,62 +6,42 @@ package frc.robot.commands.ArmCommands;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmSystemConstants;
-import frc.robot.subsystems.ArmSystem;
-import frc.robot.subsystems.ArmSystem.ARM_SELECTION;
+import frc.robot.subsystems.ArmSystem.Arm;
 import pabeles.concurrency.IntOperatorTask.Max;
 
 public class ArmGoToAngle extends CommandBase {
   /** Creates a new ArmPIDTuner. */
-  ARM_SELECTION selection;
-  ArmSystem armSystem;
+  Arm arm;
   boolean isTuning;
   double setPoint;
 
   PIDController pidController = new PIDController(0, 0, 0);
-  CANSparkMax arm;
 
   String pKey = " p: ";
   String iKey = " i: ";
   String dKey = " d: ";
   String setPointKey = " setpoint: ";
-  String bigArmKey = "big arm";
-  String littleArmKey = "little arm";
 
-  public ArmGoToAngle(ArmSystem armSystem, ARM_SELECTION selection, double setPoint, boolean isTuning) {
+  public ArmGoToAngle(Arm arm, double setPoint, boolean isTuning) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(armSystem);
-    this.armSystem = armSystem;
-    this.selection = selection;
+    addRequirements(arm);
+    this.arm = arm;
     this.isTuning = isTuning;
     this.setPoint = setPoint;
 
-    switch (selection) {
-      case LITTLE_ARM:
-        arm = armSystem.getLittleArmController();
-        break;
-      case BIG_ARM:
-        arm = armSystem.getBigArmController();
-        break;
-    }
-
-    SmartDashboard.putNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue);
-    SmartDashboard.putNumber(bigArmKey + iKey, ArmSystemConstants.BigArmAngle.Ivalue);
-    SmartDashboard.putNumber(bigArmKey + dKey, ArmSystemConstants.BigArmAngle.Dvalue);
-    SmartDashboard.putNumber(bigArmKey + setPointKey, 0);
-
-    SmartDashboard.putNumber(littleArmKey + pKey, ArmSystemConstants.LittleArmAngle.Pvalue);
-    SmartDashboard.putNumber(littleArmKey + iKey, ArmSystemConstants.LittleArmAngle.Ivalue);
-    SmartDashboard.putNumber(littleArmKey + dKey, ArmSystemConstants.LittleArmAngle.Dvalue);
-    SmartDashboard.putNumber(littleArmKey + setPointKey, 0);
+    SmartDashboard.putNumber(arm.getArmName() + pKey, arm.getConstants().getPIDConstants().p);
+    SmartDashboard.putNumber(arm.getArmName() + iKey, arm.getConstants().getPIDConstants().i);
+    SmartDashboard.putNumber(arm.getArmName() + dKey, arm.getConstants().getPIDConstants().d);
+    SmartDashboard.putNumber(arm.getArmName() + setPointKey, 0);
 
   }
 
-  public ArmGoToAngle(ArmSystem armSystem, ARM_SELECTION selection, double setPoint) {
-    this(armSystem, selection, setPoint, false);
+  public ArmGoToAngle(Arm armSystem, double setPoint) {
+    this(armSystem, setPoint, false);
   }
 
 
@@ -72,61 +52,32 @@ public class ArmGoToAngle extends CommandBase {
 
     pidController.reset();
 
-    switch (selection) {
-      case BIG_ARM:
-        pidController.setP(SmartDashboard.getNumber(bigArmKey + pKey, ArmSystemConstants.BigArmAngle.Pvalue));
-        pidController.setI(SmartDashboard.getNumber(bigArmKey + iKey, ArmSystemConstants.BigArmAngle.Ivalue));
-        pidController.setD(SmartDashboard.getNumber(bigArmKey + dKey, ArmSystemConstants.BigArmAngle.Dvalue));
-        if (isTuning) {
-          pidController.setSetpoint(SmartDashboard.getNumber(bigArmKey + setPointKey, 0));
-        }else {
-          pidController.setSetpoint(setPoint);
+    pidController.setP(SmartDashboard.getNumber(arm.getArmName() + pKey, arm.getConstants().getPIDConstants().p));
+    pidController.setI(SmartDashboard.getNumber(arm.getArmName() + iKey, arm.getConstants().getPIDConstants().i));
+    pidController.setD(SmartDashboard.getNumber(arm.getArmName() + dKey, arm.getConstants().getPIDConstants().d));
+    if (isTuning) {
+      pidController.setSetpoint(SmartDashboard.getNumber(arm.getArmName() + setPointKey, 0));
+    }else {
+      pidController.setSetpoint(setPoint);
 
-        }
-        break;
-      case LITTLE_ARM:
-        pidController.setP(SmartDashboard.getNumber(littleArmKey + pKey, ArmSystemConstants.LittleArmAngle.Pvalue));
-        pidController.setI(SmartDashboard.getNumber(littleArmKey + iKey, ArmSystemConstants.LittleArmAngle.Ivalue));
-        pidController.setD(SmartDashboard.getNumber(littleArmKey + dKey, ArmSystemConstants.LittleArmAngle.Dvalue));
-        if (isTuning) {
-          pidController.setSetpoint(SmartDashboard.getNumber(littleArmKey + setPointKey, 0));
-        } else {
-          pidController.setSetpoint(setPoint);
-
-        }
-        break;
     }
+
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = 0;
-    switch (selection) {
-      case BIG_ARM:
-        speed = pidController.calculate(armSystem.getBigArmPosition());
-        if((speed ) > ArmSystemConstants.BigArmAngle.maxSpeed){
-          speed =  ArmSystemConstants.BigArmAngle.maxSpeed;
-        } else if (speed < -ArmSystemConstants.BigArmAngle.maxSpeed){
-          speed =  -ArmSystemConstants.BigArmAngle.maxSpeed;
-        }
-      case LITTLE_ARM:
-        speed = pidController.calculate(armSystem.getLittleArmPositon());
-        if((speed ) > ArmSystemConstants.LittleArmAngle.maxSpeed){
-          speed =  ArmSystemConstants.LittleArmAngle.maxSpeed;
-        } else if (speed < -ArmSystemConstants.LittleArmAngle.maxSpeed){
-          speed =  -ArmSystemConstants.LittleArmAngle.maxSpeed;
-        }
-    }
 
-    arm.set(speed);
+    double speed = MathUtil.clamp(pidController.calculate(arm.getAngle()), arm.getConstants().getMaxAutoSpeed(), -arm.getConstants().getMaxAutoSpeed());
+    
+    arm.armConstantSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    arm.set(0);
+    arm.stop();
   }
 
   // Returns true when the command should end.

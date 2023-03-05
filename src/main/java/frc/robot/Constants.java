@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.ArmSystem.ArmPosition;
-import frc.robot.subsystems.ArmSystem.Position;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,9 +13,12 @@ import frc.robot.subsystems.ArmSystem.Position;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  //public static final IUniqueRobotConstants uniqueRobotConstants = new TurtleShell();
+
   public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
 
+
+
+  // **************************************************************** Driver ***************************************************************************/
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int buttonBoxPort = 1;
@@ -42,9 +42,10 @@ public final class Constants {
 
     public static final double defaultRotationGoverner = 0.5;
     
-
-    // left turtle ks=.16
   }
+
+
+    // **************************************************************** Pnematics ***************************************************************************/
 
   public static class PneumaticConstants {
       public static final String compressorKey = "compressor ";
@@ -60,67 +61,108 @@ public final class Constants {
       }
   }
 
-  public static class ArmSystemConstants {
-    public static final int bigArmCANID = 11;
-    public static final int littleArmCANID = 10;
-    public static final int bigArmZeroChannel = 9;
-    public static final int littleArmPotAnalogInChannel = 3;
-    public static final int DMA_DIO_INPUT_CHANNEL = 0;
+    // **************************************************************** Arm ***************************************************************************/
 
-    public static class LittleArmAngle{
-      
-    public static final double Home = 0;
-    public static final double ObjectSafety = 1;
-    public static final double GroundPickUp = 0;
-    public static final double SubstationPickUp = 0;
-    public static final double HighSafteyPositionFront = 0;
-    public static final double HighSafteyPositionBack = 0;
-    public static final double High_Drop_Off_Cone = 0;
-    public static final double High_Drop_Off_Cube = 0;
-    public static final double Mid_Drop_Off_Cone = 0;
-    public static final double Mid_Drop_Off_Cube = 0;
-    public static final double Low_Drop_Off_Both = 0;
-    public static final double Safe_Position = 0;
-    public static final double Home_Position = 0;
+  public static final class LittleArmConstants implements IArmConstants {
 
-    public static final double Pvalue = 0.025000;
-    public static final double Ivalue = 0;
-    public static final double Dvalue = 0;
-
-    public static final double maxAngle = 0;
-    public static final double minAngle = 0;
-
-    public static final double maxSpeed = .5;
-
+    @Override
+    public double getPositionConversionFactor() {
+      return 2.3819;
     }
 
-    public static class BigArmAngle{
+    @Override
+    public final PIDConstants getPIDConstants() {
+      return new PIDConstants(0.025000, 0, 0);
+    }
 
-        public static final double Home = 0;
-        public static final double ObjectSafety = 0;
-        public static final double GroundPickUp = 0;
-        public static final double SubstationPickUp = 0;
-        public static final double HighSafteyPositionFront = 0;
-        public static final double HighSafteyPositionBack = 0;
-        public static final double High_Drop_Off_Cone = 0;
-        public static final double High_Drop_Off_Cube = 0;
-        public static final double Mid_Drop_Off_Cone = 0;
-        public static final double Mid_Drop_Off_Cube = 0;
-        public static final double Low_Drop_Off_Both = 0;
-        public static final double Safe_Position = 0;
-        public static final double Home_Position = 0;
+    @Override
+    public int getCANDid() {
+      return 10;
+    }
 
-        public static final double Ivalue = 0;
-        public static final double Dvalue = 0;
-        public static final double Pvalue = 0;
+    @Override
+    public double getMaxAutoSpeed() {
+      return 0.5;
+    }
 
-        public static final double maxAngle = 40;
-        public static final double minAngle = -50;
+    @Override
+    public double getMaxHumanSpeed() {
+      return 0.3;
+    }
 
-        public static final double maxSpeed = .5;
+    @Override
+    public String getName() {
+      return "little arm";
+    }
+
+  }
+
+  public static class BigArmConstants implements IArmConstants {
+
+    @Override
+    public double getPositionConversionFactor() {
+      return 2;
+    }
+
+    @Override
+    public final PIDConstants getPIDConstants() {
+      return new PIDConstants(0.0, 0, 0);
+    }
+
+    @Override
+    public int getCANDid() {
+      return 11;
+    }
+
+    @Override
+    public double getMaxAutoSpeed() {
+      return 0.5;
+    }
+
+    @Override
+    public double getMaxHumanSpeed() {
+      return 0.3;
+    }
+
+    @Override
+    public String getName() {
+      return "big arm";
+    }
+
+  }
+
+
+  public interface IArmConstants {
+
+    public double getPositionConversionFactor();
+    public PIDConstants getPIDConstants();
+    public int getCANDid();
+    public double getMaxAutoSpeed();
+    public double getMaxHumanSpeed();
+    public String getName();
+  }
+
+
+
+  public static class PIDConstants{
+    public double p,i,d;
+    public PIDConstants(double p, double i, double d) {
+      this.p = p;
+      this.i = i;
+      this.d = d;
     }
   }
 
+  public static IArmConstants getBigArmConstants() {
+    return new BigArmConstants();
+  }
+
+  public static IArmConstants getLittleArmConstants() {
+    return new LittleArmConstants();
+  }
+  // **************************************************************** DriveTrain ***************************************************************************/
+
+  
   public static class DriveTrainConstants {
     public static final int LEFT_1 = 18;
     public static final int LEFT_2 = 19;
@@ -160,6 +202,9 @@ public final class Constants {
     public static final double PI = 3.14;
   }
 
+
+    // **************************************************************** Autonomous ***************************************************************************/
+
   public static class AutoConstants {
     public static final double leftLeaveSpeed = 0.7;
     public static final double rightLeaveSpeed = 0.7;
@@ -172,8 +217,11 @@ public final class Constants {
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
 
-    //public static final ArmPosition WITH_OBJECT_HOME_STATE = new ArmPosition(Position.WITH_OBJECT_HOME, 10, 6);
   }
+
+
+    // **************************************************************** Robot Interface ***************************************************************************/
+
 
   public static class TurtleShell implements IUniqueRobotConstants {
 
@@ -285,27 +333,6 @@ public final class Constants {
     }
   }
 
-  public static class PeristentMemory {
-
-    public static final KeyValue[] list = {
-      new KeyValue<Double>(StayPutCommandConstants.p, 0.0),
-      new KeyValue<Double>(StayPutCommandConstants.i, 0.0),
-      new KeyValue<Double>(StayPutCommandConstants.d, 0.0),
-      new KeyValue<Double>(StayPutCommandConstants.f, 0.0),
-      new KeyValue<Boolean>(StayPutCommandConstants.enableTuning, true),
-    };
-  }
-
-  public static class KeyValue<T> {
-    public String key;
-    public T value;
-
-    public KeyValue(String key, T value) {
-      this.key = key;
-      this.value = value;
-    }
-  }
-
   public interface IUniqueRobotConstants {
     public MotorConstants getLeftDriveTrainMotorConstants();
 
@@ -339,4 +366,33 @@ public final class Constants {
       this.ka = ka;
     }
   }
+
+
+    // **************************************************************** Persistent Memory ***************************************************************************/
+
+
+  public static class PeristentMemory {
+
+    public static final KeyValue[] list = {
+      new KeyValue<Double>(StayPutCommandConstants.p, 0.0),
+      new KeyValue<Double>(StayPutCommandConstants.i, 0.0),
+      new KeyValue<Double>(StayPutCommandConstants.d, 0.0),
+      new KeyValue<Double>(StayPutCommandConstants.f, 0.0),
+      new KeyValue<Boolean>(StayPutCommandConstants.enableTuning, true),
+    };
+  }
+
+  public static class KeyValue<T> {
+    public String key;
+    public T value;
+
+    public KeyValue(String key, T value) {
+      this.key = key;
+      this.value = value;
+    }
+  }
+
+
+
+
 }

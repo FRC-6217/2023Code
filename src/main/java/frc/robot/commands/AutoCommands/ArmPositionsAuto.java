@@ -8,12 +8,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmSystem;
-import frc.robot.subsystems.ArmSystem.ArmPosition;
-import frc.robot.subsystems.ArmSystem.Position;
+
 
 public class ArmPositionsAuto extends CommandBase {
-  /** Creates a new ArmPositionsAuto. */
+  /*
   ArmSystem armSystem;
   Position goalPosition;
   PIDController pidLittleArm;
@@ -87,5 +85,5 @@ public class ArmPositionsAuto extends CommandBase {
   }
 
  
-
+*/
 }
