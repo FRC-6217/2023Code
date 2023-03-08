@@ -7,12 +7,13 @@ package frc.robot.commands.ArmCommands;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmSystem;
+import frc.robot.subsystems.ArmSystem.Arm;
 
-public class LittleArmToLimitSwitch extends CommandBase {
-  /** Creates a new LittleArmToLimitSwitch. */
-  ArmSystem armSystem;
-  public LittleArmToLimitSwitch(ArmSystem armSystem) {
+
+public class ArmToLimitSwitch extends CommandBase {
+  /** Creates a new BigArmToLimitSwitch. */
+  Arm armSystem;
+  public ArmToLimitSwitch(Arm armSystem) {
     this.armSystem = armSystem;
     addRequirements(armSystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,18 +26,18 @@ public class LittleArmToLimitSwitch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSystem.littleArm.set(.3);
+    armSystem.armConstantSpeed(.4);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSystem.littleArm.set(0);
+    armSystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return armSystem.getLittleArmController().getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
+    return armSystem.getController().getForwardLimitSwitch(Type.kNormallyOpen).isPressed();
   }
 }

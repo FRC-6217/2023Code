@@ -7,8 +7,8 @@ package frc.robot.commands.ArmCommands;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.PneumaticConstants.Claw;
-import frc.robot.subsystems.ArmSystem;
 
+/*
 public class ToggldeClaw extends CommandBase {
   ArmSystem armSystem;
   public static enum cState{
@@ -16,7 +16,6 @@ public class ToggldeClaw extends CommandBase {
     CLOSED,
   }
   cState c;
-  /** Creates a new ToggldeClaw. */
   public ToggldeClaw(ArmSystem armSystem, cState c) {
     this.armSystem = armSystem;
     addRequirements(armSystem);
@@ -48,3 +47,6 @@ public class ToggldeClaw extends CommandBase {
     return true;
   }
 }
+
+
+*/

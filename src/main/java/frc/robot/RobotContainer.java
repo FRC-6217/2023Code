@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
-import frc.robot.Constants.ArmSystemConstants.LittleArmAngle;
 import frc.robot.commands.CancelDriveTrain;
 import frc.robot.commands.DriveToObject;
 import frc.robot.commands.FindKs;
@@ -18,10 +17,7 @@ import frc.robot.commands.SlewRatedArmMovement;
 import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
-import frc.robot.commands.ArmCommands.BigArmToLimitSwitch;
-import frc.robot.commands.ArmCommands.LittleArmToLimitSwitch;
-import frc.robot.commands.ArmCommands.SetArmZero;
-import frc.robot.commands.ArmCommands.ToggldeClaw;
+import frc.robot.commands.ArmCommands.ArmToLimitSwitch;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
@@ -143,12 +139,12 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Left Leave", getLeftAuto());
     autoChooser.addOption("Right Leave", getRightAuto(.5));
     autoChooser.addOption("Middle Leave Balance", getMiddleLeaveBalance());
-    autoChooser.addOption("Do Nothing", getDoNothingCommand());
+   // autoChooser.addOption("Do Nothing", getDoNothingCommand());
     //autoChooser.addOption("1BallAndLeave", autoDropObject());
     //autoChooser.addOption("NoPIDMiddle", getNoPIDMiddleLeaveBalance());
     autoChooser.addOption("Low Drop Off Back Up", getLowDropOffBackUp());
-    autoChooser.addOption("high drop off", getAutoDropOffHigh());
-    autoChooser.addOption("HighDropWithBalance", AutoHighDropAndBalance());
+ //   autoChooser.addOption("high drop off", getAutoDropOffHigh());
+ //   autoChooser.addOption("HighDropWithBalance", AutoHighDropAndBalance());
 //    autoChooser.addOption("HighDropWithBalanceOverandBack", AutoHighDropAndBalanceOver());
 
 
@@ -240,11 +236,13 @@ public class RobotContainer {
   public SequentialCommandGroup getLowDropOffBackUp(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(Commands.waitSeconds(.5));
-    commandGroup.addCommands(getAutoDropOffLow());
+   // commandGroup.addCommands(getAutoDropOffLow());
     commandGroup.addCommands(getRightAuto(0.1));
 
     return commandGroup;
   }
+
+  /*
 
   public SequentialCommandGroup getAutoDropOffLow() {
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
@@ -332,14 +330,14 @@ public class RobotContainer {
 
   }
 
- /* public SequentialCommandGroup AutoHighDropAndBalanceOver(){
+  public SequentialCommandGroup AutoHighDropAndBalanceOver(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new EnableBrakes(mTankDrive));
     commandGroup.addCommands(getAutoDropOffHigh());
     commandGroup.addCommands(getMiddleLeaveBalance());
     return commandGroup;
 
-  }*/
+  }
   public SequentialCommandGroup autoDropObject(){
     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -20, 0.4));
@@ -363,4 +361,6 @@ public class RobotContainer {
 
     return commandGroup;
   }
+
+  */
 }

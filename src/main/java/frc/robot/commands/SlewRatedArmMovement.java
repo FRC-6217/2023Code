@@ -22,7 +22,6 @@ public class SlewRatedArmMovement extends CommandBase {
     SmartDashboard.putNumber("slew speed " + arm.getArmName(), 0);
     SmartDashboard.putNumber(" pos slew " + arm.getArmName(), 0);
     SmartDashboard.putNumber(" neg slew " + arm.getArmName(), 0);
->>>>>>> fd91d308ba0224dd682248a0f05af469582392f3
   }
 
   // Called when the command is initially scheduled.
@@ -30,9 +29,6 @@ public class SlewRatedArmMovement extends CommandBase {
   public void initialize() {
     slewRateLimiter = new SlewRateLimiter(SmartDashboard.getNumber(" pos slew " + arm.getArmName(), 0),
                                           SmartDashboard.getNumber(" neg slew " + arm.getArmName(), 0), 0);
-    slewRateLimiter.reset(0);
-    if(selection == ARM_SELECTION.BIG_ARM)
-    armSystem.disableBigArmBreak();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
