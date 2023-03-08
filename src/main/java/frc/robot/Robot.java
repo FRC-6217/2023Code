@@ -42,6 +42,12 @@ public class Robot extends TimedRobot {
     //new Trigger(this::isEnabled).onTrue(Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive));
    // new Trigger(this::isEnabled).negate().debounce(3).whenActive(Commands.runOnce(this.m_robotContainer.mTankDrive::disabledbreaks, this.m_robotContainer.mTankDrive));
     SmartDashboard.putData(CommandScheduler.getInstance());
+
+    EnableBigArmBrake armBrake = new EnableBigArmBrake(m_robotContainer.bigArm);
+    armBrake.schedule();
+
+    Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive).schedule();
+
     
   }
 
@@ -98,10 +104,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    EnableBigArmBrake enableBigArmBrakeCommand = new EnableBigArmBrake(m_robotContainer.armSystem);
-    enableBigArmBrakeCommand.schedule();
-
 
   }
 

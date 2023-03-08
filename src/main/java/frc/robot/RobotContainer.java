@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-
-import frc.robot.Constants.ArmSystemConstants;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
@@ -32,7 +31,6 @@ import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.commands.DriveToObject.ObjectType;
-import frc.robot.subsystems.ArmSystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.PneumaticController;
@@ -40,8 +38,11 @@ import frc.robot.subsystems.PotentiameterTest;
 import frc.robot.subsystems.ServoTEST;
 import frc.robot.subsystems.SimpleMotorController;
 import frc.robot.subsystems.TankDrive;
-import frc.robot.subsystems.ArmSystem.ARM_SELECTION;
+import frc.robot.subsystems.ArmSystem.Arm;
+import frc.robot.subsystems.ArmSystem.BigArm;
+import frc.robot.subsystems.ArmSystem.Claw;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,22 +63,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final PersistenceData mData = new PersistenceData();
+
+
   public final TankDrive mTankDrive = new TankDrive();
+  public Arm littleArm = new Arm(Constants.getLittleArmConstants());
+  public BigArm bigArm = new BigArm(Constants.getBigArmConstants());
+  public Claw claw = new Claw();
+
+  PneumaticHub pHub = new PneumaticHub();
+  private final PDP pdp = new PDP();
+  private final PersistenceData mData = new PersistenceData();
+
+
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-  //public final PneumaticController pneumatics = new PneumaticController();
-  
-  //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
- // private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
 
-  final ArmSystem armSystem = new ArmSystem();
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick buttonBox = new CommandJoystick(OperatorConstants.buttonBoxPort);
-  private final PDP pdp = new PDP();
+
 
   StayPutAllDOF stayPutCommand = new StayPutAllDOF(mTankDrive);
   CancelDriveTrain cancelCommand = new CancelDriveTrain(mTankDrive);
@@ -124,34 +127,14 @@ public class RobotContainer {
    // driveJoystick.button(OperatorConstants.buttonUnused9).onTrue(new DriveToObject(mTankDrive, ObjectType.CUBE));
     //driveJoystick.button(OperatorConstants.stayPut11).toggleOnTrue(stayPutCommand);
 
-//driveJoystick.button(4).onTrue(Commands.runOnce(armSystem::bigArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-//driveJoystick.button(6).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-//driveJoystick.button(5).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-//driveJoystick.button(3).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    driveJoystick.button(4).whileTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0, true));
-
     //button box
 
-    buttonBox.button(1).onTrue(Commands.runOnce(armSystem::toggleClaw, armSystem));
-    //buttonBox.button(6).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    // buttonBox.button(4).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    // buttonBox.button(5).onTrue(Commands.runOnce(armSystem::bigArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    // buttonBox.button(3).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    // //buttonBox.button(6).onTrue(Commands.runOnce(armSystem::enableBigArmBreak, armSystem));
-    //buttonBox.button(7).onTrue(Commands.runOnce(armSystem::disableBigArmBreak, armSystem));
-    buttonBox.button(6).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.LITTLE_ARM, 1));
-    buttonBox.button(4).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.LITTLE_ARM, -1));
-    buttonBox.button(5).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, 1));
-    buttonBox.button(3).whileTrue(new SlewRatedArmMovement(armSystem, ARM_SELECTION.BIG_ARM, -1));
-    buttonBox.button(10).whileTrue(new BigArmToLimitSwitch(armSystem));
-    //buttonBox.button(8).whileTrue(getDummyAuto());
-    //REMOVE For sure
-    //buttonBox.button(7).whileTrue(extendToDrop());
-    //buttonBox.button(8).whileTrue(retractWhileDriving());
-    //buttonBox.button(9).whileTrue(zeroArms());
-    //todo set buttons
-   // buttonBox.button(7).whileTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 0, true));
-    //buttonBox.button(0).onTrue(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, 0 , true));
+    buttonBox.button(5).onTrue(Commands.runOnce(claw::toggle, claw));
+    buttonBox.button(9).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+    buttonBox.button(9).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+
+    buttonBox.button(2).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
+    buttonBox.button(3).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
 
 
     //auto
