@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.ArmSystem;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -15,7 +16,10 @@ public class Claw extends SubsystemBase {
   
   private final DoubleSolenoid claw = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticConstants.Claw.clawChannelForwards, PneumaticConstants.Claw.clawChannelBackwards);
 
-  public Claw() {}
+  public Claw() {
+    Compressor c = new Compressor(PneumaticsModuleType.REVPH);
+    c.disable();
+  }
 
   @Override
   public void periodic() {

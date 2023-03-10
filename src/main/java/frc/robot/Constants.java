@@ -106,7 +106,7 @@ public final class Constants {
 
     @Override
     public final PIDConstants getPIDConstants() {
-      return new PIDConstants(0.028000, 0, 0);
+      return new PIDConstants(0.0, 0, 0);
     }
 
     @Override

@@ -30,10 +30,13 @@ public class Arm extends SubsystemBase {
     this.constants = constants;
     arm.restoreFactoryDefaults();
     arm.setIdleMode(IdleMode.kBrake);
+    this.name = constants.getName();
 
-    new Trigger(arm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(() -> System.out.println(name + " forward limit hit"), this));
+    new Trigger(arm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::resetArmPosition, this));
     new Trigger(arm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(() -> System.out.println(name + " reverse limit hit"), this));
+    
 
+    SmartDashboard.putNumber(arm + " speed: ", 0.3);
     setPositionConversionFactor(constants.getPositionConversionFactor());
 
   }

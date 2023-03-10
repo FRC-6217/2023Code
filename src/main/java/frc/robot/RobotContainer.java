@@ -20,6 +20,7 @@ import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.ArmToLimitSwitch;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
+import frc.robot.commands.AutoCommands.AutoCommandFactory;
 import frc.robot.commands.AutoCommands.DriveToBalanced;
 import frc.robot.commands.AutoCommands.DriveToDistanceInches;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
@@ -42,6 +43,7 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -125,13 +127,15 @@ public class RobotContainer {
 
     //button box
 
-    buttonBox.button(5).onTrue(Commands.runOnce(claw::toggle, claw));
-    buttonBox.button(9).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
-    buttonBox.button(9).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+    AutoCommandFactory autoFactory = new AutoCommandFactory(this);
+    buttonBox.button(1).onTrue(Commands.runOnce(claw::toggle, claw));
+    buttonBox.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+    buttonBox.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
-    buttonBox.button(2).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
-    buttonBox.button(3).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
-
+    buttonBox.button(4).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
+    buttonBox.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
+    buttonBox.button(16).onTrue(Commands.runOnce(littleArm::resetArmPosition, littleArm));
+    buttonBox.button(15).onTrue(autoFactory.ArmsToSaftey());
 
     //auto
 
