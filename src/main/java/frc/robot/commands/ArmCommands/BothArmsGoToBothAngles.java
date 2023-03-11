@@ -146,6 +146,10 @@ public class BothArmsGoToBothAngles extends CommandBase {
     return bigPid.atSetpoint() && littlePid.atSetpoint();
   }
 
+  public boolean isAngleWithinZone(double angle, double[] range) {
+    return range[0] > angle && range[1] < angle;
+  }
+
   private boolean isCrossingNoNoZoneFromHigh() {
     return (bigArmFinalSetPoint > ArmSystemConstants.bigArmDetourRequiredZone[1]) && (bigArm.getAngle() < ArmSystemConstants.bigArmDetourRequiredZone[1]);
   }
