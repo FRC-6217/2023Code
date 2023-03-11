@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DisableBreaks;
-import frc.robot.commands.EnableBigArmBrake;
+import frc.robot.commands.ArmCommands.EnableBigArmBrake;
+import frc.robot.commands.DriveCommands.DisableBreaks;
 import frc.robot.subsystems.TankDrive;
 
 /**
