@@ -16,6 +16,26 @@ public final class Constants {
   //public static final IUniqueRobotConstants uniqueRobotConstants = new TurtleShell();
   public static final IUniqueRobotConstants uniqueRobotConstants = new TorinRobot();
 
+  public static class LimeLightGamePieceConstants {
+    public static final double rotateP = 0.04;
+    public static final double rotateI = 0;
+    public static final double rotateD = 0;
+    public static final double forwardP = 0.1;
+    public static final double forwardI = 0;
+    public static final double forwardD = 0;
+
+    public static final double rotateSetpoint = 0;
+    public static final double coneForwardSetpoint = 10;
+    public static final double cubeForwardSetpoint = 10;
+
+    public static final double rotateTolerance = 1;
+    public static final double forwardTolerance = 1;
+
+    public static final double rotateClamp = 0.5;
+    public static final double forwardClamp = 0.5;
+
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int buttonBoxPort = 1;

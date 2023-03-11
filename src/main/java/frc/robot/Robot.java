@@ -92,8 +92,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    EnableBigArmBrake enableBigArmBrakeCommand = new EnableBigArmBrake(m_robotContainer.armSystem);
-    enableBigArmBrakeCommand.schedule();
+   
   }
 
   /** This function is called periodically during operator control. */

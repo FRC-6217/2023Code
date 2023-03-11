@@ -11,6 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.CancelDriveTrain;
 import frc.robot.commands.DriveToObject;
+import frc.robot.commands.Drivetogamepeace;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
@@ -25,6 +26,7 @@ import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.commands.DriveToObject.ObjectType;
+import frc.robot.commands.Drivetogamepeace.gamepiece;
 import frc.robot.subsystems.ArmSystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -57,13 +59,12 @@ public class RobotContainer {
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   public final PotentiameterTest pT = new PotentiameterTest();
   public final ServoTEST servoTEST = new ServoTEST();
-
   //public final PneumaticController pneumatics = new PneumaticController();
   
   //private final InchesDrive inchesDrive12forward = new InchesDrive(mTankDrive, 12, .3);
  // private final InchesDrive inchesDrive12back = new InchesDrive(mTankDrive, -12, .3);
 
-  final ArmSystem armSystem = new ArmSystem();
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kXboxDriver);
@@ -112,18 +113,12 @@ public class RobotContainer {
     driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToObject(mTankDrive, ObjectType.CONE));
     driveJoystick.button(OperatorConstants.buttonUnused9).onTrue(new DriveToObject(mTankDrive, ObjectType.CUBE));
     driveJoystick.button(OperatorConstants.stayPut1).toggleOnTrue(stayPutCommand);
+    driveJoystick.button(3).whileTrue(new Drivetogamepeace(mTankDrive,gamepiece.both));
 
 
     //button box
 
-    buttonBox.button(1).onTrue(Commands.runOnce(armSystem::toggleClaw, armSystem));
-    buttonBox.button(2).onTrue(Commands.runOnce(armSystem::littleArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    buttonBox.button(3).onTrue(Commands.runOnce(armSystem::littleArmBackward, armSystem)).onFalse(Commands.runOnce(armSystem::littleArmOff, armSystem));
-    buttonBox.button(4).onTrue(Commands.runOnce(armSystem::bigArmForward, armSystem)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    buttonBox.button(5).onTrue(Commands.runOnce(armSystem::bigArmBackward)).onFalse(Commands.runOnce(armSystem::bigArmOff, armSystem));
-    buttonBox.button(6).onTrue(Commands.runOnce(armSystem::enableBigArmBreak, armSystem));
-    buttonBox.button(7).onTrue(Commands.runOnce(armSystem::disableBigArmBreak, armSystem));
-    //auto
+   
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
     autoChooser.setDefaultOption("LeftLeave", getLeftAuto());

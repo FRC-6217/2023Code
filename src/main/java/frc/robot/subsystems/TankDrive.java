@@ -35,6 +35,7 @@ public class TankDrive extends SubsystemBase {
   NetworkTableEntry ty = table.getEntry("ty");
   NetworkTableEntry ta = table.getEntry("ta");
   NetworkTableEntry pipeline = table.getEntry("pipeline");
+  NetworkTableEntry tclass = table.getEntry("tclass");
 
   private LimeData  limeData = new LimeData();
 
@@ -187,10 +188,12 @@ public class TankDrive extends SubsystemBase {
     limeData.setTy(y);
     double area = ta.getDouble(0.0);
     limeData.setTa(area);
-
+    String t = tclass.getString("nothing");
+    limeData.settclass(t);
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
+    SmartDashboard.putString("Limelighttclass2", t);
 
   }
 
@@ -264,7 +267,13 @@ public class TankDrive extends SubsystemBase {
 
   public class LimeData {
     private double tx = 0,ty = 0,ta = 0;
-
+    private String tclass = "";
+    public void settclass(String t){
+      this.tclass = t;
+    }
+    public String gettclass(){
+      return tclass;
+    }
     public void setTx(double tx) {
       this.tx = tx;
     }
