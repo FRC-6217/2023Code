@@ -11,7 +11,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.CancelDriveTrain;
 import frc.robot.commands.DriveToObject;
-import frc.robot.commands.Drivetogamepeace;
+import frc.robot.commands.DriveToGamePiece;
 import frc.robot.commands.FindKs;
 import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
@@ -26,7 +26,7 @@ import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.commands.DriveToObject.ObjectType;
-import frc.robot.commands.Drivetogamepeace.gamepiece;
+import frc.robot.commands.DriveToGamePiece.GamePiece;
 import frc.robot.subsystems.ArmSystem;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
@@ -113,7 +113,7 @@ public class RobotContainer {
     driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToObject(mTankDrive, ObjectType.CONE));
     driveJoystick.button(OperatorConstants.buttonUnused9).onTrue(new DriveToObject(mTankDrive, ObjectType.CUBE));
     driveJoystick.button(OperatorConstants.stayPut1).toggleOnTrue(stayPutCommand);
-    driveJoystick.button(3).whileTrue(new Drivetogamepeace(mTankDrive,gamepiece.both));
+    driveJoystick.button(3).whileTrue(new DriveToGamePiece(mTankDrive, GamePiece.both));
 
 
     //button box

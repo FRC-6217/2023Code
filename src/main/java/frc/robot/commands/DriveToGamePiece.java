@@ -12,17 +12,17 @@ import frc.robot.Constants.LimeLightGamePieceConstants;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TankDrive.LimeData;
 
-public class Drivetogamepeace extends CommandBase {
+public class DriveToGamePiece extends CommandBase {
   /** Creates a new Drivetogamepeace. */
-  public static enum gamepiece {
+  public static enum GamePiece {
     cube,cone,both
   }
   TankDrive tankdrive; 
-  gamepiece piece;
+  GamePiece piece;
   LimeData limedata;
   PIDController forwardpid;
   PIDController rotatepid;
-  public Drivetogamepeace(TankDrive tankdrive,gamepiece piece) {
+  public DriveToGamePiece(TankDrive tankdrive, GamePiece piece) {
   addRequirements(tankdrive);
     // Use addRequirements() here to declare subsystem dependencies.
     this.tankdrive = tankdrive;
@@ -51,6 +51,7 @@ public class Drivetogamepeace extends CommandBase {
     rotatepid.setP(SmartDashboard.getNumber("rotate gamepiecepid" + " pvalue", LimeLightGamePieceConstants.rotateP)); 
     rotatepid.setI(SmartDashboard.getNumber("rotate gamepiecepid" + " ivalue", LimeLightGamePieceConstants.rotateI)); 
     rotatepid.setD(SmartDashboard.getNumber("rotate gamepiecepid" + " dvalue", LimeLightGamePieceConstants.rotateD)); 
+
     forwardpid.reset();
     rotatepid.reset();
 
