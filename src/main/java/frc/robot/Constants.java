@@ -63,6 +63,12 @@ public final class Constants {
 
     // **************************************************************** Arm ***************************************************************************/
 
+  public static class ArmSystemConstants {
+    public static final double littleArmDetourAngleLowToHigh = 0; //todo
+    public static final double littleArmDetourAngleHighToLow = 0; //todo
+    public static final double[] bigArmDetourRequiredZone = {0,0}; //todo
+  }
+
   public static final class LittleArmConstants implements IArmConstants {
 
     @Override
