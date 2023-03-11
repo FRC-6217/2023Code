@@ -27,6 +27,7 @@ public class Arm extends SubsystemBase {
   public Arm(IArmConstants constants) {
 
     this.arm = new CANSparkMax(constants.getCANDid(), MotorType.kBrushless);
+    arm.setInverted(true);
     this.constants = constants;
     arm.restoreFactoryDefaults();
     arm.setIdleMode(IdleMode.kBrake);
@@ -89,7 +90,7 @@ public class Arm extends SubsystemBase {
     return name;
   }
 
-  
+
 
   @Override
   public void periodic() {
