@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.ArmSystem;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -13,11 +14,13 @@ import frc.robot.Constants.IArmConstants;
 
 public class BigArm extends Arm {
 
+  AnalogInput ai;
   private final DoubleSolenoid brakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.PneumaticConstants.BigArmBrake.channelForwards, Constants.PneumaticConstants.BigArmBrake.channelBackwards);
 
   public BigArm(IArmConstants constants) {
     super(constants);
     SmartDashboard.putData(brakePiston);
+    ai = new AnalogInput(1);
   }
 
   public void enableBigArmBreak() {
@@ -31,6 +34,7 @@ public class BigArm extends Arm {
   @Override
   public void armConstantSpeedForwardFromDashBoard(){
     disableBigArmBreak();
+    System.out.println("Arm Brakes Disabled");
     super.armConstantSpeedForwardFromDashBoard();
 
   }
@@ -45,6 +49,12 @@ public class BigArm extends Arm {
   public void armConstantSpeed(double speed) {
     disableBigArmBreak();
     super.armConstantSpeed(speed);
+  }
+
+  @Override
+  public void periodic(){
+    super.periodic();
+    SmartDashboard.putData(ai);
   }
 
   @Override

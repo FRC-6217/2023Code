@@ -12,6 +12,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
+import frc.robot.subsystems.ArmSystem.Arm;
 import frc.robot.subsystems.ArmSystem.BigArm;
 
 /** Add your docs here. */
@@ -128,6 +129,9 @@ public class AutoCommandFactory {
 
     public ParallelCommandGroup DriveOverChargeStationArmsToSaftey(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
+        if (robotContainer.bigArm.getAngle() > 90) {
+            //add new command to avoid 
+        }
         pCommandGroup.addCommands(DriveOverChargeStation());
         pCommandGroup.addCommands(ArmsToSaftey());
         return pCommandGroup;
@@ -139,5 +143,18 @@ public class AutoCommandFactory {
         pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, 0));
         pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, 0));
         return pCommandGroup;
+    }
+
+    public ParallelCommandGroup TwoArmToTwoAngles(double bigSetpoint, double littleSetpoint){
+        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
+        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, bigSetpoint));
+        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, littleSetpoint));
+
+        return pCommandGroup;
+    }
+
+    public SequentialCommandGroup MoveWithSaftey(double bigSetpoint, double littleSetpoint){
+        SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
+        return sCommandGroup;
     }
 }

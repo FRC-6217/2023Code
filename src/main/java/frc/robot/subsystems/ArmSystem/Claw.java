@@ -18,7 +18,7 @@ public class Claw extends SubsystemBase {
 
   public Claw() {
     Compressor c = new Compressor(PneumaticsModuleType.REVPH);
-    c.disable();
+    //c.disable();
   }
 
   @Override

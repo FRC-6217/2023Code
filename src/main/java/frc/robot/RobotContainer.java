@@ -18,6 +18,7 @@ import frc.robot.commands.StayPutAllDOF;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.ArmToLimitSwitch;
+import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.AutoCommandFactory;
@@ -38,6 +39,7 @@ import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.ArmSystem.Arm;
 import frc.robot.subsystems.ArmSystem.BigArm;
 import frc.robot.subsystems.ArmSystem.Claw;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -91,7 +93,6 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     SmartDashboard.putData(autoChooser);
-  
   }
 
   /**
@@ -127,8 +128,10 @@ public class RobotContainer {
 
     //button box
 
+    TwoArmsToTwoAngle testTwoArms= new TwoArmsToTwoAngle(littleArm, -20, bigArm, -50);
+    ArmGoToAngle testLittleArmToAngle = new ArmGoToAngle(littleArm, -60);
     AutoCommandFactory autoFactory = new AutoCommandFactory(this);
-    buttonBox.button(1).onTrue(Commands.runOnce(claw::toggle, claw));
+    driveJoystick.button(2).onTrue(Commands.runOnce(claw::toggle, claw));
     buttonBox.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
     buttonBox.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
@@ -136,6 +139,8 @@ public class RobotContainer {
     buttonBox.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
     buttonBox.button(16).onTrue(Commands.runOnce(littleArm::resetArmPosition, littleArm));
     buttonBox.button(15).onTrue(autoFactory.ArmsToSaftey());
+    buttonBox.button(7).whileTrue(testTwoArms);
+    buttonBox.button(8).whileTrue(testLittleArmToAngle);
 
     //auto
 
