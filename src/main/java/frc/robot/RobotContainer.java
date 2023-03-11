@@ -8,16 +8,10 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
-import frc.robot.commands.CancelDriveTrain;
-import frc.robot.commands.DriveToObject;
-import frc.robot.commands.FindKs;
-import frc.robot.commands.FindKv;
 import frc.robot.commands.PersistenceData;
-import frc.robot.commands.SlewRatedArmMovement;
-import frc.robot.commands.StayPutAllDOF;
-import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.ArmToLimitSwitch;
+import frc.robot.commands.ArmCommands.SlewRatedArmMovement;
 import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
 import frc.robot.commands.AutoCommands.AutoBalance;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
@@ -28,7 +22,13 @@ import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
 import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
-import frc.robot.commands.DriveToObject.ObjectType;
+import frc.robot.commands.DriveCommands.CancelDriveTrain;
+import frc.robot.commands.DriveCommands.DriveToGamePiece;
+import frc.robot.commands.DriveCommands.StayPutAllDOF;
+import frc.robot.commands.DriveCommands.TeleopDrive;
+import frc.robot.commands.DriveCommands.DriveToGamePiece.GamePiece;
+import frc.robot.commands.testCommands.FindKs;
+import frc.robot.commands.testCommands.FindKv;
 import frc.robot.subsystems.PDP;
 import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.PneumaticController;
@@ -112,6 +112,13 @@ public class RobotContainer {
     AutoBalancedPID autoBalanceCommand = new AutoBalancedPID(mTankDrive);
     AutoBalancedPID autoBalanceCommandSeperate = new AutoBalancedPID(mTankDrive);
 
+
+    
+    TwoArmsToTwoAngle testTwoArms= new TwoArmsToTwoAngle(littleArm, -20, bigArm, -50);
+    ArmGoToAngle testLittleArmToAngle = new ArmGoToAngle(littleArm, -60);
+    AutoCommandFactory autoFactory = new AutoCommandFactory(this);
+
+
    // DriveUntilUnBalanced driveToChargingStation = new DriveUntilUnBalanced(mTankDrive, Direction.forwards);
 
     driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleTurning, mTankDrive));
@@ -128,10 +135,11 @@ public class RobotContainer {
 
     //button box
 
-    TwoArmsToTwoAngle testTwoArms= new TwoArmsToTwoAngle(littleArm, -20, bigArm, -50);
-    ArmGoToAngle testLittleArmToAngle = new ArmGoToAngle(littleArm, -60);
-    AutoCommandFactory autoFactory = new AutoCommandFactory(this);
     driveJoystick.button(2).onTrue(Commands.runOnce(claw::toggle, claw));
+    driveJoystick.button(3).whileTrue(new DriveToGamePiece(mTankDrive, GamePiece.both));
+
+
+
     buttonBox.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
     buttonBox.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
