@@ -74,7 +74,7 @@ public class RobotContainer {
   private final PersistenceData mData = new PersistenceData();
 
 
-  public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  // public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
 
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
@@ -211,23 +211,7 @@ public class RobotContainer {
     commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
     return commandGroup;
   }
-  public SequentialCommandGroup getNoPIDMiddleLeaveBalance(){
-    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-    commandGroup.addCommands(new EnableBrakes(mTankDrive));
-    commandGroup.addCommands(new PrintCommand("Driving off1"));
-    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
-    commandGroup.addCommands(new PrintCommand("Driving off2"));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-    commandGroup.addCommands(new PrintCommand("Driving off3"));
-    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.forwards)); //Make sure on the floor
-    commandGroup.addCommands(new PrintCommand("Driving off4"));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-    commandGroup.addCommands(new PrintCommand("Driving off5"));
-    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
-    commandGroup.addCommands(new PrintCommand("Driving off6"));
-    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.backwards, .3));
-    return commandGroup;
-  }
+  
 
 
   public SequentialCommandGroup getLeftAuto() {

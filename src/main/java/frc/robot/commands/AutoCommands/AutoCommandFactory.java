@@ -4,6 +4,8 @@
 
 package frc.robot.commands.AutoCommands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -11,9 +13,11 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IArmConstants;
+import frc.robot.Constants.PneumaticConstants.Claw;
 import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
+import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.ArmSystem.Arm;
 import frc.robot.subsystems.ArmSystem.BigArm;
 
@@ -22,10 +26,37 @@ public class AutoCommandFactory {
     RobotContainer robotContainer;
     Arm littleArm;
     BigArm bigArm;
+    public SendableChooser<Command> autoChooserStep1 = new SendableChooser<Command>();
+    public SendableChooser<Command> autoChooserStep2 = new SendableChooser<Command>();
+    public SendableChooser<Command> autoChooserStep3 = new SendableChooser<Command>();
+
     public AutoCommandFactory(RobotContainer robotContainer, Arm littArm, BigArm bigArm){
         this.robotContainer = robotContainer;
         this.bigArm = bigArm;
         this.littleArm = littArm;
+
+    
+        
+        autoChooserStep1.setDefaultOption("No Drop Off", ArmsToSaftey());
+        autoChooserStep1.addOption("Mid Cube Drop Off", ArmsToMidCubeDrop());
+        autoChooserStep1.addOption("High Cube Drop Off", ArmsToHighCubeDrop());
+        autoChooserStep1.addOption("Mid Cone Drop Off", ArmsToMidConeDrop());
+        autoChooserStep1.addOption("High Cone Drop Off", ArmsToHighConeDrop());
+        autoChooserStep1.addOption("Low Drop Off", ArmsToFrontPickUp());
+
+        autoChooserStep2.setDefaultOption("Back Out Of Community", getLeaveAuto());
+        autoChooserStep2.addOption("No Leave Balance", NoLeaveBalance());
+        autoChooserStep2.addOption("Leave and Balance", DriveOverChargeStationArmsToSaftey());
+        autoChooserStep2.addOption("Don't Move", ArmsToSaftey());
+
+    }
+
+
+    public SequentialCommandGroup getAutoCommand(){
+    SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
+
+
+    return sCommandGroup;
     }
 
     // public SequentialCommandGroup getAutoDropOffHigh(){
@@ -83,17 +114,13 @@ public class AutoCommandFactory {
 
     public ParallelCommandGroup ArmsToMidCubeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-       
         pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidCubeSetPoint(), bigArm, bigArm.getConstants().getMidCubeSetPoint()));
-
         return pCommandGroup;
     }
 
     public ParallelCommandGroup ArmsToMidConeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-      
         pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidConeSetPoint(), bigArm, bigArm.getConstants().getMidConeSetPoint()));
-
         return pCommandGroup;
     }
 
@@ -132,6 +159,14 @@ public class AutoCommandFactory {
         return commandGroup;
     }
 
+    public SequentialCommandGroup NoLeaveBalance(){
+        SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+        commandGroup.addCommands(new DriveUntilUnBalanced(robotContainer.mTankDrive, Direction.backwards));
+        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, -30, AutoConstants.middleLeaveOffPlatformSpeed));
+        commandGroup.addCommands(new AutoBalancedPID(robotContainer.mTankDrive));
+        return commandGroup;
+    }
+
     public SequentialCommandGroup ArmsToSaftey(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
       
@@ -142,9 +177,6 @@ public class AutoCommandFactory {
 
     public ParallelCommandGroup DriveOverChargeStationArmsToSaftey(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        if (robotContainer.bigArm.getAngle() > 90) {
-            //add new command to avoid 
-        }
         pCommandGroup.addCommands(DriveOverChargeStation());
         pCommandGroup.addCommands(ArmsToSaftey());
         return pCommandGroup;
@@ -153,15 +185,20 @@ public class AutoCommandFactory {
     public ParallelCommandGroup DriveOverChargeStationArmsFlipOver(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStation());
- 
-
         return pCommandGroup;
     }
 
+    public SequentialCommandGroup getLeaveAuto() {
+        SequentialCommandGroup commandGroup = new SequentialCommandGroup();
+        //commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
+        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, AutoConstants.leftLeaveDistanceInches, AutoConstants.leftLeaveSpeed));
+        return commandGroup;
+      }
 
-
-    public SequentialCommandGroup MoveWithSaftey(double bigSetpoint, double littleSetpoint){
-        SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
-        return sCommandGroup;
+    public ParallelCommandGroup AlwaysDo(){
+        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
+        pCommandGroup.addCommands(new EnableBrakes(robotContainer.mTankDrive));
+        pCommandGroup.addCommands(Commands.runOnce(robotContainer.claw::toggle, robotContainer.claw));
+        return pCommandGroup;
     }
 }
