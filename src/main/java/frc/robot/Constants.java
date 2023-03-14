@@ -21,8 +21,8 @@ public final class Constants {
   // **************************************************************** Driver ***************************************************************************/
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int buttonBoxPort = 1;
-
+    public static final int buttonBoxPort = 2;
+    public static final int armJoystickport = 1;
     public static final int stayPut11 = 11;
     public static final int toggleBreak2 = 2;
     public static final int buttonUnused3 = 3;
@@ -100,7 +100,77 @@ public final class Constants {
     public String getName() {
       return "little arm";
     }
+  
+    @Override
+    public int getPotChannel() {
+      return 2;
+    }
 
+    @Override
+    public double getScaleFactor() {
+      // TODO Auto-generated method stub
+      return -811.25;
+    }
+
+    @Override
+    public double getOffset() {
+      // TODO Auto-generated method stub
+      return 1.96;
+    }
+
+    @Override
+    public double getHighCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 139.2;
+    }
+
+    @Override
+    public double getHighConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 160;
+    }
+
+    @Override
+    public double getMidCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 78.8;
+    }
+
+    @Override
+    public double getMidConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 107.6;
+    }
+
+    @Override
+    public double getPickUpCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 38.25;
+    }
+
+    @Override
+    public double getPickUpConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 43.2;
+    }
+
+    @Override
+    public double getSubstationSetPoint() {
+      // TODO Auto-generated method stub
+      return 126.4;
+    }
+
+    @Override
+    public double getBacksidePickUpSetPoint() {
+      // TODO Auto-generated method stub
+      return 189.8;
+    }
+
+    @Override
+    public double getSafteySetPoint() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
   }
 
   public static class BigArmConstants implements IArmConstants {
@@ -112,7 +182,7 @@ public final class Constants {
 
     @Override
     public final PIDConstants getPIDConstants() {
-      return new PIDConstants(0.0, 0, 0);
+      return new PIDConstants(0.24, 0, 0);
     }
 
     @Override
@@ -135,6 +205,76 @@ public final class Constants {
       return "big arm";
     }
 
+    @Override
+    public int getPotChannel() {
+      return 1;
+    }
+
+    @Override
+    public double getScaleFactor() {
+      // TODO Auto-generated method stub
+      return 66.67;
+    }
+
+    @Override
+    public double getOffset() {
+      // TODO Auto-generated method stub
+      return 2.94;
+    }
+
+    @Override
+    public double getHighCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 11.3;
+    }
+
+    @Override
+    public double getHighConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 23.4;
+    }
+
+    @Override
+    public double getMidCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 42.3;
+    }
+
+    @Override
+    public double getMidConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 41.5;
+    }
+
+    @Override
+    public double getPickUpCubeSetPoint() {
+      // TODO Auto-generated method stub
+      return 0;
+    }
+
+    @Override
+    public double getPickUpConeSetPoint() {
+      // TODO Auto-generated method stub
+      return 5.8;
+    }
+
+    @Override
+    public double getSubstationSetPoint() {
+      // TODO Auto-generated method stub
+      return 20.06;
+    }
+
+    @Override
+    public double getBacksidePickUpSetPoint() {
+      // TODO Auto-generated method stub
+      return 74.6;
+    }
+
+    @Override
+    public double getSafteySetPoint() {
+      // TODO Auto-generated method stub
+      return 90;
+    }
   }
 
 
@@ -146,6 +286,18 @@ public final class Constants {
     public double getMaxAutoSpeed();
     public double getMaxHumanSpeed();
     public String getName();
+    public int getPotChannel();
+    public double getScaleFactor();
+    public double getOffset();
+    public double getHighCubeSetPoint();
+    public double getHighConeSetPoint();
+    public double getMidCubeSetPoint();
+    public double getMidConeSetPoint();
+    public double getPickUpCubeSetPoint();
+    public double getPickUpConeSetPoint();
+    public double getSubstationSetPoint();
+    public double getBacksidePickUpSetPoint();
+    public double getSafteySetPoint();
   }
 
 

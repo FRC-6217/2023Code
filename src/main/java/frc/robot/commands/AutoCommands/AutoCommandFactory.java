@@ -7,9 +7,11 @@ package frc.robot.commands.AutoCommands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.ArmCommands.ArmGoToAngle;
+import frc.robot.Constants.IArmConstants;
+import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.subsystems.ArmSystem.Arm;
@@ -18,9 +20,14 @@ import frc.robot.subsystems.ArmSystem.BigArm;
 /** Add your docs here. */
 public class AutoCommandFactory {
     RobotContainer robotContainer;
-    public AutoCommandFactory(RobotContainer robotContainer){
+    Arm littleArm;
+    BigArm bigArm;
+    public AutoCommandFactory(RobotContainer robotContainer, Arm littArm, BigArm bigArm){
         this.robotContainer = robotContainer;
+        this.bigArm = bigArm;
+        this.littleArm = littArm;
     }
+
     // public SequentialCommandGroup getAutoDropOffHigh(){
     //     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
     //     commandGroup.addCommands(Commands.waitSeconds(.5));
@@ -61,51 +68,56 @@ public class AutoCommandFactory {
 
     public ParallelCommandGroup ArmsToHighCubeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -173));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, 0));
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getHighCubeSetPoint(), bigArm, bigArm.getConstants().getHighCubeSetPoint()));
         return pCommandGroup;
     }
 
     
-    public ParallelCommandGroup ArmsToMidCubeDrop(){
+    public ParallelCommandGroup ArmsToHighConeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -116));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -53));
+       
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getHighConeSetPoint(), bigArm, bigArm.getConstants().getHighConeSetPoint()));
+
         return pCommandGroup;
     }
 
-    public ParallelCommandGroup ArmsToHighConeDrop(){
+    public ParallelCommandGroup ArmsToMidCubeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -160));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -28));
+       
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidCubeSetPoint(), bigArm, bigArm.getConstants().getMidCubeSetPoint()));
+
         return pCommandGroup;
     }
 
     public ParallelCommandGroup ArmsToMidConeDrop(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -110));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -46));
+      
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidConeSetPoint(), bigArm, bigArm.getConstants().getMidConeSetPoint()));
+
         return pCommandGroup;
     }
 
     public ParallelCommandGroup ArmsToFrontPickUp(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -74));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, 0));
+        
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getPickUpConeSetPoint(), bigArm, bigArm.getConstants().getPickUpConeSetPoint()));
+
         return pCommandGroup;
     }
 
     public ParallelCommandGroup ArmsToBackPickUp(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -273));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -100));
+      
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getBacksidePickUpSetPoint(), bigArm, bigArm.getConstants().getBacksidePickUpSetPoint()));
+
         return pCommandGroup;
     }
 
     public ParallelCommandGroup ArmsToSubStationPickUp(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, -174));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -127));
+       
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getSubstationSetPoint(), bigArm, bigArm.getConstants().getSubstationSetPoint()));
+
         return pCommandGroup;
     }
 
@@ -122,8 +134,9 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup ArmsToSaftey(){
         SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, 0));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, -130));
+      
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getSafteySetPoint(), bigArm, bigArm.getConstants().getSafteySetPoint()));
+
         return pCommandGroup;
     }
 
@@ -140,18 +153,12 @@ public class AutoCommandFactory {
     public ParallelCommandGroup DriveOverChargeStationArmsFlipOver(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStation());
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, 0));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, 0));
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup TwoArmToTwoAngles(double bigSetpoint, double littleSetpoint){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.bigArm, bigSetpoint));
-        pCommandGroup.addCommands(new ArmGoToAngle(robotContainer.littleArm, littleSetpoint));
+ 
 
         return pCommandGroup;
     }
+
+
 
     public SequentialCommandGroup MoveWithSaftey(double bigSetpoint, double littleSetpoint){
         SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();

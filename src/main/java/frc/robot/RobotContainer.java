@@ -9,7 +9,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.PersistenceData;
-import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.ArmToLimitSwitch;
 import frc.robot.commands.ArmCommands.SlewRatedArmMovement;
 import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
@@ -80,7 +79,7 @@ public class RobotContainer {
 
   private final CommandJoystick driveJoystick = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   private final CommandJoystick buttonBox = new CommandJoystick(OperatorConstants.buttonBoxPort);
-
+  private final CommandJoystick armJoystick = new CommandJoystick(OperatorConstants.armJoystickport);
 
   StayPutAllDOF stayPutCommand = new StayPutAllDOF(mTankDrive);
   CancelDriveTrain cancelCommand = new CancelDriveTrain(mTankDrive);
@@ -114,9 +113,8 @@ public class RobotContainer {
 
 
     
-    TwoArmsToTwoAngle testTwoArms= new TwoArmsToTwoAngle(littleArm, -20, bigArm, -50);
-    ArmGoToAngle testLittleArmToAngle = new ArmGoToAngle(littleArm, -60);
-    AutoCommandFactory autoFactory = new AutoCommandFactory(this);
+    TwoArmsToTwoAngle testTwoArms= new TwoArmsToTwoAngle(littleArm, 130, bigArm, 45);
+    AutoCommandFactory autoFactory = new AutoCommandFactory(this, littleArm, bigArm);
 
 
    // DriveUntilUnBalanced driveToChargingStation = new DriveUntilUnBalanced(mTankDrive, Direction.forwards);
@@ -140,16 +138,20 @@ public class RobotContainer {
 
 
 
-    buttonBox.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
-    buttonBox.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+    armJoystick.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
+    armJoystick.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
-    buttonBox.button(4).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
-    buttonBox.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
-    buttonBox.button(16).onTrue(Commands.runOnce(littleArm::resetArmPosition, littleArm));
-    buttonBox.button(15).onTrue(autoFactory.ArmsToSaftey());
-    buttonBox.button(7).whileTrue(testTwoArms);
-    buttonBox.button(8).whileTrue(testLittleArmToAngle);
-
+    armJoystick.button(4).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
+    armJoystick.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm)); 
+ buttonBox.button(4).onTrue(autoFactory.ArmsToHighConeDrop());
+ buttonBox.button(3).onTrue(autoFactory.ArmsToMidConeDrop());
+ buttonBox.button(2).onTrue(autoFactory.ArmsToFrontPickUp());
+ buttonBox.button(8).onTrue(autoFactory.ArmsToHighCubeDrop());
+ buttonBox.button(7).onTrue(autoFactory.ArmsToMidCubeDrop());
+ buttonBox.button(6).onTrue(autoFactory.ArmsToFrontPickUp());
+ buttonBox.button(1).onTrue(autoFactory.ArmsToFrontPickUp());
+ buttonBox.button(12).onTrue(autoFactory.ArmsToSubStationPickUp());
+ buttonBox.button(9).onTrue(autoFactory.ArmsToSaftey());
     //auto
 
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
