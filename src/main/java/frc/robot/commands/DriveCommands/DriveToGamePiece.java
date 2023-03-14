@@ -64,9 +64,9 @@ public class DriveToGamePiece extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double rotate = rotatepid.calculate(limedata.getTx());
+    double rotate = -rotatepid.calculate(limedata.getTx());
     rotate = MathUtil.clamp(rotate, -LimeLightGamePieceConstants.rotateClamp, LimeLightGamePieceConstants.rotateClamp);
-    double XSPEED = -forwardpid.calculate(limedata.getTa());
+    double XSPEED = forwardpid.calculate(limedata.getTa());
     XSPEED = MathUtil.clamp(XSPEED, -LimeLightGamePieceConstants.forwardClamp, LimeLightGamePieceConstants.forwardClamp);
     tankdrive.autoDrive(XSPEED, rotate);
   }

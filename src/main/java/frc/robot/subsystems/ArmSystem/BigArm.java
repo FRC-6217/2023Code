@@ -14,13 +14,11 @@ import frc.robot.Constants.IArmConstants;
 
 public class BigArm extends Arm {
 
-  AnalogInput ai;
   private final DoubleSolenoid brakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.PneumaticConstants.BigArmBrake.channelForwards, Constants.PneumaticConstants.BigArmBrake.channelBackwards);
 
   public BigArm(IArmConstants constants) {
     super(constants);
     SmartDashboard.putData(brakePiston);
-    ai = new AnalogInput(1);
   }
 
   public void enableBigArmBreak() {
@@ -54,7 +52,6 @@ public class BigArm extends Arm {
   @Override
   public void periodic(){
     super.periodic();
-    SmartDashboard.putData(ai);
   }
 
   @Override

@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +22,7 @@ public class Arm extends SubsystemBase {
 
   private final CANSparkMax arm;
   private String name;
-
+  AnalogInput pot;
   private IArmConstants constants;
 
   public Arm(IArmConstants constants) {
@@ -35,7 +36,7 @@ public class Arm extends SubsystemBase {
 
     new Trigger(arm.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(this::resetArmPosition, this));
     new Trigger(arm.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen)::isPressed).onTrue(Commands.runOnce(() -> System.out.println(name + " reverse limit hit"), this));
-    
+    pot = new AnalogInput(constants.getPotChannel());
 
     SmartDashboard.putNumber(arm + " speed: ", 0.3);
     setPositionConversionFactor(constants.getPositionConversionFactor());
@@ -60,7 +61,7 @@ public class Arm extends SubsystemBase {
 
 
   public double getAngle() {
-    return arm.getEncoder().getPosition();
+    return constants.getScaleFactor()*(pot.getVoltage()-constants.getOffset());
   }
 
   public void resetArmPosition(){
@@ -94,7 +95,8 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-        SmartDashboard.putNumber(name + " angle: ", getAngle());
+      SmartDashboard.putNumber(name + " angle: ", getAngle());
+      SmartDashboard.putNumber(name + " Pot: ", pot.getVoltage());
   }
 
 

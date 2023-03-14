@@ -17,9 +17,6 @@ public class TwoArmsToTwoAngle extends CommandBase{
   BigArm bigArm;
   double littleSetpoint;
   double bigSetpoint;
-  ArmGoToAngle bigArmCommand;
-  ArmGoToAngle littleArmCommand;
-  ArmGoToAngle reverseHighSafteyBigArm;
 
 
   PIDController bigPidController = new PIDController(0, 0, 0);
@@ -76,14 +73,15 @@ public class TwoArmsToTwoAngle extends CommandBase{
       bigArm.stop();
     }else{
     double bigSpeed = MathUtil.clamp(bigPidController.calculate(bigArm.getAngle()), -bigArm.getConstants().getMaxAutoSpeed(), bigArm.getConstants().getMaxAutoSpeed());
-    bigArm.armConstantSpeed(bigSpeed);
+    bigArm.armConstantSpeed(-bigSpeed);
+    System.out.println(bigSpeed);
    }
 
    if(littlePidController.atSetpoint()){
     littleArm.stop();
   }else{
     double littleSpeed = MathUtil.clamp(littlePidController.calculate(littleArm.getAngle()), -littleArm.getConstants().getMaxAutoSpeed(), littleArm.getConstants().getMaxAutoSpeed());
-    littleArm.armConstantSpeed(littleSpeed);
+    littleArm.armConstantSpeed(-littleSpeed);
  }
   }
 

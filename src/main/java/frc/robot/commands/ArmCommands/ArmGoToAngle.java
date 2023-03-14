@@ -11,9 +11,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSystem.Arm;
-
-public class ArmGoToAngle extends CommandBase {
-  /** Creates a new ArmPIDTuner. */
+/*/
+public class ArmGoToAngle extends CommandBase(){
   Arm arm;
   boolean isTuning;
   double setPoint;
@@ -68,7 +67,7 @@ public class ArmGoToAngle extends CommandBase {
   @Override
   public void execute() {
 
-    double speed = MathUtil.clamp(pidController.calculate(arm.getAngle()), arm.getConstants().getMaxAutoSpeed(), -arm.getConstants().getMaxAutoSpeed());
+    double speed = MathUtil.clamp(pidController.calculate(arm.getAngle()), -arm.getConstants().getMaxAutoSpeed(), arm.getConstants().getMaxAutoSpeed());
     
     arm.armConstantSpeed(speed);
   }
@@ -85,3 +84,4 @@ public class ArmGoToAngle extends CommandBase {
     return pidController.atSetpoint();
   }
 }
+*/
