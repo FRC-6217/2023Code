@@ -169,20 +169,20 @@ public class TankDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("left1 (raw): ", left1.getEncoder().getPosition());
-    SmartDashboard.putNumber("right1 (raw): ", right1.getEncoder().getPosition());
-    SmartDashboard.putNumber("left1 speed (raw): ", left1.getEncoder().getVelocity());
-    SmartDashboard.putNumber("right1 speed (raw): ", right1.getEncoder().getVelocity());
+   // SmartDashboard.putNumber("left1 (raw): ", left1.getEncoder().getPosition());
+   // SmartDashboard.putNumber("right1 (raw): ", right1.getEncoder().getPosition());
+   // SmartDashboard.putNumber("left1 speed (raw): ", left1.getEncoder().getVelocity());
+   // SmartDashboard.putNumber("right1 speed (raw): ", right1.getEncoder().getVelocity());
     //System.out.println("wheelspeed: " + left1.getEncoder().getVelocity() + " ctilt: " + gyro.getPitch() + "-pTilt: " + prevTilt + "\n =     "  + (gyro.getPitch() - prevTilt));
-    SmartDashboard.putNumber("left1 (feet): ", Units.metersToFeet(left1.getEncoder().getPosition()));
-    SmartDashboard.putNumber("right1 (feet): ", Units.metersToFeet(right1.getEncoder().getPosition()));
+   // SmartDashboard.putNumber("left1 (feet): ", Units.metersToFeet(left1.getEncoder().getPosition()));
+   // SmartDashboard.putNumber("right1 (feet): ", Units.metersToFeet(right1.getEncoder().getPosition()));
 
     SmartDashboard.putNumber("Robot Tilt", (int) gyro.getPitch());
     SmartDashboard.putBoolean("Is Balanced", isBalanced());
     SmartDashboard.putData("Gyro", gyro);
-
     SmartDashboard.putNumber("Robot FPS: ", Units.metersToFeet(getAvergeVelocity()));
-    SmartDashboard.putNumber("Robot speed (raw): ", getAvergeVelocity());
+    
+   // SmartDashboard.putNumber("Robot speed (raw): ", getAvergeVelocity());
 
 
     double mps = Math.abs(getAvergeVelocity());
@@ -190,8 +190,8 @@ public class TankDrive extends SubsystemBase {
       maxMPS = mps;
     }
 
-    SmartDashboard.putNumber("maxFPS", Units.metersToFeet(getMaxMPS()));
-    SmartDashboard.putNumber("maxMPS", getMaxMPS());
+ //   SmartDashboard.putNumber("maxFPS", Units.metersToFeet(getMaxMPS()));
+  //  SmartDashboard.putNumber("maxMPS", getMaxMPS());
 
 
     double x = tx.getDouble(0.0);

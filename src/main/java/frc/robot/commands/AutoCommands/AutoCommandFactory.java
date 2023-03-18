@@ -12,173 +12,147 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.IArmConstants;
-import frc.robot.Constants.PneumaticConstants.Claw;
-import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
+import frc.robot.commands.ArmCommands.ArmPositions;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.ArmSystem.Arm;
 import frc.robot.subsystems.ArmSystem.BigArm;
+import frc.robot.subsystems.ArmSystem.Claw;
 
 /** Add your docs here. */
 public class AutoCommandFactory {
-    RobotContainer robotContainer;
     Arm littleArm;
     BigArm bigArm;
+    TankDrive tankDrive;
+    ArmPositions armPositions;
+    Claw claw;
+
     public SendableChooser<Command> autoChooserStep1 = new SendableChooser<Command>();
     public SendableChooser<Command> autoChooserStep2 = new SendableChooser<Command>();
-    public SendableChooser<Command> autoChooserStep3 = new SendableChooser<Command>();
 
-    public AutoCommandFactory(RobotContainer robotContainer, Arm littArm, BigArm bigArm){
-        this.robotContainer = robotContainer;
+    public AutoCommandFactory(TankDrive tankDrive, Arm littArm, BigArm bigArm, Claw claw){
         this.bigArm = bigArm;
         this.littleArm = littArm;
+        this.tankDrive = tankDrive;
+        this.claw = claw;
+        this.armPositions = new ArmPositions(littArm, bigArm);
 
-    
-        
-        autoChooserStep1.setDefaultOption("No Drop Off", ArmsToSaftey());
-        autoChooserStep1.addOption("Mid Cube Drop Off", ArmsToMidCubeDrop());
-        autoChooserStep1.addOption("High Cube Drop Off", ArmsToHighCubeDrop());
-        autoChooserStep1.addOption("Mid Cone Drop Off", ArmsToMidConeDrop());
-        autoChooserStep1.addOption("High Cone Drop Off", ArmsToHighConeDrop());
-        autoChooserStep1.addOption("Low Drop Off", ArmsToFrontPickUp());
+        autoChooserStep1.setDefaultOption("No Drop Off", armPositions.ArmsToSaftey());
+        autoChooserStep1.addOption("Mid Cube Drop Off", doDropOffAtMidCube());
+        autoChooserStep1.addOption("High Cube Drop Off", doDropOffAtHighCube());
+        autoChooserStep1.addOption("Mid Cone Drop Off", doDropOffAtMidCone());
+        autoChooserStep1.addOption("High Cone Drop Off", doDropOffAtHighCone());
+        autoChooserStep1.addOption("Low Drop Off", doDropOffAtLow());
 
         autoChooserStep2.setDefaultOption("Back Out Of Community", getLeaveAuto());
-        autoChooserStep2.addOption("No Leave Balance", NoLeaveBalance());
+        autoChooserStep2.addOption("No Leave Balance", NoLeaveBalanceArmsToSaftey());
         autoChooserStep2.addOption("Leave and Balance", DriveOverChargeStationArmsToSaftey());
-        autoChooserStep2.addOption("Don't Move", ArmsToSaftey());
+        autoChooserStep2.addOption("Don't Move", armPositions.ArmsToSaftey());
 
     }
+
+    public SequentialCommandGroup doDropOffAtMidCube() {
+        SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToMidCubeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
+        sCommandGroup.addCommands(Commands.waitSeconds(.3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public SequentialCommandGroup doDropOffAtHighCube() {
+        SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToHighCubeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
+        sCommandGroup.addCommands(Commands.waitSeconds(.3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public SequentialCommandGroup doDropOffAtMidCone() {
+        SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToMidConeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
+        sCommandGroup.addCommands(Commands.waitSeconds(.3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public SequentialCommandGroup doDropOffAtHighCone() {
+        SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToHighConeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubConeHighInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
+        sCommandGroup.addCommands(Commands.waitSeconds(.3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubConeHighInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public SequentialCommandGroup doDropOffAtLow() {
+        SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToFrontPickUp());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
+        sCommandGroup.addCommands(Commands.waitSeconds(.3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
 
 
     public SequentialCommandGroup getAutoCommand(){
-    SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
 
+        SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
+        sCommandGroup.addCommands(this.AlwaysDo());
+        sCommandGroup.addCommands(this.getStep1());
+        sCommandGroup.addCommands(this.getStep2());
 
-    return sCommandGroup;
+        return sCommandGroup;
     }
 
-    // public SequentialCommandGroup getAutoDropOffHigh(){
-    //     SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-    //     commandGroup.addCommands(Commands.waitSeconds(.5));
-        
-    //     commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -40));
-    //     commandGroup.addCommands(new BigArmToLimitSwitch(armSystem));
-    //     commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.LITTLE_ARM, -157));
-    //     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, 24, .45));
-    //     commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
-    //     commandGroup.addCommands(Commands.waitSeconds(.5));
-    //     commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, -24, 0.45));
-    //     commandGroup.addCommands(new ArmGoToAngle(armSystem, ARM_SELECTION.BIG_ARM, 10));
-    //     commandGroup.addCommands(new LittleArmToLimitSwitch(armSystem));
-    //     System.out.println("Done With Little");
-      
-    //     return commandGroup;
-    //   }
-
-
-    /*public SequentialCommandGroup getMiddleLeaveBalance(){
-    SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-    commandGroup.addCommands(new EnableBrakes(mTankDrive));
-    commandGroup.addCommands(new PrintCommand("Driving off1"));
-    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.backwards));
-    commandGroup.addCommands(new PrintCommand("Driving off2"));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-    commandGroup.addCommands(new PrintCommand("Driving off3"));
-    commandGroup.addCommands(new DriveToBalanced(mTankDrive, DirectionB.forwards));
-    commandGroup.addCommands(new PrintCommand("Driving off4"));
-    commandGroup.addCommands(new DriveToDistanceInches(mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-    commandGroup.addCommands(new PrintCommand("Driving off5"));
-    commandGroup.addCommands(new DriveUntilUnBalanced(mTankDrive, Direction.forwards));
-    commandGroup.addCommands(new PrintCommand("Driving off6"));
-    commandGroup.addCommands(new AutoBalancedPID(mTankDrive));
-    return commandGroup;
-  } */
-
-
-    public ParallelCommandGroup ArmsToHighCubeDrop(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getHighCubeSetPoint(), bigArm, bigArm.getConstants().getHighCubeSetPoint()));
-        return pCommandGroup;
+    private Command getStep1() {
+        return autoChooserStep1.getSelected();
     }
 
-    
-    public ParallelCommandGroup ArmsToHighConeDrop(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-       
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getHighConeSetPoint(), bigArm, bigArm.getConstants().getHighConeSetPoint()));
-
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup ArmsToMidCubeDrop(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidCubeSetPoint(), bigArm, bigArm.getConstants().getMidCubeSetPoint()));
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup ArmsToMidConeDrop(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getMidConeSetPoint(), bigArm, bigArm.getConstants().getMidConeSetPoint()));
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup ArmsToFrontPickUp(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getPickUpConeSetPoint(), bigArm, bigArm.getConstants().getPickUpConeSetPoint()));
-
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup ArmsToBackPickUp(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-      
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getBacksidePickUpSetPoint(), bigArm, bigArm.getConstants().getBacksidePickUpSetPoint()));
-
-        return pCommandGroup;
-    }
-
-    public ParallelCommandGroup ArmsToSubStationPickUp(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-       
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getSubstationSetPoint(), bigArm, bigArm.getConstants().getSubstationSetPoint()));
-
-        return pCommandGroup;
+    private Command getStep2() {
+        return autoChooserStep2.getSelected();
     }
 
     public SequentialCommandGroup DriveOverChargeStation(){
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-        commandGroup.addCommands(new DriveUntilUnBalanced(robotContainer.mTankDrive, Direction.backwards));
-        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-        commandGroup.addCommands(new DriveToBalanced(robotContainer.mTankDrive, DirectionB.forwards));
-        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-        commandGroup.addCommands(new DriveUntilUnBalanced(robotContainer.mTankDrive, Direction.forwards));
-        commandGroup.addCommands(new AutoBalancedPID(robotContainer.mTankDrive));
+        commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
+        commandGroup.addCommands(new DriveToBalanced(tankDrive, DirectionB.forwards));
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
+        commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.forwards));
+        commandGroup.addCommands(new AutoBalancedPID(tankDrive));
         return commandGroup;
     }
 
     public SequentialCommandGroup NoLeaveBalance(){
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-        commandGroup.addCommands(new DriveUntilUnBalanced(robotContainer.mTankDrive, Direction.backwards));
-        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, -30, AutoConstants.middleLeaveOffPlatformSpeed));
-        commandGroup.addCommands(new AutoBalancedPID(robotContainer.mTankDrive));
+        commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, -30, AutoConstants.middleLeaveOffPlatformSpeed));
+        commandGroup.addCommands(new AutoBalancedPID(tankDrive));
         return commandGroup;
     }
 
-    public SequentialCommandGroup ArmsToSaftey(){
-        SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
-      
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.getConstants().getSafteySetPoint(), bigArm, bigArm.getConstants().getSafteySetPoint()));
-
+    public ParallelCommandGroup NoLeaveBalanceArmsToSaftey(){
+        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
+        pCommandGroup.addCommands(NoLeaveBalance());
+        pCommandGroup.addCommands(armPositions.ArmsToSaftey());
         return pCommandGroup;
     }
 
-    public ParallelCommandGroup DriveOverChargeStationArmsToSaftey(){
+
+    public ParallelCommandGroup  DriveOverChargeStationArmsToSaftey(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStation());
-        pCommandGroup.addCommands(ArmsToSaftey());
+        pCommandGroup.addCommands(armPositions.ArmsToSaftey());
         return pCommandGroup;
     }
 
@@ -190,15 +164,17 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup getLeaveAuto() {
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
-        //commandGroup.addCommands(Commands.runOnce(armSystem::toggleClaw, armSystem));
-        commandGroup.addCommands(new DriveToDistanceInches(robotContainer.mTankDrive, AutoConstants.leftLeaveDistanceInches, AutoConstants.leftLeaveSpeed));
+        commandGroup.addCommands(armPositions.ArmsToSaftey());
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.leftLeaveDistanceInches, AutoConstants.leftLeaveSpeed));
         return commandGroup;
       }
 
     public ParallelCommandGroup AlwaysDo(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
-        pCommandGroup.addCommands(new EnableBrakes(robotContainer.mTankDrive));
-        pCommandGroup.addCommands(Commands.runOnce(robotContainer.claw::toggle, robotContainer.claw));
+        pCommandGroup.addCommands(Commands.runOnce(tankDrive.getGyro()::reset, tankDrive));
+        pCommandGroup.addCommands(new EnableBrakes(tankDrive));
+        pCommandGroup.addCommands(Commands.runOnce(claw::close, claw));
         return pCommandGroup;
+
     }
 }

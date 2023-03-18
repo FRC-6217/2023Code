@@ -18,7 +18,7 @@ public class BigArm extends Arm {
 
   public BigArm(IArmConstants constants) {
     super(constants);
-    SmartDashboard.putData(brakePiston);
+    this.getController().setInverted(true);
   }
 
   public void enableBigArmBreak() {
@@ -32,7 +32,6 @@ public class BigArm extends Arm {
   @Override
   public void armConstantSpeedForwardFromDashBoard(){
     disableBigArmBreak();
-    System.out.println("Arm Brakes Disabled");
     super.armConstantSpeedForwardFromDashBoard();
 
   }
@@ -52,6 +51,7 @@ public class BigArm extends Arm {
   @Override
   public void periodic(){
     super.periodic();
+    SmartDashboard.putString("Big Arm Piston: ", brakePiston.get().equals(Value.kForward) ? "Disable" : "Enable");
   }
 
   @Override

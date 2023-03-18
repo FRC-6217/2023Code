@@ -43,7 +43,6 @@ public class Robot extends TimedRobot {
 
     EnableBigArmBrake armBrake = new EnableBigArmBrake(m_robotContainer.bigArm);
     armBrake.schedule();
-
     Commands.runOnce(m_robotContainer.mTankDrive::enableBreaks, m_robotContainer.mTankDrive).schedule();
 
     
@@ -77,7 +76,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.mTankDrive.getGyro().reset();
+;
     //ToggldeClaw tClaw = new ToggldeClaw(m_robotContainer.armSystem, cState.OPEN);
    // tClaw.schedule();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();

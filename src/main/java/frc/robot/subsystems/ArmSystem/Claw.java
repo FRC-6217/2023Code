@@ -24,17 +24,23 @@ public class Claw extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putData(claw);
+    SmartDashboard.putString("Claw Piston: ", claw.get().equals(Value.kForward) ? "Opened" : "Closed");
   }
 
   
   public void toggle() {
-    
     if (claw.get().equals(Value.kForward)){
       claw.set(Value.kReverse);
     } else{
       claw.set(Value.kForward);
     }
-  
+  }
+
+  public void close() {
+    claw.set(Value.kForward);
+  }
+
+  public void open() {
+    claw.set(Value.kReverse);
   }
 }

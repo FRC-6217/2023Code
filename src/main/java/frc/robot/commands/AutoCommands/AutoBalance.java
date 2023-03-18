@@ -16,7 +16,7 @@ public class AutoBalance extends CommandBase {
   TankDrive tankDrive;
   double factor = .03;
   public AutoBalance(TankDrive tankDrive) {
-    SmartDashboard.putNumber("Tilt Factor", factor);
+  //  SmartDashboard.putNumber("Tilt Factor", factor);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
@@ -34,7 +34,7 @@ public class AutoBalance extends CommandBase {
     @SuppressWarnings("unused")
     RobotPosition cPosition = tankDrive.getRelativePosition(sPosition);
     double tilt = tankDrive.getGyro().getPitch();
-    SmartDashboard.getNumber("Tilt Factor", factor);
+   // SmartDashboard.getNumber("Tilt Factor", factor);
     tankDrive.autoDrive(tilt*factor, 0);
     System.out.println(tilt*factor + " " + tilt + " "+ factor);
 

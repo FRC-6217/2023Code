@@ -60,8 +60,14 @@ public class TwoArmsToTwoAngle extends CommandBase{
     bigPidController.setI(SmartDashboard.getNumber("BigArm" + iKey, bigArm.getConstants().getPIDConstants().i));
     bigPidController.setD(SmartDashboard.getNumber("BigArm" + dKey, bigArm.getConstants().getPIDConstants().d));
 
+    SmartDashboard.putNumber("LittleArm SetPoint", littleSetpoint);
+    SmartDashboard.putNumber("BigArm SetPoint", bigSetpoint);
+
     littlePidController.setSetpoint(littleSetpoint);
     bigPidController.setSetpoint(bigSetpoint);
+
+    littlePidController.setTolerance(2);
+    bigPidController.setTolerance(2);
   
   }
 
@@ -72,16 +78,19 @@ public class TwoArmsToTwoAngle extends CommandBase{
     if(bigPidController.atSetpoint()){
       bigArm.stop();
     }else{
-    double bigSpeed = MathUtil.clamp(bigPidController.calculate(bigArm.getAngle()), -bigArm.getConstants().getMaxAutoSpeed(), bigArm.getConstants().getMaxAutoSpeed());
-    bigArm.armConstantSpeed(-bigSpeed);
-    System.out.println(bigSpeed);
+
+    double pidoutput = bigPidController.calculate(bigArm.getAngle());
+    double bigSpeed = MathUtil.clamp(pidoutput, -bigArm.getConstants().getMaxAutoSpeed(), bigArm.getConstants().getMaxAutoSpeed());
+    System.out.println("BigArm pid output: " + pidoutput  + " + actual speed: " + bigSpeed);
+    bigArm.armConstantSpeed(bigSpeed);
    }
 
    if(littlePidController.atSetpoint()){
     littleArm.stop();
   }else{
     double littleSpeed = MathUtil.clamp(littlePidController.calculate(littleArm.getAngle()), -littleArm.getConstants().getMaxAutoSpeed(), littleArm.getConstants().getMaxAutoSpeed());
-    littleArm.armConstantSpeed(-littleSpeed);
+    SmartDashboard.putNumber("LittleArm pid output", littleSpeed);
+    littleArm.armConstantSpeed(littleSpeed);
  }
   }
 
@@ -95,6 +104,6 @@ public class TwoArmsToTwoAngle extends CommandBase{
   // Returns true when the command should end.
 
   public boolean isFinished() {
-    return bigPidController.atSetpoint()&&littlePidController.atSetpoint();
+    return bigPidController.atSetpoint() && littlePidController.atSetpoint();
   }
 }

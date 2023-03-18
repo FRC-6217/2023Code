@@ -63,12 +63,6 @@ public final class Constants {
 
     // **************************************************************** Arm ***************************************************************************/
 
-  public static class ArmSystemConstants {
-    public static final double littleArmDetourAngleLowToHigh = 0; //todo
-    public static final double littleArmDetourAngleHighToLow = 0; //todo
-    public static final double[] bigArmDetourRequiredZone = {0,0}; //todo
-  }
-
   public static final class LittleArmConstants implements IArmConstants {
 
     @Override
@@ -88,7 +82,7 @@ public final class Constants {
 
     @Override
     public double getMaxAutoSpeed() {
-      return 0.5;
+      return 0.3;
     }
 
     @Override
@@ -108,67 +102,56 @@ public final class Constants {
 
     @Override
     public double getScaleFactor() {
-      // TODO Auto-generated method stub
       return -811.25;
     }
 
     @Override
     public double getOffset() {
-      // TODO Auto-generated method stub
-      return 1.96;
+      return 1.99;
     }
 
     @Override
     public double getHighCubeSetPoint() {
-      // TODO Auto-generated method stub
-      return 139.2;
+      return 173;
     }
 
     @Override
     public double getHighConeSetPoint() {
-      // TODO Auto-generated method stub
-      return 160;
+      return 185;
     }
 
     @Override
     public double getMidCubeSetPoint() {
-      // TODO Auto-generated method stub
-      return 78.8;
+      return 106;
     }
 
     @Override
     public double getMidConeSetPoint() {
-      // TODO Auto-generated method stub
-      return 107.6;
+      return 158;
     }
 
     @Override
     public double getPickUpCubeSetPoint() {
-      // TODO Auto-generated method stub
-      return 38.25;
+      return 55;
     }
 
     @Override
     public double getPickUpConeSetPoint() {
-      // TODO Auto-generated method stub
       return 43.2;
     }
 
     @Override
     public double getSubstationSetPoint() {
-      // TODO Auto-generated method stub
       return 126.4;
     }
 
     @Override
     public double getBacksidePickUpSetPoint() {
-      // TODO Auto-generated method stub
       return 189.8;
     }
 
     @Override
     public double getSafteySetPoint() {
-      // TODO Auto-generated method stub
       return 0;
     }
   }
@@ -182,7 +165,7 @@ public final class Constants {
 
     @Override
     public final PIDConstants getPIDConstants() {
-      return new PIDConstants(0.24, 0, 0);
+      return new PIDConstants(0.024, 0, 0);
     }
 
     @Override
@@ -192,7 +175,7 @@ public final class Constants {
 
     @Override
     public double getMaxAutoSpeed() {
-      return 0.5;
+      return 0.3;
     }
 
     @Override
@@ -212,67 +195,56 @@ public final class Constants {
 
     @Override
     public double getScaleFactor() {
-      // TODO Auto-generated method stub
       return 66.67;
     }
 
     @Override
     public double getOffset() {
-      // TODO Auto-generated method stub
-      return 2.94;
+      return 3.018;
     }
 
     @Override
     public double getHighCubeSetPoint() {
-      // TODO Auto-generated method stub
-      return 11.3;
+      return 13;
     }
 
     @Override
     public double getHighConeSetPoint() {
-      // TODO Auto-generated method stub
-      return 23.4;
+      return 20.5;
     }
 
     @Override
     public double getMidCubeSetPoint() {
-      // TODO Auto-generated method stub
       return 42.3;
     }
 
     @Override
     public double getMidConeSetPoint() {
-      // TODO Auto-generated method stub
-      return 41.5;
+      return 24;
     }
 
     @Override
     public double getPickUpCubeSetPoint() {
-      // TODO Auto-generated method stub
-      return 0;
+      return 4.8;
     }
 
     @Override
     public double getPickUpConeSetPoint() {
-      // TODO Auto-generated method stub
       return 5.8;
     }
 
     @Override
     public double getSubstationSetPoint() {
-      // TODO Auto-generated method stub
       return 20.06;
     }
 
     @Override
     public double getBacksidePickUpSetPoint() {
-      // TODO Auto-generated method stub
       return 74.6;
     }
 
     @Override
     public double getSafteySetPoint() {
-      // TODO Auto-generated method stub
       return 90;
     }
   }
@@ -329,8 +301,8 @@ public final class Constants {
     public static final double forwardD = 0;
 
     public static final double rotateSetpoint = 0;
-    public static final double coneForwardSetpoint = 10;
-    public static final double cubeForwardSetpoint = 10;
+    public static final double coneForwardSetpoint = 18;
+    public static final double cubeForwardSetpoint = 18;
 
     public static final double rotateTolerance = 1;
     public static final double forwardTolerance = 1;
@@ -395,7 +367,9 @@ public final class Constants {
     public static final double middleLeaveOffPlatformSpeed = .5;
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
-
+    public static final double AutoDriveToHubInches = 24;
+    public static final double AutoDriveToHubConeHighInches = 28;
+    public static final double AutoDriveStep1Speed = 0.3;
   }
 
 
@@ -406,7 +380,6 @@ public final class Constants {
 
     @Override
     public String getName() {
-      // TODO Auto-generated method stub
       return "Turtle";
     }
 

@@ -5,7 +5,6 @@
 package frc.robot.commands.DriveCommands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.PIDDriveTrain;
 import frc.robot.subsystems.TankDrive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,17 +12,13 @@ import frc.robot.subsystems.TankDrive;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class CancelDriveTrain extends InstantCommand {
   TankDrive tankDrive;
-  PIDDriveTrain p;
   public CancelDriveTrain(TankDrive tankDrive) {
     this.tankDrive = tankDrive;
     addRequirements(tankDrive);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public CancelDriveTrain(PIDDriveTrain p) {
-    this.p = p;
-    addRequirements(p);
-  }
+
 
   // Called when the command is initially scheduled.
   @Override
