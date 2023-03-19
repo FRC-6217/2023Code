@@ -48,10 +48,10 @@ public class ArmPositions {
         return pCommandGroup;
     }
 
-    public ParallelCommandGroup ArmsToFrontPickUp(){
-        ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
+    public SequentialCommandGroup ArmsToFrontPickUp(){
+        SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
         
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.setpoints.lowCube, bigArm, bigArm.setpoints.lowCube));
+        pCommandGroup.addCommands(new ArmGoToAngle(littleArm, littleArm.setpoints.lowCube).andThen(new ArmGoToAngle(bigArm, bigArm.setpoints.lowCube)));
 
         return pCommandGroup;
     }

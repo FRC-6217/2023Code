@@ -72,7 +72,7 @@ public final class Constants {
 
     @Override
     public final PIDConstants getPIDConstants() {
-      return new PIDConstants(0.025000, 0, 0);
+      return new PIDConstants(0.028000, 0, 0);
     }
 
     @Override
@@ -132,7 +132,7 @@ public final class Constants {
 
     @Override
     public double getPickUpCubeSetPoint() {
-      return 25;
+      return 40;
     }
 
     @Override
@@ -363,13 +363,13 @@ public final class Constants {
     public static final double rightLeaveDistanceInches = -168;
     public static final double middleLeaveOnPlatformInches = -84;
     public static final double middleLeaveOffPlatformInches = -24;
-    public static final double middleLeaveOnPlatformSpeed = .5;
-    public static final double middleLeaveOffPlatformSpeed = .5;
+    public static final double middleLeaveOnPlatformSpeed = .6;
+    public static final double middleLeaveOffPlatformSpeed = .6;
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
     public static final double AutoDriveToHubInches = 24;
     public static final double AutoDriveToHubConeHighInches = 28;
-    public static final double AutoDriveStep1Speed = 0.3;
+    public static final double AutoDriveStep1Speed = 0.5;
   }
 
 

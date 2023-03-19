@@ -37,10 +37,10 @@ public class Claw extends SubsystemBase {
   }
 
   public void close() {
-    claw.set(Value.kForward);
+    claw.set(Value.kReverse);
   }
 
   public void open() {
-    claw.set(Value.kReverse);
+    claw.set(Value.kForward);
   }
 }
