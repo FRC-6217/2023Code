@@ -19,22 +19,22 @@ public class SlewRatedArmMovement extends CommandBase {
     addRequirements(arm);
     this.arm = arm;
 
-    SmartDashboard.putNumber("slew speed " + arm.getArmName(), 0);
-    SmartDashboard.putNumber(" pos slew " + arm.getArmName(), 0);
-    SmartDashboard.putNumber(" neg slew " + arm.getArmName(), 0);
+ ////   SmartDashboard.putNumber("slew speed " + arm.getArmName(), 0);
+  //  SmartDashboard.putNumber(" pos slew " + arm.getArmName(), 0);
+  //  SmartDashboard.putNumber(" neg slew " + arm.getArmName(), 0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    slewRateLimiter = new SlewRateLimiter(SmartDashboard.getNumber(" pos slew " + arm.getArmName(), 0),
-                                          SmartDashboard.getNumber(" neg slew " + arm.getArmName(), 0), 0);
+  //  slewRateLimiter = new SlewRateLimiter(SmartDashboard.getNumber(" pos slew " + arm.getArmName(), 0),
+    //                                      SmartDashboard.getNumber(" neg slew " + arm.getArmName(), 0), 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.armConstantSpeed(slewRateLimiter.calculate(SmartDashboard.getNumber("slew speed " + arm.getArmName(), 0)));
+   // arm.armConstantSpeed(slewRateLimiter.calculate(SmartDashboard.getNumber("slew speed " + arm.getArmName(), 0)));
   }
 
   // Called once the command ends or is interrupted.

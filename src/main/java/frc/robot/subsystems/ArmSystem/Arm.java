@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,12 +29,10 @@ public class Arm extends SubsystemBase {
 
   SlewRateLimiter slewRateLimiter;
   double maxAcc = 1;
-  boolean useSlewRate = true;
+
   public Setpoints setpoints;
 
-  public Arm(IArmConstants constants, boolean useSlewRate) {
-
-    this.useSlewRate = useSlewRate;
+  public Arm(IArmConstants constants) {
 
     this.arm = new CANSparkMax(constants.getCANDid(), MotorType.kBrushless);
     arm.restoreFactoryDefaults();
@@ -50,22 +49,9 @@ public class Arm extends SubsystemBase {
    
     setPositionConversionFactor(constants.getPositionConversionFactor());
 
-    slewRateLimiter = new SlewRateLimiter(maxAcc);
-    SmartDashboard.putNumber(name + "slew rate", 1);
-
     setpoints = new Setpoints();
     setupKnownSetPoints();
 
-
-  }
-
-  public Arm(IArmConstants constants) {
-    this(constants, false);
-  }
-
-  public void resetSlewRate() {
-    maxAcc = SmartDashboard.getNumber(name + "slew rate", 1);
-    slewRateLimiter = new SlewRateLimiter(maxAcc);
 
   }
 
@@ -87,7 +73,13 @@ public class Arm extends SubsystemBase {
 
 
   public double getAngle() {
-    return constants.getScaleFactor()*(pot.getVoltage()-constants.getOffset());
+    return constants.getScaleFactor()*getRoundedPotVoltage();
+  }
+
+  public double getRoundedPotVoltage() {
+    double roundedVoltage = ( (double) Math.round(pot.getAverageVoltage() * 1000)) / 1000;
+    roundedVoltage -= constants.getOffset();
+    return roundedVoltage;
   }
 
   public void resetArmPosition(){
@@ -97,49 +89,33 @@ public class Arm extends SubsystemBase {
 
   public void armConstantSpeedForwardFromDashBoard(){
     double speed;
-    if (useSlewRate) {
-      speed = slewRateLimiter.calculate(SmartDashboard.getNumber(name + " speed: ", 0));
-    } else {
-      speed = SmartDashboard.getNumber(name + " speed: ", 0);
-    }
-    
+    speed = SmartDashboard.getNumber(name + " speed: ", 0);
     arm.set(speed);
   }
 
   public void armConstantSpeedBackwardFromDashBoard(){
     double speed;
-    if (useSlewRate) {
-      speed = slewRateLimiter.calculate(-SmartDashboard.getNumber(name + " speed: ", 0));
-    } else {
-      speed = -SmartDashboard.getNumber(name + " speed: ", 0);
-    }
+    speed = -SmartDashboard.getNumber(name + " speed: ", 0);
     arm.set(speed);
   }
 
   public void armConstantSpeed(double speed) {
-    if (useSlewRate) {
-      speed = slewRateLimiter.calculate(speed);
-    } else {
-
-    }
     arm.set(speed);
   }
 
   public void stop(){
     arm.set(0);
-    slewRateLimiter = new SlewRateLimiter(maxAcc);
   }
 
   public String getArmName() {
     return name;
   }
 
-
-
   @Override
   public void periodic() {
       SmartDashboard.putNumber(name + " angle: ", getAngle());
-      SmartDashboard.putNumber(name + " Pot: ", pot.getVoltage());
+      SmartDashboard.putNumber(name + " Pot (rounded): ", getRoundedPotVoltage());
+      SmartDashboard.putNumber(name + " Pot (raw): ", pot.getVoltage());
 
       if (SmartDashboard.getNumber(name + " high Cube setpoint: ", constants.getHighCubeSetPoint()) != this.setpoints.highCube) {
         this.setpoints.highCube = SmartDashboard.getNumber(name + " high Cube setpoint: ", constants.getHighCubeSetPoint());

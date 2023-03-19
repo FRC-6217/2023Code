@@ -107,42 +107,42 @@ public final class Constants {
 
     @Override
     public double getOffset() {
-      return 1.99;
+      return 1.96;
     }
 
     @Override
     public double getHighCubeSetPoint() {
-      return 173;
+      return 154;
     }
 
     @Override
     public double getHighConeSetPoint() {
-      return 185;
+      return 154;
     }
 
     @Override
     public double getMidCubeSetPoint() {
-      return 106;
+      return 89;
     }
 
     @Override
     public double getMidConeSetPoint() {
-      return 158;
+      return 105;
     }
 
     @Override
     public double getPickUpCubeSetPoint() {
-      return 55;
+      return 25;
     }
 
     @Override
     public double getPickUpConeSetPoint() {
-      return 43.2;
+      return 30;
     }
 
     @Override
     public double getSubstationSetPoint() {
-      return 126.4;
+      return 154;
     }
 
     @Override
@@ -200,42 +200,42 @@ public final class Constants {
 
     @Override
     public double getOffset() {
-      return 3.018;
+      return 3.018 + 0.152;
     }
 
     @Override
     public double getHighCubeSetPoint() {
-      return 13;
+      return 2;
     }
 
     @Override
     public double getHighConeSetPoint() {
-      return 20.5;
+      return 15;
     }
 
     @Override
     public double getMidCubeSetPoint() {
-      return 42.3;
+      return 25;
     }
 
     @Override
     public double getMidConeSetPoint() {
-      return 24;
+      return 36;
     }
 
     @Override
     public double getPickUpCubeSetPoint() {
-      return 4.8;
+      return 0;
     }
 
     @Override
     public double getPickUpConeSetPoint() {
-      return 5.8;
+      return 0;
     }
 
     @Override
     public double getSubstationSetPoint() {
-      return 20.06;
+      return 6;
     }
 
     @Override
@@ -245,7 +245,7 @@ public final class Constants {
 
     @Override
     public double getSafteySetPoint() {
-      return 90;
+      return 58;
     }
   }
 

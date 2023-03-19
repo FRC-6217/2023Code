@@ -100,11 +100,6 @@ public class RobotContainer {
     armJoystick.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
     armJoystick.button(4).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm)); 
 
-    // temp for testing slew rate
-    armJoystick.button(12).onTrue(Commands.runOnce(littleArm::resetSlewRate, littleArm));
-    armJoystick.button(12).onTrue(Commands.runOnce(bigArm::resetSlewRate, bigArm));
-
-
     buttonBox.button(1).onTrue(armPositions.ArmsToSaftey());
     buttonBox.button(4).onTrue(armPositions.ArmsToHighConeDrop());
     buttonBox.button(3).onTrue(armPositions.ArmsToMidConeDrop());

@@ -6,6 +6,7 @@ package frc.robot.commands.ArmCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSystem.Arm;
@@ -21,6 +22,9 @@ public class TwoArmsToTwoAngle extends CommandBase{
 
   PIDController bigPidController = new PIDController(0, 0, 0);
   PIDController littlePidController = new PIDController(0, 0, 0);
+
+  SlewRateLimiter bigArmSlewRate;
+  SlewRateLimiter littleArmSlewRate;
 
   String pKey = " p: ";
   String iKey = " i: ";
@@ -66,8 +70,13 @@ public class TwoArmsToTwoAngle extends CommandBase{
     littlePidController.setSetpoint(littleSetpoint);
     bigPidController.setSetpoint(bigSetpoint);
 
-    littlePidController.setTolerance(2);
-    bigPidController.setTolerance(2);
+    bigArmSlewRate = new SlewRateLimiter(SmartDashboard.getNumber("big arm slew rate: ", 1));
+    littleArmSlewRate = new SlewRateLimiter(SmartDashboard.getNumber("little arm slew rate: ", 1));
+
+
+    //todo move to constants
+    littlePidController.setTolerance(1.5);
+    bigPidController.setTolerance(1.5);
   
   }
 
@@ -81,7 +90,9 @@ public class TwoArmsToTwoAngle extends CommandBase{
 
     double pidoutput = bigPidController.calculate(bigArm.getAngle());
     double bigSpeed = MathUtil.clamp(pidoutput, -bigArm.getConstants().getMaxAutoSpeed(), bigArm.getConstants().getMaxAutoSpeed());
-    System.out.println("BigArm pid output: " + pidoutput  + " + actual speed: " + bigSpeed);
+  //  double slewRatedOutput = bigArmSlewRate.calculate(bigSpeed);
+
+
     bigArm.armConstantSpeed(bigSpeed);
    }
 
@@ -89,8 +100,9 @@ public class TwoArmsToTwoAngle extends CommandBase{
     littleArm.stop();
   }else{
     double littleSpeed = MathUtil.clamp(littlePidController.calculate(littleArm.getAngle()), -littleArm.getConstants().getMaxAutoSpeed(), littleArm.getConstants().getMaxAutoSpeed());
-    SmartDashboard.putNumber("LittleArm pid output", littleSpeed);
+   // double slewRatedOutput = littleArmSlewRate.calculate(littleSpeed);
     littleArm.armConstantSpeed(littleSpeed);
+
  }
   }
 
@@ -99,11 +111,13 @@ public class TwoArmsToTwoAngle extends CommandBase{
   public void end(boolean interrupted) {
     bigArm.stop();
     littleArm.stop();
+    System.out.println("Arm Command Finished b: " + bigSetpoint + " l: " + littleSetpoint);
   }
 
   // Returns true when the command should end.
 
   public boolean isFinished() {
+   
     return bigPidController.atSetpoint() && littlePidController.atSetpoint();
   }
 }
