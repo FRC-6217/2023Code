@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
@@ -122,11 +123,11 @@ public class AutoCommandFactory {
         return sCommandGroup;
     }
 
-    private Command getStep1() {
+    public Command getStep1() {
         return autoChooserStep1.getSelected();
     }
 
-    private Command getStep2() {
+    public Command getStep2() {
         return autoChooserStep2.getSelected();
     }
 
@@ -134,10 +135,11 @@ public class AutoCommandFactory {
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
         commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
         commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
-        commandGroup.addCommands(new DriveToBalanced(tankDrive, DirectionB.forwards));
+        commandGroup.addCommands(new DriveToBalanced(tankDrive, DirectionB.forwards, 0.4));
         commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.middleLeaveOffPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
         commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.forwards));
-        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, 25, 0.6));
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, 36, 0.6));
+        commandGroup.addCommands(new WaitCommand(1));
         commandGroup.addCommands(new AutoBalancedPID(tankDrive));
         return commandGroup;
     }

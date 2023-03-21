@@ -6,8 +6,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.ArmCommands.ArmPositions;
+import frc.robot.commands.AutoCommands.AutoBalancePIDv2;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.AutoCommandFactory;
+import frc.robot.commands.DriveCommands.CancelArms;
 import frc.robot.commands.DriveCommands.CancelDriveTrain;
 import frc.robot.commands.DriveCommands.DriveToGamePiece;
 import frc.robot.commands.DriveCommands.StayPutAllDOF;
@@ -94,6 +96,8 @@ public class RobotContainer {
     driveJoystick.button(2).onTrue(Commands.runOnce(claw::toggle, claw));
     driveJoystick.button(3).whileTrue(new DriveToGamePiece(mTankDrive, GamePiece.both));
 
+    driveJoystick.button(11).whileTrue(new AutoBalancePIDv2(mTankDrive));
+
     armJoystick.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
     armJoystick.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
@@ -107,9 +111,9 @@ public class RobotContainer {
     buttonBox.button(8).onTrue(armPositions.ArmsToHighCubeDrop());
     buttonBox.button(7).onTrue(armPositions.ArmsToMidCubeDrop());
     buttonBox.button(6).onTrue(armPositions.ArmsToFrontPickUp());
-    buttonBox.button(9).onTrue(armPositions.ArmsToFrontPickUp());
+    buttonBox.button(5).onTrue(armPositions.ArmsToFrontPickUp());
     buttonBox.button(12).onTrue(armPositions.ArmsToSubStationPickUp());
-   
+    buttonBox.button(13).onTrue(new CancelArms(littleArm, bigArm));
   }
 
   /**
@@ -120,6 +124,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return autoFactory.getAutoCommand();
+  }
+
+  public AutoCommandFactory getAutoCommandFactory() {
+    return autoFactory;
   }
 
 }

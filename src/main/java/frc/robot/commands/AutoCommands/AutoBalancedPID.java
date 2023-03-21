@@ -25,7 +25,7 @@ public class AutoBalancedPID extends PIDCommand {
 
   public AutoBalancedPID(TankDrive tankDrive) {
     super(
-        new PIDController(0.024000, 0.000, 0.0000),
+        new PIDController(0.02000, 0.000, 0.0000),
         // This should return the measurement
         () -> tankDrive.getGyro().getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -44,7 +44,7 @@ public class AutoBalancedPID extends PIDCommand {
         addRequirements(tankDrive);
         this.tankDrive = tankDrive;
 
-        SmartDashboard.putNumber(name + " pvalue", 0.024000);
+        SmartDashboard.putNumber(name + " pvalue", 0.021000);
         SmartDashboard.putNumber(name + " ivalue", 0.000);
         SmartDashboard.putNumber(name + " dvalue", 0.000);
 

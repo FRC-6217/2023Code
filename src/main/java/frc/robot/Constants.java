@@ -154,6 +154,11 @@ public final class Constants {
     public double getSafteySetPoint() {
       return 0;
     }
+
+    @Override
+    public double getStopThreshold() {
+      return 1000;
+    }
   }
 
   public static class BigArmConstants implements IArmConstants {
@@ -247,6 +252,11 @@ public final class Constants {
     public double getSafteySetPoint() {
       return 58;
     }
+
+    @Override
+    public double getStopThreshold() {
+      return 1000;
+    }
   }
 
 
@@ -270,6 +280,8 @@ public final class Constants {
     public double getSubstationSetPoint();
     public double getBacksidePickUpSetPoint();
     public double getSafteySetPoint();
+
+    public double getStopThreshold();
   }
 
 

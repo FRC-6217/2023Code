@@ -49,6 +49,9 @@ public class TankDrive extends SubsystemBase {
 
   private double slowRotate = 1;
 
+
+  double rate[] = {0,0,0};
+
   public TankDrive() {
 
     left1 = new CANSparkMax(DriveTrainConstants.LEFT_1, MotorType.kBrushless);
@@ -181,6 +184,9 @@ public class TankDrive extends SubsystemBase {
     SmartDashboard.putBoolean("Is Balanced", isBalanced());
     SmartDashboard.putData("Gyro", gyro);
     SmartDashboard.putNumber("Robot FPS: ", Units.metersToFeet(getAvergeVelocity()));
+
+    getGyro().getRawGyro(rate);
+    SmartDashboard.putNumber("pitch rate: ", rate[0]);
     
    // SmartDashboard.putNumber("Robot speed (raw): ", getAvergeVelocity());
 

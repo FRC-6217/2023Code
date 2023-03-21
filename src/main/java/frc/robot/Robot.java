@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmCommands.EnableBigArmBrake;
+import frc.robot.commands.AutoCommands.EnableBrakes;
 import frc.robot.commands.DriveCommands.DisableBreaks;
 import frc.robot.subsystems.TankDrive;
 
@@ -79,12 +80,14 @@ public class Robot extends TimedRobot {
 ;
     //ToggldeClaw tClaw = new ToggldeClaw(m_robotContainer.armSystem, cState.OPEN);
    // tClaw.schedule();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    System.out.println(m_autonomousCommand.getName());
+  //  m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //System.out.println(m_autonomousCommand.getName());
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+   // if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.schedule();
+    //}
+
+    m_robotContainer.getAutoCommandFactory().AlwaysDo().andThen(m_robotContainer.getAutoCommandFactory().getStep1()).andThen( m_robotContainer.getAutoCommandFactory().getStep2()).schedule();
   }
 
   /** This function is called periodically during autonomous. */
@@ -100,6 +103,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    Command brakes = new EnableBrakes(m_robotContainer.mTankDrive);
+    brakes.schedule();
 
   }
 

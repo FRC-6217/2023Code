@@ -17,6 +17,8 @@ public class ArmGoToAngle extends CommandBase {
   boolean isTuning;
   double setPoint;
 
+  boolean isError;
+
   PIDController pidController = new PIDController(0, 0, 0);
 
   String pKey = " p: ";
@@ -30,6 +32,7 @@ public class ArmGoToAngle extends CommandBase {
     this.arm = arm;
     this.isTuning = isTuning;
     this.setPoint = setPoint;
+    isError = false;
 
     SmartDashboard.putNumber(arm.getArmName() + pKey, arm.getConstants().getPIDConstants().p);
     SmartDashboard.putNumber(arm.getArmName() + iKey, arm.getConstants().getPIDConstants().i);
@@ -63,11 +66,17 @@ public class ArmGoToAngle extends CommandBase {
     }
 
 
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+    if (arm.getAngle() > arm.getConstants().getStopThreshold() || arm.getAngle() < -arm.getConstants().getStopThreshold()) {
+      System.out.println("Analog Error: " + arm.getName());
+      isError = true;
+    }
 
     double speed = MathUtil.clamp(pidController.calculate(arm.getAngle()), -arm.getConstants().getMaxAutoSpeed(), arm.getConstants().getMaxAutoSpeed());
     
@@ -83,6 +92,6 @@ public class ArmGoToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pidController.atSetpoint();
+    return pidController.atSetpoint() || isError;
   }
 }
