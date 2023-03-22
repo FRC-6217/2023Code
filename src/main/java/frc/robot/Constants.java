@@ -152,7 +152,7 @@ public final class Constants {
 
     @Override
     public double getSafteySetPoint() {
-      return 0;
+      return 5;
     }
 
     @Override
@@ -380,7 +380,7 @@ public final class Constants {
     public static final double AutoKnockObjectOffDistanceInches = 18;
     public static final double AutoKnockObjectOffSpeed = .7;
     public static final double AutoDriveToHubInches = 24;
-    public static final double AutoDriveToHubConeHighInches = 28;
+    public static final double AutoDriveToHubConeHighInches = 36;
     public static final double AutoDriveStep1Speed = 0.5;
   }
 

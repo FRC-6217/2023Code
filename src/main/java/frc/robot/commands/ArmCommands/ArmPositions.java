@@ -27,11 +27,14 @@ public class ArmPositions {
         return pCommandGroup;
     }
 
-    
     public ParallelCommandGroup ArmsToHighConeDrop(){
+        return ArmsToHighConeDrop(0);
+    }
+    
+    public ParallelCommandGroup ArmsToHighConeDrop(double adding){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
        
-        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.setpoints.highCone, bigArm, bigArm.setpoints.highCone));
+        pCommandGroup.addCommands(new TwoArmsToTwoAngle(littleArm, littleArm.setpoints.highCone+adding, bigArm, bigArm.setpoints.highCone));
 
         return pCommandGroup;
     }

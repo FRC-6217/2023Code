@@ -6,12 +6,16 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.ArmCommands.ArmPositions;
-import frc.robot.commands.AutoCommands.AutoBalancePIDv2;
+import frc.robot.commands.AutoCommands.AutoBalanceBangBang;
 import frc.robot.commands.AutoCommands.AutoBalancedPID;
 import frc.robot.commands.AutoCommands.AutoCommandFactory;
+import frc.robot.commands.AutoCommands.DriveToDistanceInches;
+import frc.robot.commands.AutoCommands.DriveUntilUnBalanced;
+import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.commands.DriveCommands.CancelArms;
 import frc.robot.commands.DriveCommands.CancelDriveTrain;
 import frc.robot.commands.DriveCommands.DriveToGamePiece;
+import frc.robot.commands.DriveCommands.DriveToSubStationPickUp;
 import frc.robot.commands.DriveCommands.StayPutAllDOF;
 import frc.robot.commands.DriveCommands.TeleopDrive;
 import frc.robot.commands.DriveCommands.DriveToGamePiece.GamePiece;
@@ -96,13 +100,14 @@ public class RobotContainer {
     driveJoystick.button(2).onTrue(Commands.runOnce(claw::toggle, claw));
     driveJoystick.button(3).whileTrue(new DriveToGamePiece(mTankDrive, GamePiece.both));
 
-    driveJoystick.button(11).whileTrue(new AutoBalancePIDv2(mTankDrive));
 
     armJoystick.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
     armJoystick.button(3).onTrue(Commands.runOnce(littleArm::armConstantSpeedBackwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));
 
     armJoystick.button(6).onTrue(Commands.runOnce(bigArm::armConstantSpeedForwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm));
     armJoystick.button(4).onTrue(Commands.runOnce(bigArm::armConstantSpeedBackwardFromDashBoard, bigArm)).onFalse(Commands.runOnce(bigArm::stop, bigArm)); 
+
+    armJoystick.button(10).whileTrue(new DriveToSubStationPickUp(mTankDrive));
 
     buttonBox.button(1).onTrue(armPositions.ArmsToSaftey());
     buttonBox.button(4).onTrue(armPositions.ArmsToHighConeDrop());

@@ -45,6 +45,7 @@ public class DriveToGamePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    limedata.setPipeline(LimeData.ConesAndCubesPipeLine);
     forwardpid.setP(SmartDashboard.getNumber("forward gamepiecepid" + " pvalue", LimeLightGamePieceConstants.forwardP)); 
     forwardpid.setI(SmartDashboard.getNumber("forward gamepiecepid" + " ivalue", LimeLightGamePieceConstants.forwardI)); 
     forwardpid.setD(SmartDashboard.getNumber("forward gamepiecepid" + " dvalue", LimeLightGamePieceConstants.forwardD)); 

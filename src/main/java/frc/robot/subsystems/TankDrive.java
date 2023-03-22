@@ -282,6 +282,11 @@ public class TankDrive extends SubsystemBase {
   }
 
   public class LimeData {
+
+    public static final int ConesAndCubesPipeLine = 0;
+    public static final int AprilTagsPipeLine = 3;
+
+
     private double tx = 0,ty = 0,ta = 0;
 
     public void setTx(double tx) {

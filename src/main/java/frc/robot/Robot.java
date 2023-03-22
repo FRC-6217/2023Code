@@ -80,14 +80,16 @@ public class Robot extends TimedRobot {
 ;
     //ToggldeClaw tClaw = new ToggldeClaw(m_robotContainer.armSystem, cState.OPEN);
    // tClaw.schedule();
-  //  m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+   m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     //System.out.println(m_autonomousCommand.getName());
     // schedule the autonomous command (example)
-   // if (m_autonomousCommand != null) {
-    //  m_autonomousCommand.schedule();
-    //}
+   if (m_autonomousCommand != null) {
+    m_autonomousCommand.schedule();
+    }
 
-    m_robotContainer.getAutoCommandFactory().AlwaysDo().andThen(m_robotContainer.getAutoCommandFactory().getStep1()).andThen( m_robotContainer.getAutoCommandFactory().getStep2()).schedule();
+
+
+    //m_robotContainer.getAutoCommandFactory().AlwaysDo().andThen(m_robotContainer.getAutoCommandFactory().getStep1()).andThen( m_robotContainer.getAutoCommandFactory().getStep2()).schedule();
   }
 
   /** This function is called periodically during autonomous. */

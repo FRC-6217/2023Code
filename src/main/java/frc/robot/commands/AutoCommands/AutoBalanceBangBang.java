@@ -4,7 +4,10 @@
 
 package frc.robot.commands.AutoCommands;
 
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TankDrive;
 import frc.robot.subsystems.TankDrive.RobotPosition;
@@ -24,12 +27,27 @@ public class AutoBalanceBangBang extends CommandBase {
   double minSpeed = .3;
   double slope = (maxSpeed - minSpeed) / (distanceToEstimatedBalancePointInches - 0);
 
-  double rateThreshold = 1;
+  double rateThreshold = 10; //dps
+  double maxrate = 0;
 
+  double direction = 1;
+
+  Timer timer;
+
+  public AutoBalanceBangBang(TankDrive tankDrive, double direction) {
+    addRequirements(tankDrive);
+    this.tankDrive = tankDrive;
+    this.pigeon = tankDrive.getGyro();
+    this.direction = direction;
+    timer = new Timer();
+  }
+
+  
   public AutoBalanceBangBang(TankDrive tankDrive) {
     addRequirements(tankDrive);
     this.tankDrive = tankDrive;
     this.pigeon = tankDrive.getGyro();
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
@@ -37,16 +55,24 @@ public class AutoBalanceBangBang extends CommandBase {
   public void initialize() {
     sPosition = tankDrive.getStartPosition();
     gyroRates = new double[] {0,0,0};
+    timer.reset();
+    timer.start();
+    maxrate = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     pigeon.getRawGyro(gyroRates);
+    if (gyroRates[0] > maxrate) {
+      maxrate = gyroRates[0];
+      System.out.println("max: " + maxrate);
+    }
     cPosition = tankDrive.getRelativePosition(sPosition);
 
     //is this inches?
-    tankDrive.autoDrive(slope*cPosition.averagePosition + minSpeed, 0);
+   // tankDrive.autoDrive(direction*slope*cPosition.averagePosition + minSpeed, 0);
+   tankDrive.autoDrive(direction*.28, 0);
 
   }
 
@@ -60,6 +86,6 @@ public class AutoBalanceBangBang extends CommandBase {
   @Override
   public boolean isFinished() {
     // is this pitch?
-    return (gyroRates[0] > rateThreshold);// || (cPosition.averagePosition > distanceToEstimatedBalancePointInches);
+    return (timer.get() > .8) && (Math.abs(gyroRates[0]) > rateThreshold);// || (cPosition.averagePosition > distanceToEstimatedBalancePointInches);
   }
 }

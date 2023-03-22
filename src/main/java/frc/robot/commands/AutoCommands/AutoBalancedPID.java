@@ -20,12 +20,12 @@ import frc.robot.subsystems.TankDrive;
 public class AutoBalancedPID extends PIDCommand {
 
   TankDrive tankDrive;
-  Debouncer debounceSetPoint = new Debouncer(BalanceConstants.debounceTime, DebounceType.kRising);
+  Debouncer debounceSetPoint = new Debouncer(2, DebounceType.kRising);
   String name = "AutoBalancePID: "; 
 
   public AutoBalancedPID(TankDrive tankDrive) {
     super(
-        new PIDController(0.02000, 0.000, 0.0000),
+        new PIDController(0.027000, 0.000, 0.0000),
         // This should return the measurement
         () -> tankDrive.getGyro().getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -44,7 +44,7 @@ public class AutoBalancedPID extends PIDCommand {
         addRequirements(tankDrive);
         this.tankDrive = tankDrive;
 
-        SmartDashboard.putNumber(name + " pvalue", 0.021000);
+        SmartDashboard.putNumber(name + " pvalue", 0.027000);
         SmartDashboard.putNumber(name + " ivalue", 0.000);
         SmartDashboard.putNumber(name + " dvalue", 0.000);
 
