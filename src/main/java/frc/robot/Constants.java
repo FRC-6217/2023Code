@@ -381,7 +381,7 @@ public final class Constants {
     public static final double AutoKnockObjectOffSpeed = .7;
     public static final double AutoDriveToHubInches = 24;
     public static final double AutoDriveToHubConeHighInches = 36;
-    public static final double AutoDriveStep1Speed = 0.5;
+    public static final double AutoDriveStep1Speed = 0.6;
   }
 
 

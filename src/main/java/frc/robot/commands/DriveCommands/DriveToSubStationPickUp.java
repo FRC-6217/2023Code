@@ -36,7 +36,7 @@ public class DriveToSubStationPickUp extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    limedata.setPipeline(3);
+    limedata.setPipeline(3); //Maybe put in Execute???
     forwardpid.setP(SmartDashboard.getNumber("forward Substation: " + " pvalue", LimeLightGamePieceConstants.forwardP)); 
     forwardpid.setI(SmartDashboard.getNumber("forward Substation: " + " ivalue", LimeLightGamePieceConstants.forwardI)); 
     forwardpid.setD(SmartDashboard.getNumber("forward Substation: " + " dvalue", LimeLightGamePieceConstants.forwardD)); 

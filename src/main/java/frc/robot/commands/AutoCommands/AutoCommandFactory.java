@@ -14,7 +14,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.LittleArmToAngleNoPID;
+import frc.robot.commands.ArmCommands.ArmGoToAngle;
 import frc.robot.commands.ArmCommands.ArmPositions;
+import frc.robot.commands.ArmCommands.TwoArmsToTwoAngle;
 import frc.robot.commands.AutoCommands.DriveToBalanced.DirectionB;
 import frc.robot.commands.AutoCommands.DriveUntilUnBalanced.Direction;
 import frc.robot.subsystems.TankDrive;
@@ -47,27 +50,32 @@ public class AutoCommandFactory {
 
         autoChooser.setDefaultOption("No Drop off, no move", AlwaysDo().andThen(armPositions.ArmsToSaftey()));
 
-        autoChooser.addOption("High Cube Drop Off, no move", AlwaysDo().andThen(doDropOffAtHighCube()));
-        autoChooser.addOption("Mid Cube Drop Off, no move", AlwaysDo().andThen(doDropOffAtMidCube()));
-        autoChooser.addOption("High Cone Drop Off, no move", AlwaysDo().andThen(doDropOffAtHighCone()));
+        autoChooser.addOption("High Cube Drop Off, no move", DropOffAlwaysDo().andThen(doDropOffAtHighCube()));
+        autoChooser.addOption("Mid Cube Drop Off, no move", DropOffAlwaysDo().andThen(doDropOffAtMidCube()));
+        autoChooser.addOption("High Cone Drop Off, no move", DropOffAlwaysDo().andThen(doDropOffAtHighCone()));
 
 
-        autoChooser.addOption("High Cube Drop Off, then move out of community", AlwaysDo().andThen(doDropOffAtHighCube()).andThen(getLeaveAuto()));
-        autoChooser.addOption("Mid Cube Drop Off, then move out of community", AlwaysDo().andThen(doDropOffAtHighCube()).andThen(getLeaveAuto()));
-        autoChooser.addOption("High Cone Drop Off, then move out of community", AlwaysDo().andThen(doDropOffAtHighCone()).andThen(getLeaveAuto()));
+        autoChooser.addOption("High Cube Drop Off, then move out of community", DropOffAlwaysDo().andThen(doDropOffAtHighCube()).andThen(getLeaveAuto()));
+        autoChooser.addOption("Mid Cube Drop Off, then move out of community", DropOffAlwaysDo().andThen(doDropOffAtHighCube()).andThen(getLeaveAuto()));
+        autoChooser.addOption("High Cone Drop Off, then move out of community", DropOffAlwaysDo().andThen(doDropOffAtHighCone()).andThen(getLeaveAuto()));
         autoChooser.addOption("No Drop off, then move out of community", AlwaysDo().andThen(getLeaveAuto()));
 
-        autoChooser.addOption("High Cube Drop Off, then balance", AlwaysDo().andThen(doDropOffAtHighCube()).andThen(NoLeaveBalanceArmsToSaftey()));
-        autoChooser.addOption("Mid Cube Drop Off, then balance", AlwaysDo().andThen(doDropOffAtMidCube()).andThen(NoLeaveBalanceArmsToSaftey()));
-        autoChooser.addOption("High Cone Drop Off, then balance", AlwaysDo().andThen(doDropOffAtHighCone()).andThen(NoLeaveBalanceArmsToSaftey()));
+        autoChooser.addOption("High Cube Drop Off, then balance", DropOffAlwaysDo().andThen(doDropOffAtHighCube()).andThen(NoLeaveBalanceArmsToSaftey()));
+        autoChooser.addOption("Mid Cube Drop Off, then balance", DropOffAlwaysDo().andThen(doDropOffAtMidCube()).andThen(NoLeaveBalanceArmsToSaftey()));
+        autoChooser.addOption("High Cone Drop Off, then balance", DropOffAlwaysDo().andThen(doDropOffAtHighCone()).andThen(NoLeaveBalanceArmsToSaftey()));
         autoChooser.addOption("No Drop off, then balance", AlwaysDo().andThen(NoLeaveBalanceArmsToSaftey()));
 
-
+/*
         autoChooser.addOption("High Cube Drop Off, then leave and balance", AlwaysDo().andThen(doDropOffAtHighCube()).andThen(DriveOverChargeStationArmsToSaftey()));
         autoChooser.addOption("Mid Cube Drop Off, then leave and balance", AlwaysDo().andThen(doDropOffAtMidCube()).andThen(DriveOverChargeStationArmsToSaftey()));
         autoChooser.addOption("High Cone Drop Off, then leave and balance", AlwaysDo().andThen(doDropOffAtHighCone()).andThen(DriveOverChargeStationArmsToSaftey()));
         autoChooser.addOption("No Drop off, then leave and balance", AlwaysDo().andThen(DriveOverChargeStationArmsToSaftey()));
-        autoChooser.addOption("High Cube Drop Off V2, then leave and balance", AlwaysDo().andThen(doDropOffAtHighCube()).andThen(DriveOverChargeStationArmsToSafteyV2()));
+*/
+        autoChooser.addOption("High Cube Drop Off, then leave and balance V2", DropOffAlwaysDo().andThen(doDropOffAtHighCube()).andThen(DriveOverChargeStationArmsToSafteyV2()));
+        autoChooser.addOption("Mid Cube Drop Off, then leave and balance V2", DropOffAlwaysDo().andThen(doDropOffAtMidCube()).andThen(DriveOverChargeStationArmsToSafteyV2()));
+        autoChooser.addOption("High Cube Drop Off, then leave and balance V2", DropOffAlwaysDo().andThen(doDropOffAtHighCube()).andThen(DriveOverChargeStationArmsToSafteyV2()));
+        autoChooser.addOption("No Drop off, then leave and balance V2", AlwaysDo().andThen(DriveOverChargeStationArmsToSafteyV2()));
+        
 
         
 /*
@@ -92,21 +100,33 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup doDropOffAtMidCube() {
         SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
-        sCommandGroup.addCommands(armPositions.ArmsToMidCubeDrop());
-        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(getGoToMidCube());
         sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
         sCommandGroup.addCommands(Commands.waitSeconds(.3));
         sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
         return sCommandGroup;
     }
 
+    public ParallelCommandGroup getGoToMidCube(){
+        ParallelCommandGroup sCommandGroup = new ParallelCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToMidCubeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
     public SequentialCommandGroup doDropOffAtHighCube() {
         SequentialCommandGroup sCommandGroup = new SequentialCommandGroup();
-        sCommandGroup.addCommands(armPositions.ArmsToHighCubeDrop());
-        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(getGoToHighCube());
         sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
         sCommandGroup.addCommands(Commands.waitSeconds(.3));
         sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public ParallelCommandGroup getGoToHighCube(){
+        ParallelCommandGroup sCommandGroup = new ParallelCommandGroup();
+        sCommandGroup.addCommands(armPositions.ArmsToHighCubeDrop());
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubInches, Constants.AutoConstants.AutoDriveStep1Speed));
         return sCommandGroup;
     }
 
@@ -122,12 +142,18 @@ public class AutoCommandFactory {
 
     public SequentialCommandGroup doDropOffAtHighCone() {
         SequentialCommandGroup sCommandGroup=new SequentialCommandGroup();
-        sCommandGroup.addCommands(Commands.waitSeconds(.1));
-        sCommandGroup.addCommands(armPositions.ArmsToHighConeDrop(3));
-        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubConeHighInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        sCommandGroup.addCommands(getGoToHighCone());
         sCommandGroup.addCommands(Commands.runOnce(claw::open, claw));
         sCommandGroup.addCommands(Commands.waitSeconds(.3));
         sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, -Constants.AutoConstants.AutoDriveToHubConeHighInches, Constants.AutoConstants.AutoDriveStep1Speed));
+        return sCommandGroup;
+    }
+
+    public ParallelCommandGroup getGoToHighCone(){
+        ParallelCommandGroup sCommandGroup = new ParallelCommandGroup();
+        sCommandGroup.addCommands(Commands.waitSeconds(.1));
+        sCommandGroup.addCommands(armPositions.ArmsToHighConeDrop(3));
+        sCommandGroup.addCommands(new DriveToDistanceInches(tankDrive, Constants.AutoConstants.AutoDriveToHubConeHighInches, Constants.AutoConstants.AutoDriveStep1Speed));
         return sCommandGroup;
     }
 
@@ -162,7 +188,7 @@ public class AutoCommandFactory {
         return autoChooserStep2.getSelected();
     }
 */
-    public SequentialCommandGroup DriveOverChargeStation(){
+   /* public SequentialCommandGroup DriveOverChargeStation(){
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
         commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
         commandGroup.addCommands(new DriveToDistanceInches(tankDrive, AutoConstants.middleLeaveOnPlatformInches, AutoConstants.middleLeaveOffPlatformSpeed));
@@ -174,7 +200,7 @@ public class AutoCommandFactory {
         commandGroup.addCommands(new AutoBalancedPID(tankDrive));
         return commandGroup;
     }
-
+*/
     public SequentialCommandGroup DriveOverChargeStationV2() {
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
         commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
@@ -188,7 +214,7 @@ public class AutoCommandFactory {
     public SequentialCommandGroup NoLeaveBalance(){
         SequentialCommandGroup commandGroup = new SequentialCommandGroup();
         commandGroup.addCommands(new DriveUntilUnBalanced(tankDrive, Direction.backwards));
-        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, -34, AutoConstants.middleLeaveOffPlatformSpeed));
+        commandGroup.addCommands(new DriveToDistanceInches(tankDrive, 26, AutoConstants.middleLeaveOffPlatformSpeed));
         commandGroup.addCommands(new AutoBalancedPID(tankDrive));
         return commandGroup;
     }
@@ -200,26 +226,26 @@ public class AutoCommandFactory {
         return pCommandGroup;
     }
 
-
+/* 
     public ParallelCommandGroup  DriveOverChargeStationArmsToSaftey(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStation());
         pCommandGroup.addCommands(armPositions.ArmsToSaftey());
         return pCommandGroup;
     }
-
+*/
     public ParallelCommandGroup  DriveOverChargeStationArmsToSafteyV2(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStationV2());
         pCommandGroup.addCommands(armPositions.ArmsToSaftey());
         return pCommandGroup;
     }
-
+/*
     public ParallelCommandGroup DriveOverChargeStationArmsFlipOver(){
         ParallelCommandGroup pCommandGroup = new ParallelCommandGroup();
         pCommandGroup.addCommands(DriveOverChargeStation());
         return pCommandGroup;
-    }
+    }*/
 
     public ParallelCommandGroup getLeaveAuto() {
         ParallelCommandGroup commandGroup = new ParallelCommandGroup();
@@ -236,4 +262,15 @@ public class AutoCommandFactory {
         pCommandGroup.addCommands(Commands.waitSeconds(.2));
         return pCommandGroup;
     }
+
+    public SequentialCommandGroup DropOffAlwaysDo(){
+        SequentialCommandGroup pCommandGroup = new SequentialCommandGroup();
+        pCommandGroup.addCommands(Commands.runOnce(tankDrive.getGyro()::reset, tankDrive));
+        pCommandGroup.addCommands(new EnableBrakes(tankDrive));
+        pCommandGroup.addCommands(Commands.runOnce(claw::close, claw));
+        pCommandGroup.addCommands(Commands.waitSeconds(.2));
+        pCommandGroup.addCommands(new LittleArmToAngleNoPID(littleArm, littleArm.setpoints.midCube, .6));
+        return pCommandGroup;
+    }
+
 }
