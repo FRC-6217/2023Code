@@ -4,6 +4,7 @@
 
 package frc.robot;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveToDistanceInchesTuning;
 import frc.robot.commands.PersistenceData;
 import frc.robot.commands.ArmCommands.ArmPositions;
 import frc.robot.commands.AutoCommands.AutoBalanceBangBang;
@@ -83,9 +84,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleTurning, mTankDrive));
     //driveJoystick.button(OperatorConstants.cancelDrive11).onTrue(cancelCommand);
-    driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(new AutoBalancedPID(mTankDrive));
    // driveJoystick.button(12).whileTrue(getMiddleLeaveBalance());
    // driveJoystick.button(OperatorConstants.fullBalanceAct6).onTrue(driveToChargingStation.andThen(autoBalanceCommand));
     //driveJoystick.button(OperatorConstants.buttonUnused7).onTrue(new DriveToDistanceInches(mTankDrive, 10, .4));
@@ -99,6 +98,12 @@ public class RobotContainer {
     mTankDrive.setDefaultCommand( new TeleopDrive(mTankDrive, driveJoystick));
     driveJoystick.button(2).onTrue(Commands.runOnce(claw::toggle, claw));
     driveJoystick.button(3).whileTrue(new DriveToGamePiece(mTankDrive, GamePiece.both));
+    driveJoystick.button(OperatorConstants.toggleTurning12).onTrue(Commands.runOnce(mTankDrive::toggleTurning, mTankDrive));
+    driveJoystick.button(OperatorConstants.doAutoBalance10).whileTrue(new AutoBalancedPID(mTankDrive));
+
+
+    //Testing Buttons
+    driveJoystick.button(10).whileTrue(new DriveUntilUnBalanced(mTankDrive, Direction.forwards).andThen(new DriveToDistanceInchesTuning(mTankDrive, 30, .5)));
 
 
     armJoystick.button(5).onTrue(Commands.runOnce(littleArm::armConstantSpeedForwardFromDashBoard, littleArm)).onFalse(Commands.runOnce(littleArm::stop, littleArm));

@@ -12,8 +12,8 @@ import frc.robot.subsystems.TankDrive.RobotPosition;
 public class DriveToDistanceInches extends CommandBase {
 RobotPosition startPosition; 
 public TankDrive tankDrive;
-double distanceMeters; 
-double speed; 
+public double distanceMeters; 
+public double speed; 
 double direction;
   /** Creates a new InchesDrive. */
   public DriveToDistanceInches(TankDrive tankDrive, double inches, double speed) {
